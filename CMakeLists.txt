@@ -11,12 +11,55 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# ------------------------------------------------------------
+# Core simulation library
+# ------------------------------------------------------------
+
+add_library(AlienEvolutionCore
+    src/development/Phenotype.cpp
+    src/development/Development.cpp
+)
+
+target_include_directories(
+    AlienEvolutionCore
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+)
+
+# ------------------------------------------------------------
+# Main executable
+# ------------------------------------------------------------
+
 add_executable(AlienEvolution
     src/main.cpp
 )
 
-target_include_directories(
+target_link_libraries(
     AlienEvolution
     PRIVATE
-        ${PROJECT_SOURCE_DIR}/include
+        AlienEvolutionCore
 )
+
+# ------------------------------------------------------------
+# Tests
+# ------------------------------------------------------------
+
+include(CTest)
+
+if(BUILD_TESTING)
+    add_executable(
+        AlienEvolutionDevelopmentTests
+        tests/development_tests.cpp
+    )
+
+    target_link_libraries(
+        AlienEvolutionDevelopmentTests
+        PRIVATE
+            AlienEvolutionCore
+    )
+
+    add_test(
+        NAME DevelopmentTests
+        COMMAND AlienEvolutionDevelopmentTests
+    )
+endif()
