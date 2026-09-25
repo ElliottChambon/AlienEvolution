@@ -3,6 +3,8 @@
 #include "alien_evolution/development/Development.hpp"
 #include "alien_evolution/development/Phenotype.hpp"
 #include "alien_evolution/environment/Environment.hpp"
+#include "alien_evolution/evaluation/Energetics.hpp"
+#include "alien_evolution/evaluation/PhenotypeMetrics.hpp"
 #include "alien_evolution/genetics/Genome.hpp"
 
 namespace
@@ -62,6 +64,18 @@ int main()
             environment
         );
 
+    const ae::PhenotypeMetrics metrics =
+        ae::measurePhenotype(phenotype);
+
+    const ae::EnergeticsConfig energeticsConfig{};
+
+    const ae::EnergeticConsequences energetics =
+        ae::evaluateEnergetics(
+            metrics,
+            environment,
+            energeticsConfig
+        );
+
     std::cout << "AlienEvolution v0.1.0\n\n";
 
     std::cout << "Environment\n";
@@ -94,7 +108,29 @@ int main()
 
     std::cout
         << "  Total material: "
-        << phenotype.totalMaterial()
+        << metrics.totalMaterial
+        << '\n';
+
+    std::cout
+        << "  Exposed boundary: "
+        << metrics.exposedBoundary
+        << '\n';
+
+    std::cout << "\nEnergetic consequences\n";
+
+    std::cout
+        << "  Resource acquisition: "
+        << energetics.resourceAcquisition
+        << '\n';
+
+    std::cout
+        << "  Maintenance cost: "
+        << energetics.maintenanceCost
+        << '\n';
+
+    std::cout
+        << "  Net energy: "
+        << energetics.netEnergy
         << "\n\n";
 
     printPhenotype(phenotype);

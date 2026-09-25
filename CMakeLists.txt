@@ -22,6 +22,8 @@ add_library(AlienEvolutionCore
     src/genetics/Mutation.cpp
     src/evolution/Organism.cpp
     src/evolution/Population.cpp
+    src/evaluation/PhenotypeMetrics.cpp
+    src/evaluation/Energetics.cpp
 )
 
 target_include_directories(
@@ -98,6 +100,22 @@ if(BUILD_TESTING)
     add_test(
         NAME PopulationTests
         COMMAND AlienEvolutionPopulationTests
+    )
+
+    add_executable(
+        AlienEvolutionEvaluationTests
+        tests/evaluation_tests.cpp
+    )
+
+    target_link_libraries(
+        AlienEvolutionEvaluationTests
+        PRIVATE
+            AlienEvolutionCore
+    )
+
+    add_test(
+        NAME EvaluationTests
+        COMMAND AlienEvolutionEvaluationTests
     )
 
 endif()
