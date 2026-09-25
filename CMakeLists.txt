@@ -16,8 +16,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # ------------------------------------------------------------
 
 add_library(AlienEvolutionCore
+    src/core/Random.cpp
     src/development/Phenotype.cpp
     src/development/Development.cpp
+    src/genetics/Mutation.cpp
 )
 
 target_include_directories(
@@ -47,6 +49,7 @@ target_link_libraries(
 include(CTest)
 
 if(BUILD_TESTING)
+
     add_executable(
         AlienEvolutionDevelopmentTests
         tests/development_tests.cpp
@@ -62,4 +65,21 @@ if(BUILD_TESTING)
         NAME DevelopmentTests
         COMMAND AlienEvolutionDevelopmentTests
     )
+
+    add_executable(
+        AlienEvolutionRandomMutationTests
+        tests/random_mutation_tests.cpp
+    )
+
+    target_link_libraries(
+        AlienEvolutionRandomMutationTests
+        PRIVATE
+            AlienEvolutionCore
+    )
+
+    add_test(
+        NAME RandomMutationTests
+        COMMAND AlienEvolutionRandomMutationTests
+    )
+
 endif()
