@@ -20,6 +20,8 @@ add_library(AlienEvolutionCore
     src/development/Phenotype.cpp
     src/development/Development.cpp
     src/genetics/Mutation.cpp
+    src/evolution/Organism.cpp
+    src/evolution/Population.cpp
 )
 
 target_include_directories(
@@ -80,6 +82,22 @@ if(BUILD_TESTING)
     add_test(
         NAME RandomMutationTests
         COMMAND AlienEvolutionRandomMutationTests
+    )
+
+    add_executable(
+        AlienEvolutionPopulationTests
+        tests/population_tests.cpp
+    )
+
+    target_link_libraries(
+        AlienEvolutionPopulationTests
+        PRIVATE
+            AlienEvolutionCore
+    )
+
+    add_test(
+        NAME PopulationTests
+        COMMAND AlienEvolutionPopulationTests
     )
 
 endif()
