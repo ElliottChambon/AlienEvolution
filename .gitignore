@@ -1,0 +1,38 @@
+# ============================================
+# AlienEvolution
+# ============================================
+
+# CMake build output
+out/
+build/
+cmake-build-*/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.VC.opendb
+
+# Compiled binaries
+*.exe
+*.dll
+*.lib
+*.obj
+*.pdb
+*.ilk
+
+# Temporary/editor files
+*.tmp
+*.log
+*~
+.DS_Store
+
+# Experiment output
+experiments/output/
