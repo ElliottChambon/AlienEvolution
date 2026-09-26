@@ -65,6 +65,21 @@ target_link_libraries(
 )
 
 # ------------------------------------------------------------
+# Scientific experiments
+# ------------------------------------------------------------
+
+add_executable(
+    AlienEvolutionRegulatorySelectionValidation
+    experiments/regulatory_selection_validation.cpp
+)
+
+target_link_libraries(
+    AlienEvolutionRegulatorySelectionValidation
+    PRIVATE
+        AlienEvolutionCore
+)
+
+# ------------------------------------------------------------
 # Tests
 # ------------------------------------------------------------
 
