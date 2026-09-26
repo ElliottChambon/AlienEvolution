@@ -20,6 +20,7 @@ add_library(AlienEvolutionCore
 
     src/development/Phenotype.cpp
     src/development/Development.cpp
+    src/development/RegulatoryDevelopment.cpp
 
     src/genetics/Mutation.cpp
     src/genetics/RegulatoryProgram.cpp
@@ -317,6 +318,21 @@ if(BUILD_TESTING)
     add_test(
         NAME RegulatoryMutationGeneratorTests
         COMMAND AlienEvolutionRegulatoryMutationGeneratorTests
+    )
+
+        add_executable(
+        AlienEvolutionRegulatoryDevelopmentTests
+        tests/regulatory_development_tests.cpp
+    )
+
+    target_link_libraries(
+        AlienEvolutionRegulatoryDevelopmentTests
+        PRIVATE AlienEvolutionCore
+    )
+
+    add_test(
+        NAME RegulatoryDevelopmentTests
+        COMMAND AlienEvolutionRegulatoryDevelopmentTests
     )
 
 endif()
