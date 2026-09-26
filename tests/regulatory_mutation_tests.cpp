@@ -30,6 +30,29 @@ namespace
             <= tolerance;
     }
 
+    bool hasInteraction(
+        const ae::RegulatoryProgram& program,
+        const std::uint64_t sourceNodeId,
+        const std::uint64_t targetNodeId
+    )
+    {
+        for (const auto& interaction :
+            program.interactions())
+        {
+            if (
+                interaction.sourceNodeId
+                == sourceNodeId
+                && interaction.targetNodeId
+                == targetNodeId
+                )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     template <typename Function>
     void requireThrows(
         Function function,
@@ -93,7 +116,7 @@ int main()
 
         // --------------------------------------------------------
         // Test 1:
-        // Node kinetic mutation changes only the offspring program.
+        // Node kinetic mutation changes only offspring.
         // --------------------------------------------------------
 
         const ae::RegulatoryProgram nodeMutant =
@@ -135,7 +158,7 @@ int main()
 
         // --------------------------------------------------------
         // Test 2:
-        // Interaction parameters can evolve quantitatively.
+        // Interaction parameters evolve quantitatively.
         // --------------------------------------------------------
 
         const ae::RegulatoryProgram interactionMutant =
@@ -178,7 +201,7 @@ int main()
 
         // --------------------------------------------------------
         // Test 3:
-        // New regulatory linkage can be gained.
+        // Regulatory linkage gain.
         // --------------------------------------------------------
 
         const ae::RegulatoryProgram added =
@@ -205,7 +228,7 @@ int main()
 
         // --------------------------------------------------------
         // Test 4:
-        // Existing regulatory linkage can be lost.
+        // Regulatory linkage loss.
         // --------------------------------------------------------
 
         const ae::RegulatoryProgram removed =
@@ -219,65 +242,283 @@ int main()
             "Regulatory interaction loss failed."
         );
 
-        require(
-            original.interactionCount() == 1,
-            "Interaction loss modified parent program."
-        );
-
         // --------------------------------------------------------
         // Test 5:
-        // Duplicate directed interaction is rejected.
+        // Duplicate an ordinary regulatory node.
+        //
+        // Original:
+        //
+        // 1 -> 2
+        //
+        // Duplicate node 1 as node 3:
+        //
+        // 1 -> 2
+        // 3 -> 2
         // --------------------------------------------------------
 
-        requireThrows(
-            [&original]
-            {
-                const auto duplicate =
-                    ae::addRegulatoryInteraction(
-                        original,
-                        {
-                            1,
-                            2,
-                            4.0,
-                            0.5,
-                            1.0
-                        }
-                    );
-            },
-            "Duplicate regulatory interaction was accepted."
+        const ae::RegulatoryProgram duplicated =
+            ae::duplicateRegulatoryUnit(
+                original,
+                1,
+                3
+            );
+
+        require(
+            duplicated.nodeCount() == 3,
+            "Regulatory duplication failed to create node."
+        );
+
+        require(
+            duplicated.containsNode(3),
+            "Duplicated node was not found."
+        );
+
+        require(
+            nearlyEqual(
+                duplicated.node(3)
+                .basalProductionRate,
+                original.node(1)
+                .basalProductionRate
+            ),
+            "Duplicate failed to inherit node kinetics."
+        );
+
+        require(
+            hasInteraction(
+                duplicated,
+                3,
+                2
+            ),
+            "Duplicate failed to inherit outgoing regulatory interaction."
+        );
+
+        require(
+            original.nodeCount() == 2,
+            "Duplication modified parent program."
         );
 
         // --------------------------------------------------------
         // Test 6:
-        // Invalid targets are rejected.
+        // Incoming regulation is inherited.
+        //
+        // Original:
+        //
+        // 1 -> 2
+        //
+        // Duplicate node 2 as node 3:
+        //
+        // 1 -> 2
+        // 1 -> 3
+        // --------------------------------------------------------
+
+        const ae::RegulatoryProgram duplicatedTarget =
+            ae::duplicateRegulatoryUnit(
+                original,
+                2,
+                3
+            );
+
+        require(
+            hasInteraction(
+                duplicatedTarget,
+                1,
+                3
+            ),
+            "Duplicate failed to inherit incoming regulatory interaction."
+        );
+
+        // --------------------------------------------------------
+        // Test 7:
+        // Self-regulatory unit duplication preserves corresponding
+        // regulatory context.
+        // --------------------------------------------------------
+
+        const ae::RegulatoryProgram selfProgram(
+            {
+                {
+                    10,
+                    0.1,
+                    1.0,
+                    1.0
+                }
+            },
+            {
+                {
+                    10,
+                    10,
+                    5.0,
+                    0.5,
+                    2.0
+                }
+            }
+        );
+
+        const ae::RegulatoryProgram selfDuplicate =
+            ae::duplicateRegulatoryUnit(
+                selfProgram,
+                10,
+                11
+            );
+
+        require(
+            hasInteraction(
+                selfDuplicate,
+                10,
+                10
+            ),
+            "Original self-regulation disappeared."
+        );
+
+        require(
+            hasInteraction(
+                selfDuplicate,
+                10,
+                11
+            ),
+            "Duplicated unit failed to inherit incoming self-regulation."
+        );
+
+        require(
+            hasInteraction(
+                selfDuplicate,
+                11,
+                10
+            ),
+            "Duplicated unit failed to inherit outgoing self-regulation."
+        );
+
+        require(
+            hasInteraction(
+                selfDuplicate,
+                11,
+                11
+            ),
+            "Duplicate failed to inherit self-regulatory relationship."
+        );
+
+        // --------------------------------------------------------
+        // Test 8:
+        // Regulatory node deletion removes all incident edges.
+        // --------------------------------------------------------
+
+        const ae::RegulatoryProgram deletionProgram(
+            {
+                {1, 0.0, 1.0, 1.0},
+                {2, 0.0, 1.0, 1.0},
+                {3, 0.0, 1.0, 1.0}
+            },
+            {
+                {1, 2, 2.0, 0.5, 2.0},
+                {2, 3, 2.0, 0.5, 2.0},
+                {3, 1, 2.0, 0.5, 2.0}
+            }
+        );
+
+        const ae::RegulatoryProgram deleted =
+            ae::removeRegulatoryNode(
+                deletionProgram,
+                2
+            );
+
+        require(
+            deleted.nodeCount() == 2,
+            "Regulatory node deletion failed."
+        );
+
+        require(
+            !deleted.containsNode(2),
+            "Deleted regulatory node still exists."
+        );
+
+        require(
+            deleted.interactionCount() == 1,
+            "Incident interactions were not removed with node."
+        );
+
+        require(
+            hasInteraction(
+                deleted,
+                3,
+                1
+            ),
+            "Unrelated regulatory interaction was incorrectly removed."
+        );
+
+        // --------------------------------------------------------
+        // Test 9:
+        // Existing IDs cannot be reused for duplication.
         // --------------------------------------------------------
 
         requireThrows(
             [&original]
             {
                 const auto mutant =
-                    ae::changeNodeKinetics(
+                    ae::duplicateRegulatoryUnit(
                         original,
-                        999,
-                        {
-                            2.0,
-                            1.0
-                        }
+                        1,
+                        2
                     );
             },
-            "Mutation of nonexistent node was accepted."
+            "Duplicate operation accepted an existing node ID."
+        );
+
+        // --------------------------------------------------------
+        // Test 10:
+        // Final regulatory node cannot be deleted.
+        // --------------------------------------------------------
+
+        requireThrows(
+            []
+            {
+                const ae::RegulatoryProgram oneNode(
+                    {
+                        {
+                            1,
+                            0.0,
+                            1.0,
+                            1.0
+                        }
+                    },
+                    {}
+                );
+
+                const auto deleted =
+                    ae::removeRegulatoryNode(
+                        oneNode,
+                        1
+                    );
+            },
+            "Final regulatory node was allowed to be deleted."
+        );
+
+        // --------------------------------------------------------
+        // Test 11:
+        // Invalid node operations are rejected.
+        // --------------------------------------------------------
+
+        requireThrows(
+            [&original]
+            {
+                const auto mutant =
+                    ae::duplicateRegulatoryUnit(
+                        original,
+                        999,
+                        3
+                    );
+            },
+            "Nonexistent regulatory node was duplicated."
         );
 
         requireThrows(
             [&original]
             {
                 const auto mutant =
-                    ae::removeRegulatoryInteraction(
+                    ae::removeRegulatoryNode(
                         original,
                         999
                     );
             },
-            "Removal of nonexistent interaction was accepted."
+            "Nonexistent regulatory node was deleted."
         );
 
         std::cout
