@@ -9,11 +9,18 @@
 namespace ae
 {
 
+    enum class SelectionMode
+    {
+        FitnessProportional,
+        Uniform
+    };
+
     [[nodiscard]] Population reproducePopulation(
         const Population& parents,
         std::size_t offspringCount,
         Random& random,
-        const MutationConfig& mutationConfig
+        const MutationConfig& mutationConfig,
+        SelectionMode selectionMode
     );
 
 } // namespace ae

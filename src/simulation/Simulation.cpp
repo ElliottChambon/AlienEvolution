@@ -77,7 +77,8 @@ namespace ae
                     population_,
                     config_.populationSize,
                     random_,
-                    config_.offspringMutation
+                    config_.offspringMutation,
+                    config_.selectionMode
                 );
         }
 

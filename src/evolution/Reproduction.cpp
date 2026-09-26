@@ -11,7 +11,7 @@ namespace ae
     namespace
     {
 
-        const Organism& selectParent(
+        const Organism& selectFitnessWeightedParent(
             const Population& population,
             const double totalFitness,
             Random& random
@@ -28,7 +28,8 @@ namespace ae
             for (const Organism& organism :
                 population.organisms())
             {
-                cumulativeFitness += organism.fitness();
+                cumulativeFitness +=
+                    organism.fitness();
 
                 if (target < cumulativeFitness)
                 {
@@ -36,7 +37,6 @@ namespace ae
                 }
             }
 
-            // Floating-point fallback.
             for (std::size_t i = population.size();
                 i > 0;
                 --i)
@@ -55,13 +55,39 @@ namespace ae
             );
         }
 
+        const Organism& selectUniformParent(
+            const Population& population,
+            Random& random
+        )
+        {
+            const std::size_t index =
+                static_cast<std::size_t>(
+                    random.uniform(
+                        0.0,
+                        static_cast<double>(
+                            population.size()
+                            )
+                    )
+                    );
+
+            const std::size_t safeIndex =
+                index < population.size()
+                ? index
+                : population.size() - 1;
+
+            return population.at(
+                safeIndex
+            );
+        }
+
     } // namespace
 
     Population reproducePopulation(
         const Population& parents,
         const std::size_t offspringCount,
         Random& random,
-        const MutationConfig& mutationConfig
+        const MutationConfig& mutationConfig,
+        const SelectionMode selectionMode
     )
     {
         if (offspringCount == 0)
@@ -93,7 +119,10 @@ namespace ae
             const double fitness =
                 organism.fitness();
 
-            if (!std::isfinite(fitness) || fitness < 0.0)
+            if (
+                !std::isfinite(fitness)
+                || fitness < 0.0
+                )
             {
                 throw std::logic_error(
                     "Population contains invalid fitness."
@@ -103,9 +132,11 @@ namespace ae
             totalFitness += fitness;
         }
 
-        // No organism possesses reproductive surplus.
-        // The lineage/population therefore goes extinct.
-        if (totalFitness <= 0.0)
+        if (
+            selectionMode
+            == SelectionMode::FitnessProportional
+            && totalFitness <= 0.0
+            )
         {
             return Population(
                 std::vector<Organism>{}
@@ -119,16 +150,41 @@ namespace ae
             i < offspringCount;
             ++i)
         {
-            const Organism& parent =
-                selectParent(
-                    parents,
-                    totalFitness,
-                    random
+            const Organism* parent = nullptr;
+
+            switch (selectionMode)
+            {
+            case SelectionMode::FitnessProportional:
+
+                parent =
+                    &selectFitnessWeightedParent(
+                        parents,
+                        totalFitness,
+                        random
+                    );
+
+                break;
+
+            case SelectionMode::Uniform:
+
+                parent =
+                    &selectUniformParent(
+                        parents,
+                        random
+                    );
+
+                break;
+
+            default:
+
+                throw std::logic_error(
+                    "Unknown selection mode."
                 );
+            }
 
             Genome childGenome =
                 mutateGenome(
-                    parent.genome(),
+                    parent->genome(),
                     random,
                     mutationConfig
                 );

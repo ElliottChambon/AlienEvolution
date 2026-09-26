@@ -9,6 +9,7 @@
 #include "alien_evolution/environment/Environment.hpp"
 #include "alien_evolution/evaluation/Energetics.hpp"
 #include "alien_evolution/evolution/Population.hpp"
+#include "alien_evolution/evolution/Reproduction.hpp"
 #include "alien_evolution/genetics/Genome.hpp"
 #include "alien_evolution/genetics/Mutation.hpp"
 
@@ -27,6 +28,9 @@ namespace ae
         MutationConfig offspringMutation{};
 
         EnergeticsConfig energetics{};
+
+        SelectionMode selectionMode =
+            SelectionMode::FitnessProportional;
     };
 
     struct GenomeMeans

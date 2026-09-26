@@ -51,8 +51,7 @@ int main()
 
         // --------------------------------------------------------
         // Test 1:
-        // A single viable parent produces exact copies when
-        // mutation is disabled.
+        // Single viable parent reproduces exact copies.
         // --------------------------------------------------------
 
         ae::Genome parentGenome{};
@@ -75,7 +74,8 @@ int main()
                 parentPopulation,
                 100,
                 randomA,
-                noMutation
+                noMutation,
+                ae::SelectionMode::FitnessProportional
             );
 
         require(
@@ -107,8 +107,7 @@ int main()
 
         // --------------------------------------------------------
         // Test 2:
-        // Zero-fitness organisms cannot reproduce when a viable
-        // organism exists.
+        // Zero-fitness parent cannot reproduce under selection.
         // --------------------------------------------------------
 
         ae::Genome badGenome{};
@@ -139,7 +138,8 @@ int main()
                 mixedPopulation,
                 100,
                 randomB,
-                noMutation
+                noMutation,
+                ae::SelectionMode::FitnessProportional
             );
 
         for (const ae::Organism& child :
@@ -150,13 +150,13 @@ int main()
                     child.genome(),
                     goodGenome
                 ),
-                "Zero-fitness organism reproduced."
+                "Zero-fitness organism reproduced under selection."
             );
         }
 
         // --------------------------------------------------------
         // Test 3:
-        // Completely non-viable population becomes extinct.
+        // Completely non-viable selected population goes extinct.
         // --------------------------------------------------------
 
         ae::Organism deadA(parentGenome);
@@ -181,17 +181,18 @@ int main()
                 deadPopulation,
                 100,
                 randomC,
-                noMutation
+                noMutation,
+                ae::SelectionMode::FitnessProportional
             );
 
         require(
             extinct.empty(),
-            "Zero-fitness population failed to go extinct."
+            "Zero-fitness selected population failed to go extinct."
         );
 
         // --------------------------------------------------------
         // Test 4:
-        // Same seed produces identical offspring populations.
+        // Same seed remains deterministic.
         // --------------------------------------------------------
 
         ae::MutationConfig mutation{};
@@ -223,7 +224,8 @@ int main()
                 populationD,
                 50,
                 randomD,
-                mutation
+                mutation,
+                ae::SelectionMode::FitnessProportional
             );
 
         const ae::Population childrenE =
@@ -231,7 +233,8 @@ int main()
                 populationE,
                 50,
                 randomE,
-                mutation
+                mutation,
+                ae::SelectionMode::FitnessProportional
             );
 
         require(
@@ -251,6 +254,89 @@ int main()
                 "Identical seeds produced different offspring."
             );
         }
+
+        // --------------------------------------------------------
+        // Test 5:
+        // Uniform reproduction ignores fitness.
+        //
+        // We cannot require an exact ratio from a stochastic test,
+        // but both genomes should appear in a sufficiently large
+        // offspring population.
+        // --------------------------------------------------------
+
+        ae::Genome lowGenome{};
+        lowGenome.alphaR = 1.0;
+
+        ae::Genome highGenome{};
+        highGenome.alphaR = 10.0;
+
+        ae::Organism low(lowGenome);
+        ae::Organism high(highGenome);
+
+        low.setFitness(0.0);
+        high.setFitness(1000.0);
+
+        std::vector<ae::Organism> neutralParents;
+
+        neutralParents.push_back(low);
+        neutralParents.push_back(high);
+
+        ae::Population neutralPopulation(
+            std::move(neutralParents)
+        );
+
+        ae::Random neutralRandom(555);
+
+        const ae::Population neutralChildren =
+            ae::reproducePopulation(
+                neutralPopulation,
+                1000,
+                neutralRandom,
+                noMutation,
+                ae::SelectionMode::Uniform
+            );
+
+        std::size_t lowCount = 0;
+        std::size_t highCount = 0;
+
+        for (const ae::Organism& child :
+            neutralChildren.organisms())
+        {
+            if (
+                genomesEqual(
+                    child.genome(),
+                    lowGenome
+                )
+                )
+            {
+                ++lowCount;
+            }
+
+            if (
+                genomesEqual(
+                    child.genome(),
+                    highGenome
+                )
+                )
+            {
+                ++highCount;
+            }
+        }
+
+        require(
+            lowCount > 0,
+            "Uniform selection never reproduced low-fitness parent."
+        );
+
+        require(
+            highCount > 0,
+            "Uniform selection never reproduced high-fitness parent."
+        );
+
+        require(
+            lowCount + highCount == 1000,
+            "Uniform reproduction produced unexpected genome."
+        );
 
         std::cout
             << "All reproduction tests passed.\n";
