@@ -10,14 +10,19 @@ namespace ae
         std::uint64_t sourceNodeId = 0;
         std::uint64_t targetNodeId = 0;
 
-        // Positive = activation
-        // Negative = repression
-        double strength = 1.0;
+        // Fold change in target production when the regulator
+        // is strongly active.
+        //
+        // foldChange > 1 : activation
+        // foldChange < 1 : repression
+        // foldChange = 1 : no regulatory effect
+        double foldChange = 1.0;
 
-        // Regulator activity at approximately half-maximal response.
+        // Activity scale at which the interaction is approximately
+        // half engaged.
         double halfSaturation = 0.5;
 
-        // Hill-like cooperativity parameter.
+        // Hill-like cooperativity / nonlinear response parameter.
         double cooperativity = 1.0;
     };
 

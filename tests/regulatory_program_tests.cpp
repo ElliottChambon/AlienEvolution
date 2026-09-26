@@ -73,14 +73,14 @@ int main()
             {
                 1,
                 2,
-                1.0,
+                2.0,
                 0.5,
                 2.0
             },
             {
                 2,
                 1,
-                -1.0,
+                0.2,
                 0.5,
                 2.0
             }
@@ -148,7 +148,7 @@ int main()
                     {
                         1,
                         999,
-                        1.0,
+                        2.0,
                         0.5,
                         1.0
                     }
@@ -189,6 +189,36 @@ int main()
 
         // --------------------------------------------------------
         // Test 5:
+        // Fold change must be positive.
+        // --------------------------------------------------------
+
+        requireThrows(
+            []
+            {
+                const std::vector<ae::RegulatoryNode> validNodes{
+                    {1, 0.0, 1.0, 1.0}
+                };
+
+                const std::vector<ae::RegulatoryInteraction> badInteractions{
+                    {
+                        1,
+                        1,
+                        -1.0,
+                        0.5,
+                        1.0
+                    }
+                };
+
+                const ae::RegulatoryProgram badProgram(
+                    validNodes,
+                    badInteractions
+                );
+            },
+            "Non-positive fold change was accepted."
+        );
+
+        // --------------------------------------------------------
+        // Test 6:
         // Invalid Hill parameters are rejected.
         // --------------------------------------------------------
 
@@ -203,7 +233,7 @@ int main()
                     {
                         1,
                         1,
-                        1.0,
+                        2.0,
                         0.0,
                         1.0
                     }
@@ -228,7 +258,7 @@ int main()
                     {
                         1,
                         1,
-                        1.0,
+                        2.0,
                         0.5,
                         0.0
                     }

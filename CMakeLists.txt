@@ -23,6 +23,7 @@ add_library(AlienEvolutionCore
 
     src/genetics/Mutation.cpp
     src/genetics/RegulatoryProgram.cpp
+    src/genetics/RegulatoryDynamics.cpp
 
     src/evolution/Organism.cpp
     src/evolution/Population.cpp
@@ -67,8 +68,7 @@ add_executable(
 
 target_link_libraries(
     AlienEvolutionSelectionValidation
-    PRIVATE
-        AlienEvolutionCore
+    PRIVATE AlienEvolutionCore
 )
 
 add_executable(
@@ -78,8 +78,7 @@ add_executable(
 
 target_link_libraries(
     AlienEvolutionMutationSweep
-    PRIVATE
-        AlienEvolutionCore
+    PRIVATE AlienEvolutionCore
 )
 
 add_executable(
@@ -89,8 +88,7 @@ add_executable(
 
 target_link_libraries(
     AlienEvolutionLongTermMutation
-    PRIVATE
-        AlienEvolutionCore
+    PRIVATE AlienEvolutionCore
 )
 
 # ------------------------------------------------------------
@@ -219,6 +217,21 @@ if(BUILD_TESTING)
     add_test(
         NAME RegulatoryProgramTests
         COMMAND AlienEvolutionRegulatoryProgramTests
+    )
+
+    add_executable(
+        AlienEvolutionRegulatoryDynamicsTests
+        tests/regulatory_dynamics_tests.cpp
+    )
+
+    target_link_libraries(
+        AlienEvolutionRegulatoryDynamicsTests
+        PRIVATE AlienEvolutionCore
+    )
+
+    add_test(
+        NAME RegulatoryDynamicsTests
+        COMMAND AlienEvolutionRegulatoryDynamicsTests
     )
 
 endif()

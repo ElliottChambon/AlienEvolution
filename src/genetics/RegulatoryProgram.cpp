@@ -107,13 +107,13 @@ namespace ae
 
             if (
                 !std::isfinite(
-                    node.maximumProductionRate
+                    node.basalProductionRate
                 )
-                || node.maximumProductionRate < 0.0
+                || node.basalProductionRate < 0.0
                 )
             {
                 throw std::invalid_argument(
-                    "Maximum production rate must be finite and nonnegative."
+                    "Basal production rate must be finite and nonnegative."
                 );
             }
 
@@ -157,12 +157,13 @@ namespace ae
 
             if (
                 !std::isfinite(
-                    interaction.strength
+                    interaction.foldChange
                 )
+                || interaction.foldChange <= 0.0
                 )
             {
                 throw std::invalid_argument(
-                    "Regulatory interaction strength must be finite."
+                    "Regulatory fold change must be finite and positive."
                 );
             }
 
