@@ -20,6 +20,8 @@ add_library(
 
     src/core/Random.cpp
 
+    src/physics/DiffusiveField2D.cpp
+
     src/development/Phenotype.cpp
     src/development/RegulatoryDevelopment.cpp
 
@@ -326,4 +328,19 @@ if(BUILD_TESTING)
         COMMAND AlienEvolutionRegulatoryDevelopmentTests
     )
 
+
+    add_executable(
+        AlienEvolutionDiffusiveFieldTests
+        tests/diffusive_field_tests.cpp
+    )
+
+    target_link_libraries(
+        AlienEvolutionDiffusiveFieldTests
+        PRIVATE AlienEvolutionCore
+    )
+
+    add_test(
+        NAME DiffusiveFieldTests
+        COMMAND AlienEvolutionDiffusiveFieldTests
+    )
 endif()
