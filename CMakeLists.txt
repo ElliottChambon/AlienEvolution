@@ -11,6 +11,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# ------------------------------------------------------------
+# Core simulation library
+# ------------------------------------------------------------
+
 add_library(AlienEvolutionCore
     src/core/Random.cpp
     src/development/Phenotype.cpp
@@ -31,7 +35,12 @@ target_include_directories(
         ${PROJECT_SOURCE_DIR}/include
 )
 
-add_executable(AlienEvolution
+# ------------------------------------------------------------
+# Main executable
+# ------------------------------------------------------------
+
+add_executable(
+    AlienEvolution
     src/main.cpp
 )
 
@@ -40,6 +49,25 @@ target_link_libraries(
     PRIVATE
         AlienEvolutionCore
 )
+
+# ------------------------------------------------------------
+# Scientific experiments
+# ------------------------------------------------------------
+
+add_executable(
+    AlienEvolutionSelectionValidation
+    experiments/selection_validation.cpp
+)
+
+target_link_libraries(
+    AlienEvolutionSelectionValidation
+    PRIVATE
+        AlienEvolutionCore
+)
+
+# ------------------------------------------------------------
+# Tests
+# ------------------------------------------------------------
 
 include(CTest)
 
@@ -52,7 +80,8 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionDevelopmentTests
-        PRIVATE AlienEvolutionCore
+        PRIVATE
+            AlienEvolutionCore
     )
 
     add_test(
@@ -67,7 +96,8 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionRandomMutationTests
-        PRIVATE AlienEvolutionCore
+        PRIVATE
+            AlienEvolutionCore
     )
 
     add_test(
@@ -82,7 +112,8 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionPopulationTests
-        PRIVATE AlienEvolutionCore
+        PRIVATE
+            AlienEvolutionCore
     )
 
     add_test(
@@ -97,7 +128,8 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionEvaluationTests
-        PRIVATE AlienEvolutionCore
+        PRIVATE
+            AlienEvolutionCore
     )
 
     add_test(
@@ -112,7 +144,8 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionFitnessTests
-        PRIVATE AlienEvolutionCore
+        PRIVATE
+            AlienEvolutionCore
     )
 
     add_test(
@@ -127,7 +160,8 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionReproductionTests
-        PRIVATE AlienEvolutionCore
+        PRIVATE
+            AlienEvolutionCore
     )
 
     add_test(
@@ -142,7 +176,8 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionSimulationTests
-        PRIVATE AlienEvolutionCore
+        PRIVATE
+            AlienEvolutionCore
     )
 
     add_test(
