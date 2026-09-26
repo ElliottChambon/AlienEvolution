@@ -76,6 +76,17 @@ target_link_libraries(
         AlienEvolutionCore
 )
 
+add_executable(
+    AlienEvolutionLongTermMutation
+    experiments/long_term_mutation.cpp
+)
+
+target_link_libraries(
+    AlienEvolutionLongTermMutation
+    PRIVATE
+        AlienEvolutionCore
+)
+
 # ------------------------------------------------------------
 # Tests
 # ------------------------------------------------------------
