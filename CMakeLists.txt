@@ -65,6 +65,17 @@ target_link_libraries(
         AlienEvolutionCore
 )
 
+add_executable(
+    AlienEvolutionMutationSweep
+    experiments/mutation_sweep.cpp
+)
+
+target_link_libraries(
+    AlienEvolutionMutationSweep
+    PRIVATE
+        AlienEvolutionCore
+)
+
 # ------------------------------------------------------------
 # Tests
 # ------------------------------------------------------------
