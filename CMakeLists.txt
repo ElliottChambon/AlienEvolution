@@ -25,6 +25,7 @@ add_library(AlienEvolutionCore
     src/genetics/RegulatoryProgram.cpp
     src/genetics/RegulatoryDynamics.cpp
     src/genetics/RegulatoryMutation.cpp
+    src/genetics/RegulatoryMutationEvent.cpp
 
     src/evolution/Organism.cpp
     src/evolution/Population.cpp
@@ -54,8 +55,7 @@ add_executable(
 
 target_link_libraries(
     AlienEvolution
-    PRIVATE
-        AlienEvolutionCore
+    PRIVATE AlienEvolutionCore
 )
 
 # ------------------------------------------------------------
@@ -104,12 +104,10 @@ if(BUILD_TESTING)
         AlienEvolutionDevelopmentTests
         tests/development_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionDevelopmentTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME DevelopmentTests
         COMMAND AlienEvolutionDevelopmentTests
@@ -119,12 +117,10 @@ if(BUILD_TESTING)
         AlienEvolutionRandomMutationTests
         tests/random_mutation_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionRandomMutationTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME RandomMutationTests
         COMMAND AlienEvolutionRandomMutationTests
@@ -134,12 +130,10 @@ if(BUILD_TESTING)
         AlienEvolutionPopulationTests
         tests/population_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionPopulationTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME PopulationTests
         COMMAND AlienEvolutionPopulationTests
@@ -149,12 +143,10 @@ if(BUILD_TESTING)
         AlienEvolutionEvaluationTests
         tests/evaluation_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionEvaluationTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME EvaluationTests
         COMMAND AlienEvolutionEvaluationTests
@@ -164,12 +156,10 @@ if(BUILD_TESTING)
         AlienEvolutionFitnessTests
         tests/fitness_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionFitnessTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME FitnessTests
         COMMAND AlienEvolutionFitnessTests
@@ -179,12 +169,10 @@ if(BUILD_TESTING)
         AlienEvolutionReproductionTests
         tests/reproduction_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionReproductionTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME ReproductionTests
         COMMAND AlienEvolutionReproductionTests
@@ -194,12 +182,10 @@ if(BUILD_TESTING)
         AlienEvolutionSimulationTests
         tests/simulation_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionSimulationTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME SimulationTests
         COMMAND AlienEvolutionSimulationTests
@@ -209,12 +195,10 @@ if(BUILD_TESTING)
         AlienEvolutionRegulatoryProgramTests
         tests/regulatory_program_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionRegulatoryProgramTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME RegulatoryProgramTests
         COMMAND AlienEvolutionRegulatoryProgramTests
@@ -224,12 +208,10 @@ if(BUILD_TESTING)
         AlienEvolutionRegulatoryDynamicsTests
         tests/regulatory_dynamics_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionRegulatoryDynamicsTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME RegulatoryDynamicsTests
         COMMAND AlienEvolutionRegulatoryDynamicsTests
@@ -239,15 +221,26 @@ if(BUILD_TESTING)
         AlienEvolutionRegulatoryMutationTests
         tests/regulatory_mutation_tests.cpp
     )
-
     target_link_libraries(
         AlienEvolutionRegulatoryMutationTests
         PRIVATE AlienEvolutionCore
     )
-
     add_test(
         NAME RegulatoryMutationTests
         COMMAND AlienEvolutionRegulatoryMutationTests
+    )
+
+    add_executable(
+        AlienEvolutionRegulatoryMutationEventTests
+        tests/regulatory_mutation_event_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionRegulatoryMutationEventTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME RegulatoryMutationEventTests
+        COMMAND AlienEvolutionRegulatoryMutationEventTests
     )
 
 endif()
