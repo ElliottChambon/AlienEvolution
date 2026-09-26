@@ -18,9 +18,12 @@ namespace
     {
         if (!condition)
         {
-            throw std::runtime_error(message);
+            throw std::runtime_error(
+                message
+            );
         }
     }
+
 
     bool nearlyEqual(
         const double a,
@@ -29,11 +32,14 @@ namespace
     )
     {
         return
-            std::abs(a - b)
+            std::abs(
+                a - b
+            )
             <= tolerance;
     }
 
 } // namespace
+
 
 int main()
 {
@@ -60,6 +66,7 @@ int main()
             "Inactive regulator should produce baseline response."
         );
 
+
         const double halfActivation =
             ae::RegulatoryDynamics::shiftedHill(
                 1.0,
@@ -75,6 +82,7 @@ int main()
             ),
             "Shifted Hill response is incorrect at half-saturation."
         );
+
 
         const double halfRepression =
             ae::RegulatoryDynamics::shiftedHill(
@@ -92,13 +100,12 @@ int main()
             "Repressive shifted Hill response is incorrect."
         );
 
+
         // --------------------------------------------------------
         // Test 2:
-        // An unregulated node approaches production/degradation
-        // equilibrium.
+        // Unregulated node approaches analytical equilibrium.
         //
         // dx/dt = 2 - 0.5x
-        //
         // equilibrium x = 4
         // --------------------------------------------------------
 
@@ -130,6 +137,7 @@ int main()
             "Unregulated node failed to approach analytical equilibrium."
         );
 
+
         // --------------------------------------------------------
         // Test 3:
         // Activation increases target activity while repression
@@ -151,6 +159,7 @@ int main()
             }
         };
 
+
         const ae::RegulatoryProgram activationProgram(
             regulationNodes,
             {
@@ -164,6 +173,7 @@ int main()
             }
         );
 
+
         const ae::RegulatoryProgram repressionProgram(
             regulationNodes,
             {
@@ -176,6 +186,7 @@ int main()
                 }
             }
         );
+
 
         const ae::RegulatoryState activated =
             ae::RegulatoryDynamics::simulate(
@@ -193,6 +204,7 @@ int main()
                 0.01
             );
 
+
         require(
             activated[1] > 0.7,
             "Activation failed to increase target regulatory state."
@@ -204,9 +216,11 @@ int main()
         );
 
         require(
-            activated[1] > repressed[1],
+            activated[1]
+            > repressed[1],
             "Activation did not exceed repression."
         );
+
 
         // --------------------------------------------------------
         // Test 4:
@@ -234,6 +248,7 @@ int main()
             }
         );
 
+
         const ae::RegulatoryState lowState =
             ae::RegulatoryDynamics::simulate(
                 positiveFeedbackProgram,
@@ -249,6 +264,7 @@ int main()
                 100.0,
                 0.01
             );
+
 
         require(
             lowState[0] < 0.2,
@@ -266,12 +282,10 @@ int main()
             "Positive feedback failed to produce distinct stable states."
         );
 
+
         // --------------------------------------------------------
         // Test 5:
         // Mutual repression produces alternative dominant states.
-        //
-        // This is the topology used by classical genetic toggle
-        // switches.
         // --------------------------------------------------------
 
         const ae::RegulatoryProgram toggleProgram(
@@ -307,6 +321,7 @@ int main()
             }
         );
 
+
         const ae::RegulatoryState stateA =
             ae::RegulatoryDynamics::simulate(
                 toggleProgram,
@@ -321,6 +336,7 @@ int main()
             "Mutual-repression state A was not stable."
         );
 
+
         const ae::RegulatoryState stateB =
             ae::RegulatoryDynamics::simulate(
                 toggleProgram,
@@ -334,6 +350,7 @@ int main()
             && stateB[0] < 0.2,
             "Mutual-repression state B was not stable."
         );
+
 
         // --------------------------------------------------------
         // Test 6:
@@ -357,9 +374,160 @@ int main()
             );
 
         require(
-            deterministicA == deterministicB,
+            deterministicA
+            == deterministicB,
             "Identical regulatory simulations produced different states."
         );
+
+
+        // --------------------------------------------------------
+        // Test 7:
+        // External clamping must prevent intrinsic kinetics of a
+        // clamped node from leaking through intermediate RK4 stages.
+        // --------------------------------------------------------
+
+        const ae::RegulatoryProgram slowInputProgram(
+            {
+                {
+                    1,
+                    0.0,
+                    0.0,
+                    1.0
+                },
+                {
+                    2,
+                    0.0,
+                    0.2,
+                    1.0
+                }
+            },
+            {
+                {
+                    1,
+                    2,
+                    5.0,
+                    0.5,
+                    2.0
+                }
+            }
+        );
+
+
+        const ae::RegulatoryProgram fastInputProgram(
+            {
+                {
+                    1,
+                    0.0,
+                    10.0,
+                    1.0
+                },
+                {
+                    2,
+                    0.0,
+                    0.2,
+                    1.0
+                }
+            },
+            {
+                {
+                    1,
+                    2,
+                    5.0,
+                    0.5,
+                    2.0
+                }
+            }
+        );
+
+
+        const std::vector<ae::RegulatoryStateClamp> clamps{
+            {
+                0,
+                0.5
+            }
+        };
+
+
+        ae::RegulatoryState clampedSlow{
+            0.5,
+            0.0
+        };
+
+        ae::RegulatoryState clampedFast{
+            0.5,
+            0.0
+        };
+
+
+        for (
+            int step = 0;
+            step < 20;
+            ++step
+            )
+        {
+            clampedSlow =
+                ae::RegulatoryDynamics::stepRK4(
+                    slowInputProgram,
+                    clampedSlow,
+                    0.1,
+                    clamps
+                );
+
+            clampedFast =
+                ae::RegulatoryDynamics::stepRK4(
+                    fastInputProgram,
+                    clampedFast,
+                    0.1,
+                    clamps
+                );
+        }
+
+
+        require(
+            clampedSlow[0] == 0.5
+            && clampedFast[0] == 0.5,
+            "Externally clamped node did not remain exactly fixed."
+        );
+
+
+        require(
+            nearlyEqual(
+                clampedSlow[1],
+                clampedFast[1],
+                1.0e-12
+            ),
+            "Intrinsic kinetics of clamped node leaked into downstream RK4 dynamics."
+        );
+
+
+        // Confirm the regression test would detect a leak:
+        // without the clamp, the two input-kinetic models should
+        // affect the downstream node differently.
+        const ae::RegulatoryState unclampedSlow =
+            ae::RegulatoryDynamics::simulate(
+                slowInputProgram,
+                { 0.5, 0.0 },
+                2.0,
+                0.1
+            );
+
+        const ae::RegulatoryState unclampedFast =
+            ae::RegulatoryDynamics::simulate(
+                fastInputProgram,
+                { 0.5, 0.0 },
+                2.0,
+                0.1
+            );
+
+        require(
+            std::abs(
+                unclampedSlow[1]
+                - unclampedFast[1]
+            )
+            > 1.0e-3,
+            "RK4 clamp regression test setup is not sensitive to input kinetics."
+        );
+
 
         std::cout
             << "All regulatory dynamics tests passed.\n";

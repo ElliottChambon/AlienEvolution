@@ -55,7 +55,8 @@ namespace ae
         }
 
         if (
-            config_.regulatoryStepsPerDevelopmentStep == 0
+            config_.regulatoryStepsPerDevelopmentStep
+            == 0
             )
         {
             throw std::invalid_argument(
@@ -100,24 +101,33 @@ namespace ae
         }
     }
 
+
     std::size_t RegulatoryDevelopment::index(
         const std::size_t x,
         const std::size_t y
     ) const
     {
-        return y * width_ + x;
+        return
+            y * width_
+            + x;
     }
+
 
     std::size_t RegulatoryDevelopment::nodeIndex(
         const RegulatoryProgram& program,
         const std::uint64_t nodeId
     ) const
     {
-        for (std::size_t i = 0;
+        for (
+            std::size_t i = 0;
             i < program.nodeCount();
-            ++i)
+            ++i
+            )
         {
-            if (program.nodes()[i].id == nodeId)
+            if (
+                program.nodes()[i].id
+                == nodeId
+                )
             {
                 return i;
             }
@@ -128,22 +138,30 @@ namespace ae
         );
     }
 
+
     double RegulatoryDevelopment::localMaterialSignal(
         const Phenotype& phenotype,
         const std::size_t x,
         const std::size_t y
     ) const
     {
-        double weightedMaterial = 0.0;
-        double totalWeight = 0.0;
+        double weightedMaterial =
+            0.0;
 
-        for (int offsetY = -1;
+        double totalWeight =
+            0.0;
+
+        for (
+            int offsetY = -1;
             offsetY <= 1;
-            ++offsetY)
+            ++offsetY
+            )
         {
-            for (int offsetX = -1;
+            for (
+                int offsetX = -1;
                 offsetX <= 1;
-                ++offsetX)
+                ++offsetX
+                )
             {
                 if (
                     offsetX == 0
@@ -165,9 +183,13 @@ namespace ae
                     neighborX < 0
                     || neighborY < 0
                     || neighborX
-                    >= static_cast<long long>(width_)
+                    >= static_cast<long long>(
+                        width_
+                        )
                     || neighborY
-                    >= static_cast<long long>(height_)
+                    >= static_cast<long long>(
+                        height_
+                        )
                     )
                 {
                     continue;
@@ -208,9 +230,11 @@ namespace ae
             return 0.0;
         }
 
-        return weightedMaterial
+        return
+            weightedMaterial
             / totalWeight;
     }
+
 
     RegulatoryState RegulatoryDevelopment::inheritedState(
         const Phenotype& phenotype,
@@ -228,12 +252,13 @@ namespace ae
 
         if (currentMaterial > 0.0)
         {
-            return states[
-                index(
-                    x,
-                    y
-                )
-            ];
+            return
+                states[
+                    index(
+                        x,
+                        y
+                    )
+                ];
         }
 
         RegulatoryState inherited(
@@ -241,15 +266,20 @@ namespace ae
             0.0
         );
 
-        double totalWeight = 0.0;
+        double totalWeight =
+            0.0;
 
-        for (int offsetY = -1;
+        for (
+            int offsetY = -1;
             offsetY <= 1;
-            ++offsetY)
+            ++offsetY
+            )
         {
-            for (int offsetX = -1;
+            for (
+                int offsetX = -1;
                 offsetX <= 1;
-                ++offsetX)
+                ++offsetX
+                )
             {
                 if (
                     offsetX == 0
@@ -271,9 +301,13 @@ namespace ae
                     neighborX < 0
                     || neighborY < 0
                     || neighborX
-                    >= static_cast<long long>(width_)
+                    >= static_cast<long long>(
+                        width_
+                        )
                     || neighborY
-                    >= static_cast<long long>(height_)
+                    >= static_cast<long long>(
+                        height_
+                        )
                     )
                 {
                     continue;
@@ -326,9 +360,11 @@ namespace ae
                         )
                     ];
 
-                for (std::size_t node = 0;
+                for (
+                    std::size_t node = 0;
                     node < inherited.size();
-                    ++node)
+                    ++node
+                    )
                 {
                     inherited[node] +=
                         weight
@@ -342,13 +378,13 @@ namespace ae
 
         if (totalWeight == 0.0)
         {
-            return RegulatoryDynamics::initialState(
-                program
-            );
+            return
+                RegulatoryDynamics::initialState(
+                    program
+                );
         }
 
-        for (double& activity :
-            inherited)
+        for (double& activity : inherited)
         {
             activity /=
                 totalWeight;
@@ -356,6 +392,7 @@ namespace ae
 
         return inherited;
     }
+
 
     Phenotype RegulatoryDevelopment::develop(
         const RegulatoryProgram& program,
@@ -380,20 +417,23 @@ namespace ae
                 config_.depositionOutputNodeId
             );
 
-        // For this V0.2 interface we keep the sensing nodes
-        // distinct from the effector-output node.
+
+        // V0.2 currently models two distinct physical input channels
+        // and one distinct developmental effector channel.
         //
-        // This is an interface simplification, not a universal
-        // biological claim.
+        // This is an explicit interface abstraction rather than a
+        // universal biological architecture.
         if (
-            outputIndex == localInputIndex
+            localInputIndex == resourceInputIndex
+            || outputIndex == localInputIndex
             || outputIndex == resourceInputIndex
             )
         {
             throw std::invalid_argument(
-                "V0.2 regulatory development requires output node to be distinct from input nodes."
+                "V0.2 regulatory development requires distinct local-input, resource-input, and output nodes."
             );
         }
+
 
         Phenotype phenotype(
             width_,
@@ -412,6 +452,7 @@ namespace ae
             1.0
         );
 
+
         const RegulatoryState initialState =
             RegulatoryDynamics::initialState(
                 program
@@ -422,15 +463,19 @@ namespace ae
             initialState
         );
 
+
         const double resourceSignal =
             std::max(
                 environment.resourceAvailability,
                 0.0
             );
 
-        for (std::size_t developmentalStep = 0;
+
+        for (
+            std::size_t developmentalStep = 0;
             developmentalStep < steps_;
-            ++developmentalStep)
+            ++developmentalStep
+            )
         {
             Phenotype nextPhenotype =
                 phenotype;
@@ -438,13 +483,18 @@ namespace ae
             std::vector<RegulatoryState> nextStates =
                 states;
 
-            for (std::size_t y = 0;
+
+            for (
+                std::size_t y = 0;
                 y < height_;
-                ++y)
+                ++y
+                )
             {
-                for (std::size_t x = 0;
+                for (
+                    std::size_t x = 0;
                     x < width_;
-                    ++x)
+                    ++x
+                    )
                 {
                     const double currentMaterial =
                         phenotype.materialAt(
@@ -459,6 +509,7 @@ namespace ae
                             y
                         );
 
+
                     // Empty locations completely disconnected from
                     // existing material are not developmental units.
                     if (
@@ -469,6 +520,7 @@ namespace ae
                         continue;
                     }
 
+
                     RegulatoryState state =
                         inheritedState(
                             phenotype,
@@ -478,26 +530,31 @@ namespace ae
                             y
                         );
 
-                    // Physical signals are imposed on designated
-                    // regulatory input nodes.
-                    state[localInputIndex] =
-                        localSignal;
 
-                    state[resourceInputIndex] =
-                        resourceSignal;
+                    // Physical measurements are true exogenous boundary
+                    // conditions during regulatory integration.
+                    //
+                    // Their state values remain fixed during every RK4
+                    // stage, so mutations to the intrinsic kinetics of
+                    // these interface nodes cannot alter the imposed
+                    // physical measurements.
+                    const std::vector<RegulatoryStateClamp> clamps{
+                        {
+                            localInputIndex,
+                            localSignal
+                        },
+                        {
+                            resourceInputIndex,
+                            resourceSignal
+                        }
+                    };
 
-                    // V0.2 approximation:
-                    //
-                    // Input activities are re-imposed after every RK4
-                    // step, approximating continuously clamped external
-                    // signals.
-                    //
-                    // A future dynamics backend should support true
-                    // boundary conditions inside every RK stage.
+
                     for (
                         std::size_t regulatoryStep = 0;
                         regulatoryStep
-                        < config_.regulatoryStepsPerDevelopmentStep;
+                        < config_
+                        .regulatoryStepsPerDevelopmentStep;
                         ++regulatoryStep
                         )
                     {
@@ -505,21 +562,18 @@ namespace ae
                             RegulatoryDynamics::stepRK4(
                                 program,
                                 state,
-                                config_.regulatoryTimeStep
+                                config_.regulatoryTimeStep,
+                                clamps
                             );
-
-                        state[localInputIndex] =
-                            localSignal;
-
-                        state[resourceInputIndex] =
-                            resourceSignal;
                     }
+
 
                     const double outputActivity =
                         std::max(
                             state[outputIndex],
                             0.0
                         );
+
 
                     // shiftedHill(..., foldChange = 2) ranges from
                     // 1 to 2, so subtracting 1 gives a bounded
@@ -533,11 +587,13 @@ namespace ae
                         )
                         - 1.0;
 
+
                     const double deposition =
                         config_.depositionRateScale
                         * effectorActivation
                         * (1.0 - currentMaterial)
                         * resourceSignal;
+
 
                     if (deposition > 0.0)
                     {
@@ -548,6 +604,7 @@ namespace ae
                             + deposition
                         );
                     }
+
 
                     if (
                         currentMaterial > 0.0
@@ -560,10 +617,13 @@ namespace ae
                                 y
                             )
                         ] =
-                            std::move(state);
+                            std::move(
+                                state
+                            );
                     }
                 }
             }
+
 
             phenotype =
                 std::move(
@@ -575,6 +635,7 @@ namespace ae
                     nextStates
                 );
         }
+
 
         return phenotype;
     }

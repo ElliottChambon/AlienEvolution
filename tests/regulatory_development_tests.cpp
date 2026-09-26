@@ -23,6 +23,7 @@ namespace
         }
     }
 
+
     bool phenotypesEqual(
         const ae::Phenotype& a,
         const ae::Phenotype& b,
@@ -37,18 +38,29 @@ namespace
             return false;
         }
 
-        for (std::size_t y = 0;
+        for (
+            std::size_t y = 0;
             y < a.height();
-            ++y)
+            ++y
+            )
         {
-            for (std::size_t x = 0;
+            for (
+                std::size_t x = 0;
                 x < a.width();
-                ++x)
+                ++x
+                )
             {
                 if (
                     std::abs(
-                        a.materialAt(x, y)
-                        - b.materialAt(x, y)
+                        a.materialAt(
+                            x,
+                            y
+                        )
+                        -
+                        b.materialAt(
+                            x,
+                            y
+                        )
                     )
                 > tolerance
                     )
@@ -60,6 +72,7 @@ namespace
 
         return true;
     }
+
 
     ae::RegulatoryDevelopment makeDevelopment()
     {
@@ -100,33 +113,29 @@ namespace
         );
     }
 
+
     ae::RegulatoryProgram makeActivatingProgram()
     {
         return ae::RegulatoryProgram(
             {
-                // Local-material input.
                 {
                     1,
                     0.0,
                     0.0,
                     1.0
                 },
-
-            // Resource input.
-            {
-                2,
-                0.0,
-                0.0,
-                1.0
-            },
-
-            // Deposition effector.
-            {
-                3,
-                0.0,
-                0.01,
-                1.0
-            }
+                {
+                    2,
+                    0.0,
+                    0.0,
+                    1.0
+                },
+                {
+                    3,
+                    0.0,
+                    0.01,
+                    1.0
+                }
             },
         {
             {
@@ -136,7 +145,6 @@ namespace
                 0.20,
                 2.0
             },
-
             {
                 2,
                 3,
@@ -148,6 +156,7 @@ namespace
         );
     }
 
+
     ae::RegulatoryProgram makeRepressingProgram()
     {
         return ae::RegulatoryProgram(
@@ -158,14 +167,12 @@ namespace
                     0.0,
                     1.0
                 },
-
                 {
                     2,
                     0.0,
                     0.0,
                     1.0
                 },
-
                 {
                     3,
                     0.0,
@@ -181,7 +188,6 @@ namespace
                 0.20,
                 2.0
             },
-
             {
                 2,
                 3,
@@ -193,7 +199,57 @@ namespace
         );
     }
 
+
+    // Same regulatory information-processing network as the activating
+    // program, but with radically different intrinsic kinetics assigned
+    // to the two externally imposed physical-input nodes.
+    //
+    // Under true clamping these differences must have no developmental
+    // effect.
+    ae::RegulatoryProgram makeAlteredInputKineticsProgram()
+    {
+        return ae::RegulatoryProgram(
+            {
+                {
+                    1,
+                    5.0,
+                    25.0,
+                    0.2
+                },
+                {
+                    2,
+                    8.0,
+                    40.0,
+                    5.0
+                },
+                {
+                    3,
+                    0.0,
+                    0.01,
+                    1.0
+                }
+            },
+        {
+            {
+                1,
+                3,
+                20.0,
+                0.20,
+                2.0
+            },
+            {
+                2,
+                3,
+                20.0,
+                0.50,
+                2.0
+            }
+        }
+        );
+    }
+
 } // namespace
+
 
 int main()
 {
@@ -210,7 +266,7 @@ int main()
 
         // --------------------------------------------------------
         // Test 1:
-        // The regulatory network actually causes development.
+        // Regulatory network causes development.
         // --------------------------------------------------------
 
         const ae::RegulatoryProgram activatingProgram =
@@ -223,7 +279,8 @@ int main()
             );
 
         require(
-            activated.totalMaterial() > 1.0,
+            activated.totalMaterial()
+            > 1.0,
             "Activating regulatory program failed to produce growth."
         );
 
@@ -252,8 +309,8 @@ int main()
 
         // --------------------------------------------------------
         // Test 3:
-        // The same hereditary program responds differently when
-        // physical resource availability changes.
+        // Same hereditary program responds differently to resource
+        // availability.
         // --------------------------------------------------------
 
         ae::Environment noResourceEnvironment =
@@ -286,8 +343,7 @@ int main()
 
         // --------------------------------------------------------
         // Test 4:
-        // Development is deterministic for identical program and
-        // environment.
+        // Development is deterministic.
         // --------------------------------------------------------
 
         const ae::Phenotype repeat =
@@ -307,17 +363,44 @@ int main()
 
         // --------------------------------------------------------
         // Test 5:
-        // Development remains spatially localized rather than
-        // spontaneously creating material everywhere.
+        // Development remains spatially localized.
         // --------------------------------------------------------
 
         require(
             activated.totalMaterial()
-            < static_cast<double>(
+            <
+            static_cast<double>(
                 activated.width()
                 * activated.height()
                 ),
             "Regulatory development filled the entire domain immediately."
+        );
+
+
+        // --------------------------------------------------------
+        // Test 6:
+        // Intrinsic kinetics of externally imposed physical-input
+        // nodes must not alter the developed phenotype.
+        //
+        // This specifically guards against RK4 intermediate-stage
+        // leakage from clamped interface nodes.
+        // --------------------------------------------------------
+
+        const ae::RegulatoryProgram alteredInputProgram =
+            makeAlteredInputKineticsProgram();
+
+        const ae::Phenotype alteredInputPhenotype =
+            development.develop(
+                alteredInputProgram,
+                environment
+            );
+
+        require(
+            phenotypesEqual(
+                activated,
+                alteredInputPhenotype
+            ),
+            "Intrinsic kinetics of externally clamped input nodes altered development."
         );
 
 
