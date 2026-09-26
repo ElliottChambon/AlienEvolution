@@ -1,14 +1,13 @@
-#include <cmath>
+#include <cstddef>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
 
 #include "alien_evolution/core/Random.hpp"
-#include "alien_evolution/evolution/Organism.hpp"
 #include "alien_evolution/evolution/Population.hpp"
 #include "alien_evolution/evolution/Reproduction.hpp"
-#include "alien_evolution/genetics/Genome.hpp"
-#include "alien_evolution/genetics/Mutation.hpp"
+#include "alien_evolution/genetics/RegulatoryMutationGenerator.hpp"
+#include "alien_evolution/genetics/RegulatoryProgram.hpp"
 
 namespace
 {
@@ -20,24 +19,27 @@ namespace
     {
         if (!condition)
         {
-            throw std::runtime_error(message);
+            throw std::runtime_error(
+                message
+            );
         }
     }
 
-    bool genomesEqual(
-        const ae::Genome& a,
-        const ae::Genome& b,
-        const double tolerance = 1.0e-12
+    ae::RegulatoryProgram makeProgram(
+        const double basalProductionRate
     )
     {
-        return
-            std::abs(a.alphaR - b.alphaR) <= tolerance
-            && std::abs(a.alphaE - b.alphaE) <= tolerance
-            && std::abs(a.theta - b.theta) <= tolerance
-            && std::abs(a.lambda - b.lambda) <= tolerance
-            && std::abs(a.beta - b.beta) <= tolerance
-            && std::abs(a.growthRate - b.growthRate) <= tolerance
-            && std::abs(a.metabolicCost - b.metabolicCost) <= tolerance;
+        return ae::RegulatoryProgram(
+            {
+                {
+                    1,
+                    0.0,
+                    basalProductionRate,
+                    1.0
+                }
+            },
+            {}
+        );
     }
 
 } // namespace
@@ -46,297 +48,303 @@ int main()
 {
     try
     {
-        ae::MutationConfig noMutation{};
-        noMutation.probabilityPerParameter = 0.0;
+        const ae::RegulatoryMutationGeneratorConfig noMutation{};
+
 
         // --------------------------------------------------------
         // Test 1:
-        // Single viable parent reproduces exact copies.
+        // Fitness-proportional reproduction copies the only
+        // reproductively viable lineage.
         // --------------------------------------------------------
 
-        ae::Genome parentGenome{};
-        parentGenome.alphaR = 2.0;
-
-        ae::Organism parent(parentGenome);
-        parent.setFitness(10.0);
-
-        std::vector<ae::Organism> oneParent;
-        oneParent.push_back(parent);
-
-        ae::Population parentPopulation(
-            std::move(oneParent)
+        ae::Organism unfit(
+            makeProgram(
+                1.0
+            )
         );
 
-        ae::Random randomA(12345);
+        ae::Organism fit(
+            makeProgram(
+                5.0
+            )
+        );
 
-        const ae::Population children =
+        unfit.setFitness(
+            0.0
+        );
+
+        fit.setFitness(
+            10.0
+        );
+
+        ae::Population parents(
+            std::vector<ae::Organism>{
+            unfit,
+                fit
+        }
+        );
+
+        ae::Random selectedRandom(
+            1234
+        );
+
+        const ae::Population selectedOffspring =
             ae::reproducePopulation(
-                parentPopulation,
-                100,
-                randomA,
+                parents,
+                50,
+                selectedRandom,
                 noMutation,
                 ae::SelectionMode::FitnessProportional
             );
 
         require(
-            children.size() == 100,
+            selectedOffspring.size() == 50,
             "Incorrect offspring population size."
         );
 
-        for (const ae::Organism& child :
-            children.organisms())
+        for (
+            const ae::Organism& child :
+            selectedOffspring.organisms()
+            )
         {
             require(
-                genomesEqual(
-                    child.genome(),
-                    parentGenome
-                ),
-                "Inheritance changed genome with mutation disabled."
+                child.regulatoryProgram()
+                .node(1)
+                .basalProductionRate
+                == 5.0,
+                "Fitness-proportional selection reproduced zero-fitness parent."
             );
 
             require(
                 !child.hasFitness(),
-                "New offspring unexpectedly has fitness."
+                "New offspring unexpectedly inherited evaluated fitness."
             );
 
             require(
                 !child.hasPhenotype(),
-                "New offspring unexpectedly has phenotype."
+                "New offspring unexpectedly inherited phenotype."
             );
         }
+
 
         // --------------------------------------------------------
         // Test 2:
-        // Zero-fitness parent cannot reproduce under selection.
+        // Uniform reproduction permits zero-fitness parents.
         // --------------------------------------------------------
 
-        ae::Genome badGenome{};
-        badGenome.alphaR = 100.0;
-
-        ae::Genome goodGenome{};
-        goodGenome.alphaR = 3.0;
-
-        ae::Organism bad(badGenome);
-        ae::Organism good(goodGenome);
-
-        bad.setFitness(0.0);
-        good.setFitness(1.0);
-
-        std::vector<ae::Organism> mixedParents;
-
-        mixedParents.push_back(bad);
-        mixedParents.push_back(good);
-
-        ae::Population mixedPopulation(
-            std::move(mixedParents)
+        ae::Random uniformRandom(
+            9999
         );
 
-        ae::Random randomB(67890);
-
-        const ae::Population selectedChildren =
+        const ae::Population uniformOffspring =
             ae::reproducePopulation(
-                mixedPopulation,
-                100,
-                randomB,
+                parents,
+                200,
+                uniformRandom,
                 noMutation,
-                ae::SelectionMode::FitnessProportional
+                ae::SelectionMode::Uniform
             );
 
-        for (const ae::Organism& child :
-            selectedChildren.organisms())
+        bool sawUnfitLineage =
+            false;
+
+        bool sawFitLineage =
+            false;
+
+        for (
+            const ae::Organism& child :
+            uniformOffspring.organisms()
+            )
         {
-            require(
-                genomesEqual(
-                    child.genome(),
-                    goodGenome
-                ),
-                "Zero-fitness organism reproduced under selection."
-            );
+            const double value =
+                child.regulatoryProgram()
+                .node(1)
+                .basalProductionRate;
+
+            if (value == 1.0)
+            {
+                sawUnfitLineage =
+                    true;
+            }
+
+            if (value == 5.0)
+            {
+                sawFitLineage =
+                    true;
+            }
         }
+
+        require(
+            sawUnfitLineage
+            && sawFitLineage,
+            "Uniform selection failed to sample both parents."
+        );
+
 
         // --------------------------------------------------------
         // Test 3:
-        // Completely non-viable selected population goes extinct.
+        // Fitness-proportional reproduction with total fitness
+        // equal to zero produces extinction.
         // --------------------------------------------------------
 
-        ae::Organism deadA(parentGenome);
-        ae::Organism deadB(parentGenome);
-
-        deadA.setFitness(0.0);
-        deadB.setFitness(0.0);
-
-        std::vector<ae::Organism> deadParents;
-
-        deadParents.push_back(deadA);
-        deadParents.push_back(deadB);
-
-        ae::Population deadPopulation(
-            std::move(deadParents)
+        ae::Organism zeroA(
+            makeProgram(
+                1.0
+            )
         );
 
-        ae::Random randomC(42);
+        ae::Organism zeroB(
+            makeProgram(
+                2.0
+            )
+        );
+
+        zeroA.setFitness(
+            0.0
+        );
+
+        zeroB.setFitness(
+            0.0
+        );
+
+        const ae::Population zeroParents(
+            std::vector<ae::Organism>{
+            zeroA,
+                zeroB
+        }
+        );
+
+        ae::Random extinctionRandom(
+            2222
+        );
 
         const ae::Population extinct =
             ae::reproducePopulation(
-                deadPopulation,
-                100,
-                randomC,
+                zeroParents,
+                20,
+                extinctionRandom,
                 noMutation,
                 ae::SelectionMode::FitnessProportional
             );
 
         require(
             extinct.empty(),
-            "Zero-fitness selected population failed to go extinct."
+            "Zero-fitness population failed to go extinct."
         );
+
 
         // --------------------------------------------------------
         // Test 4:
-        // Same seed remains deterministic.
+        // Regulatory mutation generator is actually used during
+        // reproduction.
         // --------------------------------------------------------
 
-        ae::MutationConfig mutation{};
-        mutation.probabilityPerParameter = 0.5;
-        mutation.logStandardDeviation = 0.1;
-
-        ae::Organism reproducibleParent(parentGenome);
-        reproducibleParent.setFitness(1.0);
-
-        std::vector<ae::Organism> parentsD;
-        std::vector<ae::Organism> parentsE;
-
-        parentsD.push_back(reproducibleParent);
-        parentsE.push_back(reproducibleParent);
-
-        ae::Population populationD(
-            std::move(parentsD)
+        ae::Organism mutationParent(
+            makeProgram(
+                1.0
+            )
         );
 
-        ae::Population populationE(
-            std::move(parentsE)
+        mutationParent.setFitness(
+            1.0
         );
 
-        ae::Random randomD(999);
-        ae::Random randomE(999);
+        const ae::Population mutationParents(
+            std::vector<ae::Organism>{
+            mutationParent
+        }
+        );
 
-        const ae::Population childrenD =
-            ae::reproducePopulation(
-                populationD,
-                50,
-                randomD,
-                mutation,
-                ae::SelectionMode::FitnessProportional
-            );
+        ae::RegulatoryMutationGeneratorConfig mutationConfig{};
 
-        const ae::Population childrenE =
+        mutationConfig.rates
+            .nodeKineticPerNode =
+            100.0;
+
+        mutationConfig.quantitativeEffects
+            .nodeBasalProductionLogStdDev =
+            0.2;
+
+        mutationConfig.quantitativeEffects
+            .nodeDegradationLogStdDev =
+            0.2;
+
+        ae::Random mutationRandom(
+            3333
+        );
+
+        const ae::Population mutated =
             ae::reproducePopulation(
-                populationE,
-                50,
-                randomE,
-                mutation,
+                mutationParents,
+                1,
+                mutationRandom,
+                mutationConfig,
                 ae::SelectionMode::FitnessProportional
             );
 
         require(
-            childrenD.size() == childrenE.size(),
-            "Deterministic reproduction changed population size."
+            mutated.size() == 1,
+            "Mutation reproduction produced wrong offspring count."
         );
 
-        for (std::size_t i = 0;
-            i < childrenD.size();
-            ++i)
-        {
-            require(
-                genomesEqual(
-                    childrenD.at(i).genome(),
-                    childrenE.at(i).genome()
-                ),
-                "Identical seeds produced different offspring."
-            );
-        }
+        const auto& childNode =
+            mutated.at(0)
+            .regulatoryProgram()
+            .node(1);
+
+        require(
+            childNode.basalProductionRate
+            != 1.0
+            || childNode.degradationRate
+            != 1.0,
+            "Regulatory mutation was not applied during reproduction."
+        );
+
 
         // --------------------------------------------------------
         // Test 5:
-        // Uniform reproduction ignores fitness.
-        //
-        // We cannot require an exact ratio from a stochastic test,
-        // but both genomes should appear in a sufficiently large
-        // offspring population.
+        // Unevaluated parents cannot reproduce.
         // --------------------------------------------------------
 
-        ae::Genome lowGenome{};
-        lowGenome.alphaR = 1.0;
+        bool threw =
+            false;
 
-        ae::Genome highGenome{};
-        highGenome.alphaR = 10.0;
-
-        ae::Organism low(lowGenome);
-        ae::Organism high(highGenome);
-
-        low.setFitness(0.0);
-        high.setFitness(1000.0);
-
-        std::vector<ae::Organism> neutralParents;
-
-        neutralParents.push_back(low);
-        neutralParents.push_back(high);
-
-        ae::Population neutralPopulation(
-            std::move(neutralParents)
-        );
-
-        ae::Random neutralRandom(555);
-
-        const ae::Population neutralChildren =
-            ae::reproducePopulation(
-                neutralPopulation,
-                1000,
-                neutralRandom,
-                noMutation,
-                ae::SelectionMode::Uniform
+        try
+        {
+            const ae::Population unevaluated(
+                std::vector<ae::Organism>{
+                ae::Organism(
+                    makeProgram(
+                        1.0
+                    )
+                )
+            }
             );
 
-        std::size_t lowCount = 0;
-        std::size_t highCount = 0;
+            ae::Random random(
+                1
+            );
 
-        for (const ae::Organism& child :
-            neutralChildren.organisms())
+            const auto result =
+                ae::reproducePopulation(
+                    unevaluated,
+                    1,
+                    random,
+                    noMutation,
+                    ae::SelectionMode::Uniform
+                );
+        }
+        catch (const std::logic_error&)
         {
-            if (
-                genomesEqual(
-                    child.genome(),
-                    lowGenome
-                )
-                )
-            {
-                ++lowCount;
-            }
-
-            if (
-                genomesEqual(
-                    child.genome(),
-                    highGenome
-                )
-                )
-            {
-                ++highCount;
-            }
+            threw =
+                true;
         }
 
         require(
-            lowCount > 0,
-            "Uniform selection never reproduced low-fitness parent."
+            threw,
+            "Unevaluated population was allowed to reproduce."
         );
 
-        require(
-            highCount > 0,
-            "Uniform selection never reproduced high-fitness parent."
-        );
-
-        require(
-            lowCount + highCount == 1000,
-            "Uniform reproduction produced unexpected genome."
-        );
 
         std::cout
             << "All reproduction tests passed.\n";

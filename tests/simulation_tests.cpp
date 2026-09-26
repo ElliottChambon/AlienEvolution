@@ -1,9 +1,10 @@
 #include <cmath>
+#include <cstddef>
 #include <iostream>
 #include <stdexcept>
 
 #include "alien_evolution/environment/Environment.hpp"
-#include "alien_evolution/genetics/Genome.hpp"
+#include "alien_evolution/genetics/RegulatoryProgram.hpp"
 #include "alien_evolution/simulation/Simulation.hpp"
 
 namespace
@@ -16,60 +17,98 @@ namespace
     {
         if (!condition)
         {
-            throw std::runtime_error(message);
+            throw std::runtime_error(
+                message
+            );
         }
     }
 
-    bool nearlyEqual(
-        const double a,
-        const double b,
-        const double tolerance = 1.0e-12
-    )
+    ae::RegulatoryProgram makeFounder()
     {
-        return std::abs(a - b) <= tolerance;
+        return ae::RegulatoryProgram(
+            {
+                {
+                    1,
+                    0.0,
+                    0.0,
+                    1.0
+                },
+                {
+                    2,
+                    0.0,
+                    0.0,
+                    1.0
+                },
+                {
+                    3,
+                    0.0,
+                    0.01,
+                    1.0
+                }
+            },
+        {
+            {
+                1,
+                3,
+                20.0,
+                0.20,
+                2.0
+            },
+            {
+                2,
+                3,
+                20.0,
+                0.50,
+                2.0
+            }
+        }
+        );
     }
 
-    bool statisticsEqual(
-        const ae::GenerationStatistics& a,
-        const ae::GenerationStatistics& b
-    )
+    ae::SimulationConfig makeConfig()
     {
-        return
-            a.generation == b.generation
-            && a.populationSize == b.populationSize
-            && nearlyEqual(a.meanFitness, b.meanFitness)
-            && nearlyEqual(a.maximumFitness, b.maximumFitness)
-            && nearlyEqual(a.meanMaterial, b.meanMaterial)
-            && nearlyEqual(a.meanBoundary, b.meanBoundary)
-            && nearlyEqual(a.meanNetEnergy, b.meanNetEnergy)
-            && nearlyEqual(
-                a.meanGenome.alphaR,
-                b.meanGenome.alphaR
-            )
-            && nearlyEqual(
-                a.meanGenome.alphaE,
-                b.meanGenome.alphaE
-            )
-            && nearlyEqual(
-                a.meanGenome.theta,
-                b.meanGenome.theta
-            )
-            && nearlyEqual(
-                a.meanGenome.lambda,
-                b.meanGenome.lambda
-            )
-            && nearlyEqual(
-                a.meanGenome.beta,
-                b.meanGenome.beta
-            )
-            && nearlyEqual(
-                a.meanGenome.growthRate,
-                b.meanGenome.growthRate
-            )
-            && nearlyEqual(
-                a.meanGenome.metabolicCost,
-                b.meanGenome.metabolicCost
-            );
+        ae::SimulationConfig config{};
+
+        config.populationSize =
+            20;
+
+        config.developmentWidth =
+            15;
+
+        config.developmentHeight =
+            15;
+
+        config.developmentSteps =
+            5;
+
+        config.development.localMaterialInputNodeId =
+            1;
+
+        config.development.resourceInputNodeId =
+            2;
+
+        config.development.depositionOutputNodeId =
+            3;
+
+        config.development.neighborhoodLengthScale =
+            1.0;
+
+        config.development.regulatoryTimeStep =
+            0.05;
+
+        config.development.regulatoryStepsPerDevelopmentStep =
+            10;
+
+        config.development.outputHalfSaturation =
+            0.2;
+
+        config.development.outputCooperativity =
+            2.0;
+
+        config.development.depositionRateScale =
+            0.25;
+
+        return config;
     }
 
 } // namespace
@@ -78,26 +117,21 @@ int main()
 {
     try
     {
-        const ae::Genome founder{};
-        const ae::Environment environment{};
+        ae::Environment environment{};
 
-        ae::SimulationConfig config{};
+        environment.resourceAvailability =
+            1.0;
 
-        config.populationSize = 40;
+        const ae::RegulatoryProgram founder =
+            makeFounder();
 
-        config.developmentWidth = 20;
-        config.developmentHeight = 20;
-        config.developmentSteps = 6;
+        const ae::SimulationConfig config =
+            makeConfig();
 
-        config.initialVariation.probabilityPerParameter = 1.0;
-        config.initialVariation.logStandardDeviation = 0.05;
-
-        config.offspringMutation.probabilityPerParameter = 0.10;
-        config.offspringMutation.logStandardDeviation = 0.05;
 
         // --------------------------------------------------------
         // Test 1:
-        // One generation evaluates organisms and advances time.
+        // Simulation initializes regulatory organisms.
         // --------------------------------------------------------
 
         ae::Simulation simulation(
@@ -107,180 +141,197 @@ int main()
             12345
         );
 
-        const ae::GenerationStatistics first =
+        require(
+            simulation.population().size()
+            == config.populationSize,
+            "Simulation initialized wrong population size."
+        );
+
+        require(
+            simulation.generation() == 0,
+            "Simulation began at incorrect generation."
+        );
+
+        require(
+            !simulation.extinct(),
+            "Fresh simulation is unexpectedly extinct."
+        );
+
+
+        // --------------------------------------------------------
+        // Test 2:
+        // One simulation step develops and evaluates the current
+        // population.
+        // --------------------------------------------------------
+
+        const ae::GenerationStatistics generationZero =
             simulation.step();
 
         require(
-            first.generation == 0,
-            "First evaluated generation should be generation zero."
+            generationZero.generation == 0,
+            "Generation statistics have incorrect generation number."
         );
 
         require(
-            first.populationSize == config.populationSize,
-            "Simulation evaluated incorrect population size."
+            generationZero.populationSize
+            == config.populationSize,
+            "Generation statistics have incorrect population size."
         );
 
         require(
-            first.meanFitness > 0.0,
-            "Reference population produced no viable fitness."
+            generationZero.meanMaterial > 1.0,
+            "Regulatory simulation failed to develop material."
+        );
+
+        require(
+            generationZero.meanRegulatoryNodeCount == 3.0,
+            "Incorrect mean regulatory node count."
+        );
+
+        require(
+            generationZero.meanRegulatoryInteractionCount == 2.0,
+            "Incorrect mean regulatory interaction count."
+        );
+
+        require(
+            std::abs(
+                generationZero.meanRegulatoryNetworkDensity
+                - (2.0 / 9.0)
+            )
+            < 1.0e-12,
+            "Incorrect regulatory network density."
+        );
+
+        require(
+            generationZero.developmentFailureCount == 0,
+            "Founder population unexpectedly failed development."
         );
 
         require(
             simulation.generation() == 1,
-            "Simulation generation failed to advance."
+            "Simulation generation did not advance."
+        );
+
+
+        // --------------------------------------------------------
+        // Test 3:
+        // Zero-mutation simulation preserves network topology.
+        // --------------------------------------------------------
+
+        const ae::GenerationStatistics generationOne =
+            simulation.step();
+
+        require(
+            generationOne.meanRegulatoryNodeCount == 3.0,
+            "Network node count changed despite zero mutation rates."
         );
 
         require(
-            simulation.population().size()
-            == config.populationSize,
-            "Viable population failed to reproduce to target size."
+            generationOne.meanRegulatoryInteractionCount == 2.0,
+            "Network edge count changed despite zero mutation rates."
         );
 
-        // New offspring should not yet have been evaluated.
-        for (const ae::Organism& organism :
-            simulation.population().organisms())
-        {
-            require(
-                !organism.hasPhenotype(),
-                "New generation unexpectedly retained phenotype."
-            );
-
-            require(
-                !organism.hasFitness(),
-                "New generation unexpectedly retained fitness."
-            );
-        }
 
         // --------------------------------------------------------
-        // Test 2:
-        // Identical seeds reproduce identical evolutionary history.
+        // Test 4:
+        // Identical seeds produce identical histories.
         // --------------------------------------------------------
 
         ae::Simulation simulationA(
             environment,
             founder,
             config,
-            987654321
+            98765
         );
 
         ae::Simulation simulationB(
             environment,
             founder,
             config,
-            987654321
+            98765
         );
 
         const auto historyA =
-            simulationA.run(10);
+            simulationA.run(
+                4
+            );
 
         const auto historyB =
-            simulationB.run(10);
+            simulationB.run(
+                4
+            );
 
         require(
-            historyA.size() == historyB.size(),
-            "Identical runs produced different history lengths."
+            historyA.size()
+            == historyB.size(),
+            "Identical simulations produced histories of different length."
         );
 
-        for (std::size_t i = 0;
+        for (
+            std::size_t i = 0;
             i < historyA.size();
-            ++i)
+            ++i
+            )
         {
             require(
-                statisticsEqual(
-                    historyA[i],
-                    historyB[i]
-                ),
-                "Identical seeds produced different evolutionary histories."
+                historyA[i].meanFitness
+                == historyB[i].meanFitness
+                && historyA[i].maximumFitness
+                == historyB[i].maximumFitness
+                && historyA[i].meanMaterial
+                == historyB[i].meanMaterial
+                && historyA[i].meanBoundary
+                == historyB[i].meanBoundary
+                && historyA[i].meanRegulatoryNodeCount
+                == historyB[i].meanRegulatoryNodeCount
+                && historyA[i].meanRegulatoryInteractionCount
+                == historyB[i].meanRegulatoryInteractionCount,
+                "Identical seeds produced different simulation histories."
             );
         }
 
+
         // --------------------------------------------------------
-        // Test 3:
-        // With no mutation or initial variation, the genome remains
-        // unchanged through reproduction.
+        // Test 5:
+        // Missing required developmental interface is rejected for
+        // the founder.
         // --------------------------------------------------------
 
-        ae::SimulationConfig clonalConfig =
-            config;
+        bool threw =
+            false;
 
-        clonalConfig.initialVariation.probabilityPerParameter = 0.0;
-        clonalConfig.offspringMutation.probabilityPerParameter = 0.0;
-
-        ae::Simulation clonalSimulation(
-            environment,
-            founder,
-            clonalConfig,
-            111
-        );
-
-        clonalSimulation.run(5);
-
-        for (const ae::Organism& organism :
-            clonalSimulation.population().organisms())
+        try
         {
-            require(
-                nearlyEqual(
-                    organism.genome().alphaR,
-                    founder.alphaR
-                )
-                && nearlyEqual(
-                    organism.genome().alphaE,
-                    founder.alphaE
-                )
-                && nearlyEqual(
-                    organism.genome().theta,
-                    founder.theta
-                )
-                && nearlyEqual(
-                    organism.genome().lambda,
-                    founder.lambda
-                )
-                && nearlyEqual(
-                    organism.genome().beta,
-                    founder.beta
-                )
-                && nearlyEqual(
-                    organism.genome().growthRate,
-                    founder.growthRate
-                )
-                && nearlyEqual(
-                    organism.genome().metabolicCost,
-                    founder.metabolicCost
-                ),
-                "Genome changed despite mutation being disabled."
+            const ae::RegulatoryProgram invalidFounder(
+                {
+                    {
+                        1,
+                        0.0,
+                        1.0,
+                        1.0
+                    }
+                },
+                {}
+            );
+
+            ae::Simulation invalidSimulation(
+                environment,
+                invalidFounder,
+                config,
+                1
             );
         }
-
-        // --------------------------------------------------------
-        // Test 4:
-        // A resource-free environment causes extinction.
-        // --------------------------------------------------------
-
-        ae::Environment sterileEnvironment{};
-        sterileEnvironment.resourceAvailability = 0.0;
-
-        ae::Simulation extinctSimulation(
-            sterileEnvironment,
-            founder,
-            config,
-            222
-        );
-
-        const ae::GenerationStatistics extinctStats =
-            extinctSimulation.step();
+        catch (const std::invalid_argument&)
+        {
+            threw =
+                true;
+        }
 
         require(
-            nearlyEqual(
-                extinctStats.meanFitness,
-                0.0
-            ),
-            "Resource-free environment produced positive fitness."
+            threw,
+            "Founder missing developmental interface was accepted."
         );
 
-        require(
-            extinctSimulation.extinct(),
-            "Zero-fitness population failed to go extinct."
-        );
 
         std::cout
             << "All simulation tests passed.\n";

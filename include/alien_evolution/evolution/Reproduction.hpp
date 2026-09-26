@@ -4,7 +4,7 @@
 
 #include "alien_evolution/core/Random.hpp"
 #include "alien_evolution/evolution/Population.hpp"
-#include "alien_evolution/genetics/Mutation.hpp"
+#include "alien_evolution/genetics/RegulatoryMutationGenerator.hpp"
 
 namespace ae
 {
@@ -15,11 +15,12 @@ namespace ae
         Uniform
     };
 
-    [[nodiscard]] Population reproducePopulation(
+    [[nodiscard]]
+    Population reproducePopulation(
         const Population& parents,
         std::size_t offspringCount,
         Random& random,
-        const MutationConfig& mutationConfig,
+        const RegulatoryMutationGeneratorConfig& mutationConfig,
         SelectionMode selectionMode
     );
 

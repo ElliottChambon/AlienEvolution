@@ -11,41 +11,104 @@
 namespace ae
 {
 
+    namespace
+    {
+
+        bool hasRequiredDevelopmentInterface(
+            const RegulatoryProgram& program,
+            const RegulatoryDevelopmentConfig& config
+        )
+        {
+            return
+                program.containsNode(
+                    config.localMaterialInputNodeId
+                )
+                && program.containsNode(
+                    config.resourceInputNodeId
+                )
+                && program.containsNode(
+                    config.depositionOutputNodeId
+                );
+        }
+
+        const RegulatoryProgram& validateFounderProgram(
+            const RegulatoryProgram& program,
+            const RegulatoryDevelopmentConfig& config
+        )
+        {
+            if (
+                !hasRequiredDevelopmentInterface(
+                    program,
+                    config
+                )
+                )
+            {
+                throw std::invalid_argument(
+                    "Founder regulatory program does not contain all required developmental interface nodes."
+                );
+            }
+
+            if (
+                config.depositionOutputNodeId
+                == config.localMaterialInputNodeId
+                || config.depositionOutputNodeId
+                == config.resourceInputNodeId
+                )
+            {
+                throw std::invalid_argument(
+                    "Founder developmental output node must be distinct from input nodes."
+                );
+            }
+
+            return program;
+        }
+
+    } // namespace
+
     Simulation::Simulation(
         Environment environment,
-        Genome founderGenome,
+        RegulatoryProgram founderProgram,
         SimulationConfig config,
         const std::uint64_t seed
     )
-        : environment_(std::move(environment)),
-        config_(std::move(config)),
-        random_(seed),
+        : environment_(
+            std::move(
+                environment
+            )
+        ),
+        config_(
+            std::move(
+                config
+            )
+        ),
+        random_(
+            seed
+        ),
         development_(
             config_.developmentWidth,
             config_.developmentHeight,
-            config_.developmentSteps
+            config_.developmentSteps,
+            config_.development
         ),
         population_(
             config_.populationSize,
-            founderGenome,
+            validateFounderProgram(
+                founderProgram,
+                config_.development
+            ),
             random_,
             config_.initialVariation
         )
-    {
-        if (config_.populationSize == 0)
-        {
-            throw std::invalid_argument(
-                "Simulation population size must be greater than zero."
-            );
-        }
-    }
+    {}
 
-    const Population& Simulation::population() const
+    const Population&
+        Simulation::population() const
     {
         return population_;
     }
 
-    const Environment& Simulation::environment() const
+    const Environment&
+        Simulation::environment() const
     {
         return environment_;
     }
@@ -87,16 +150,22 @@ namespace ae
         return statistics;
     }
 
-    std::vector<GenerationStatistics> Simulation::run(
-        const std::size_t generationCount
-    )
+    std::vector<GenerationStatistics>
+        Simulation::run(
+            const std::size_t generationCount
+        )
     {
         std::vector<GenerationStatistics> history;
-        history.reserve(generationCount);
 
-        for (std::size_t i = 0;
+        history.reserve(
+            generationCount
+        );
+
+        for (
+            std::size_t i = 0;
             i < generationCount;
-            ++i)
+            ++i
+            )
         {
             if (population_.empty())
             {
@@ -111,7 +180,8 @@ namespace ae
         return history;
     }
 
-    GenerationStatistics Simulation::evaluatePopulation()
+    GenerationStatistics
+        Simulation::evaluatePopulation()
     {
         GenerationStatistics statistics{};
 
@@ -126,27 +196,70 @@ namespace ae
             return statistics;
         }
 
-        double totalFitness = 0.0;
-        double maximumFitness = 0.0;
+        double totalFitness =
+            0.0;
 
-        double totalMaterial = 0.0;
-        double totalBoundary = 0.0;
-        double totalNetEnergy = 0.0;
+        double maximumFitness =
+            0.0;
 
-        GenomeMeans genomeTotals{};
+        double totalMaterial =
+            0.0;
 
-        for (std::size_t i = 0;
+        double totalBoundary =
+            0.0;
+
+        double totalNetEnergy =
+            0.0;
+
+        double totalNodeCount =
+            0.0;
+
+        double totalInteractionCount =
+            0.0;
+
+        double totalNetworkDensity =
+            0.0;
+
+        std::size_t developmentFailureCount =
+            0;
+
+        for (
+            std::size_t i = 0;
             i < population_.size();
-            ++i)
+            ++i
+            )
         {
             Organism& organism =
                 population_.at(i);
 
-            const Phenotype phenotype =
-                development_.develop(
-                    organism.genome(),
-                    environment_
-                );
+            const RegulatoryProgram& program =
+                organism.regulatoryProgram();
+
+            Phenotype phenotype(
+                config_.developmentWidth,
+                config_.developmentHeight
+            );
+
+            if (
+                hasRequiredDevelopmentInterface(
+                    program,
+                    config_.development
+                )
+                )
+            {
+                phenotype =
+                    development_.develop(
+                        program,
+                        environment_
+                    );
+            }
+            else
+            {
+                // Losing a required developmental interface through
+                // mutation is treated as a nonviable developmental
+                // outcome rather than as a program-wide exception.
+                ++developmentFailureCount;
+            }
 
             const PhenotypeMetrics metrics =
                 measurePhenotype(
@@ -173,7 +286,8 @@ namespace ae
                 fitness
             );
 
-            totalFitness += fitness;
+            totalFitness +=
+                fitness;
 
             maximumFitness =
                 std::max(
@@ -190,29 +304,31 @@ namespace ae
             totalNetEnergy +=
                 energetics.netEnergy;
 
-            const Genome& genome =
-                organism.genome();
+            const double nodeCount =
+                static_cast<double>(
+                    program.nodeCount()
+                    );
 
-            genomeTotals.alphaR +=
-                genome.alphaR;
+            const double interactionCount =
+                static_cast<double>(
+                    program.interactionCount()
+                    );
 
-            genomeTotals.alphaE +=
-                genome.alphaE;
+            totalNodeCount +=
+                nodeCount;
 
-            genomeTotals.theta +=
-                genome.theta;
+            totalInteractionCount +=
+                interactionCount;
 
-            genomeTotals.lambda +=
-                genome.lambda;
+            const double possibleInteractions =
+                nodeCount * nodeCount;
 
-            genomeTotals.beta +=
-                genome.beta;
-
-            genomeTotals.growthRate +=
-                genome.growthRate;
-
-            genomeTotals.metabolicCost +=
-                genome.metabolicCost;
+            if (possibleInteractions > 0.0)
+            {
+                totalNetworkDensity +=
+                    interactionCount
+                    / possibleInteractions;
+            }
         }
 
         const double count =
@@ -235,26 +351,23 @@ namespace ae
         statistics.meanNetEnergy =
             totalNetEnergy / count;
 
-        statistics.meanGenome.alphaR =
-            genomeTotals.alphaR / count;
+        statistics.meanRegulatoryNodeCount =
+            totalNodeCount / count;
 
-        statistics.meanGenome.alphaE =
-            genomeTotals.alphaE / count;
+        statistics.meanRegulatoryInteractionCount =
+            totalInteractionCount / count;
 
-        statistics.meanGenome.theta =
-            genomeTotals.theta / count;
+        statistics.meanRegulatoryNetworkDensity =
+            totalNetworkDensity / count;
 
-        statistics.meanGenome.lambda =
-            genomeTotals.lambda / count;
+        statistics.developmentFailureCount =
+            developmentFailureCount;
 
-        statistics.meanGenome.beta =
-            genomeTotals.beta / count;
-
-        statistics.meanGenome.growthRate =
-            genomeTotals.growthRate / count;
-
-        statistics.meanGenome.metabolicCost =
-            genomeTotals.metabolicCost / count;
+        statistics.developmentFailureFraction =
+            static_cast<double>(
+                developmentFailureCount
+                )
+            / count;
 
         return statistics;
     }

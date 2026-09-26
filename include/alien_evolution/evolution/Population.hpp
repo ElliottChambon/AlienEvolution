@@ -5,8 +5,8 @@
 
 #include "alien_evolution/core/Random.hpp"
 #include "alien_evolution/evolution/Organism.hpp"
-#include "alien_evolution/genetics/Genome.hpp"
-#include "alien_evolution/genetics/Mutation.hpp"
+#include "alien_evolution/genetics/RegulatoryMutationGenerator.hpp"
+#include "alien_evolution/genetics/RegulatoryProgram.hpp"
 
 namespace ae
 {
@@ -16,24 +16,28 @@ namespace ae
     public:
         Population(
             std::size_t populationSize,
-            const Genome& founderGenome,
+            const RegulatoryProgram& founderProgram,
             Random& random,
-            const MutationConfig& initialVariation
+            const RegulatoryMutationGeneratorConfig& initialVariation
         );
 
         explicit Population(
             std::vector<Organism> organisms
         );
 
-        [[nodiscard]] std::size_t size() const;
+        [[nodiscard]]
+        std::size_t size() const;
 
-        [[nodiscard]] bool empty() const;
+        [[nodiscard]]
+        bool empty() const;
 
-        [[nodiscard]] const Organism& at(
+        [[nodiscard]]
+        const Organism& at(
             std::size_t index
         ) const;
 
-        [[nodiscard]] Organism& at(
+        [[nodiscard]]
+        Organism& at(
             std::size_t index
         );
 

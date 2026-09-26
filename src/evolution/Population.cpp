@@ -8,9 +8,9 @@ namespace ae
 
     Population::Population(
         const std::size_t populationSize,
-        const Genome& founderGenome,
+        const RegulatoryProgram& founderProgram,
         Random& random,
-        const MutationConfig& initialVariation
+        const RegulatoryMutationGeneratorConfig& initialVariation
     )
     {
         if (populationSize == 0)
@@ -20,19 +20,27 @@ namespace ae
             );
         }
 
-        organisms_.reserve(populationSize);
+        organisms_.reserve(
+            populationSize
+        );
 
-        for (std::size_t i = 0; i < populationSize; ++i)
+        for (
+            std::size_t i = 0;
+            i < populationSize;
+            ++i
+            )
         {
-            Genome genome =
-                mutateGenome(
-                    founderGenome,
-                    random,
-                    initialVariation
+            RegulatoryMutationGenerationResult result =
+                generateRegulatoryOffspring(
+                    founderProgram,
+                    initialVariation,
+                    random
                 );
 
             organisms_.emplace_back(
-                std::move(genome)
+                std::move(
+                    result.offspringProgram
+                )
             );
         }
     }
@@ -40,7 +48,11 @@ namespace ae
     Population::Population(
         std::vector<Organism> organisms
     )
-        : organisms_(std::move(organisms))
+        : organisms_(
+            std::move(
+                organisms
+            )
+        )
     {}
 
     std::size_t Population::size() const
@@ -57,14 +69,18 @@ namespace ae
         const std::size_t index
     ) const
     {
-        return organisms_.at(index);
+        return organisms_.at(
+            index
+        );
     }
 
     Organism& Population::at(
         const std::size_t index
     )
     {
-        return organisms_.at(index);
+        return organisms_.at(
+            index
+        );
     }
 
     const std::vector<Organism>&

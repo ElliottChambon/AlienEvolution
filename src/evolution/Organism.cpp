@@ -7,13 +7,20 @@
 namespace ae
 {
 
-    Organism::Organism(Genome genome)
-        : genome_(std::move(genome))
+    Organism::Organism(
+        RegulatoryProgram regulatoryProgram
+    )
+        : regulatoryProgram_(
+            std::move(
+                regulatoryProgram
+            )
+        )
     {}
 
-    const Genome& Organism::genome() const
+    const RegulatoryProgram&
+        Organism::regulatoryProgram() const
     {
-        return genome_;
+        return regulatoryProgram_;
     }
 
     bool Organism::hasPhenotype() const
@@ -33,9 +40,14 @@ namespace ae
         return *phenotype_;
     }
 
-    void Organism::setPhenotype(Phenotype phenotype)
+    void Organism::setPhenotype(
+        Phenotype phenotype
+    )
     {
-        phenotype_ = std::move(phenotype);
+        phenotype_ =
+            std::move(
+                phenotype
+            );
     }
 
     bool Organism::hasFitness() const
@@ -55,16 +67,22 @@ namespace ae
         return *fitness_;
     }
 
-    void Organism::setFitness(const double fitness)
+    void Organism::setFitness(
+        const double fitness
+    )
     {
-        if (!std::isfinite(fitness) || fitness < 0.0)
+        if (
+            !std::isfinite(fitness)
+            || fitness < 0.0
+            )
         {
             throw std::invalid_argument(
                 "Organism fitness must be finite and non-negative."
             );
         }
 
-        fitness_ = fitness;
+        fitness_ =
+            fitness;
     }
 
     void Organism::clearEvaluation()

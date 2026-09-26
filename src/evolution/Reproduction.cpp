@@ -23,28 +23,43 @@ namespace ae
                     totalFitness
                 );
 
-            double cumulativeFitness = 0.0;
+            double cumulativeFitness =
+                0.0;
 
-            for (const Organism& organism :
-                population.organisms())
+            for (
+                const Organism& organism :
+                population.organisms()
+                )
             {
                 cumulativeFitness +=
                     organism.fitness();
 
-                if (target < cumulativeFitness)
+                if (
+                    target
+                    < cumulativeFitness
+                    )
                 {
                     return organism;
                 }
             }
 
-            for (std::size_t i = population.size();
+            // Floating-point defensive fallback.
+            for (
+                std::size_t i =
+                population.size();
                 i > 0;
-                --i)
+                --i
+                )
             {
                 const Organism& organism =
-                    population.at(i - 1);
+                    population.at(
+                        i - 1
+                    );
 
-                if (organism.fitness() > 0.0)
+                if (
+                    organism.fitness()
+            > 0.0
+                    )
                 {
                     return organism;
                 }
@@ -86,7 +101,7 @@ namespace ae
         const Population& parents,
         const std::size_t offspringCount,
         Random& random,
-        const MutationConfig& mutationConfig,
+        const RegulatoryMutationGeneratorConfig& mutationConfig,
         const SelectionMode selectionMode
     )
     {
@@ -104,10 +119,13 @@ namespace ae
             );
         }
 
-        double totalFitness = 0.0;
+        double totalFitness =
+            0.0;
 
-        for (const Organism& organism :
-            parents.organisms())
+        for (
+            const Organism& organism :
+            parents.organisms()
+            )
         {
             if (!organism.hasFitness())
             {
@@ -129,7 +147,8 @@ namespace ae
                 );
             }
 
-            totalFitness += fitness;
+            totalFitness +=
+                fitness;
         }
 
         if (
@@ -138,19 +157,27 @@ namespace ae
             && totalFitness <= 0.0
             )
         {
+            // Under the current non-overlapping reproduction model,
+            // a population with no reproductive fitness goes extinct.
             return Population(
                 std::vector<Organism>{}
             );
         }
 
         std::vector<Organism> offspring;
-        offspring.reserve(offspringCount);
 
-        for (std::size_t i = 0;
+        offspring.reserve(
+            offspringCount
+        );
+
+        for (
+            std::size_t i = 0;
             i < offspringCount;
-            ++i)
+            ++i
+            )
         {
-            const Organism* parent = nullptr;
+            const Organism* parent =
+                nullptr;
 
             switch (selectionMode)
             {
@@ -182,20 +209,24 @@ namespace ae
                 );
             }
 
-            Genome childGenome =
-                mutateGenome(
-                    parent->genome(),
-                    random,
-                    mutationConfig
+            RegulatoryMutationGenerationResult mutationResult =
+                generateRegulatoryOffspring(
+                    parent->regulatoryProgram(),
+                    mutationConfig,
+                    random
                 );
 
             offspring.emplace_back(
-                std::move(childGenome)
+                std::move(
+                    mutationResult.offspringProgram
+                )
             );
         }
 
         return Population(
-            std::move(offspring)
+            std::move(
+                offspring
+            )
         );
     }
 
