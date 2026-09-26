@@ -11,10 +11,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# ------------------------------------------------------------
-# Core simulation library
-# ------------------------------------------------------------
-
 add_library(AlienEvolutionCore
     src/core/Random.cpp
     src/development/Phenotype.cpp
@@ -22,6 +18,7 @@ add_library(AlienEvolutionCore
     src/genetics/Mutation.cpp
     src/evolution/Organism.cpp
     src/evolution/Population.cpp
+    src/evolution/Reproduction.cpp
     src/evaluation/PhenotypeMetrics.cpp
     src/evaluation/Energetics.cpp
     src/evaluation/Fitness.cpp
@@ -33,10 +30,6 @@ target_include_directories(
         ${PROJECT_SOURCE_DIR}/include
 )
 
-# ------------------------------------------------------------
-# Main executable
-# ------------------------------------------------------------
-
 add_executable(AlienEvolution
     src/main.cpp
 )
@@ -46,10 +39,6 @@ target_link_libraries(
     PRIVATE
         AlienEvolutionCore
 )
-
-# ------------------------------------------------------------
-# Tests
-# ------------------------------------------------------------
 
 include(CTest)
 
@@ -62,8 +51,7 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionDevelopmentTests
-        PRIVATE
-            AlienEvolutionCore
+        PRIVATE AlienEvolutionCore
     )
 
     add_test(
@@ -78,8 +66,7 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionRandomMutationTests
-        PRIVATE
-            AlienEvolutionCore
+        PRIVATE AlienEvolutionCore
     )
 
     add_test(
@@ -94,8 +81,7 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionPopulationTests
-        PRIVATE
-            AlienEvolutionCore
+        PRIVATE AlienEvolutionCore
     )
 
     add_test(
@@ -110,8 +96,7 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionEvaluationTests
-        PRIVATE
-            AlienEvolutionCore
+        PRIVATE AlienEvolutionCore
     )
 
     add_test(
@@ -126,13 +111,27 @@ if(BUILD_TESTING)
 
     target_link_libraries(
         AlienEvolutionFitnessTests
-        PRIVATE
-            AlienEvolutionCore
+        PRIVATE AlienEvolutionCore
     )
 
     add_test(
         NAME FitnessTests
         COMMAND AlienEvolutionFitnessTests
+    )
+
+    add_executable(
+        AlienEvolutionReproductionTests
+        tests/reproduction_tests.cpp
+    )
+
+    target_link_libraries(
+        AlienEvolutionReproductionTests
+        PRIVATE AlienEvolutionCore
+    )
+
+    add_test(
+        NAME ReproductionTests
+        COMMAND AlienEvolutionReproductionTests
     )
 
 endif()

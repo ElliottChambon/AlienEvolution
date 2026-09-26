@@ -21,7 +21,13 @@ namespace ae
             const MutationConfig& initialVariation
         );
 
+        explicit Population(
+            std::vector<Organism> organisms
+        );
+
         [[nodiscard]] std::size_t size() const;
+
+        [[nodiscard]] bool empty() const;
 
         [[nodiscard]] const Organism& at(
             std::size_t index

@@ -1,6 +1,7 @@
 #include "alien_evolution/evolution/Population.hpp"
 
 #include <stdexcept>
+#include <utility>
 
 namespace ae
 {
@@ -15,7 +16,7 @@ namespace ae
         if (populationSize == 0)
         {
             throw std::invalid_argument(
-                "Population size must be greater than zero."
+                "Initial population size must be greater than zero."
             );
         }
 
@@ -36,9 +37,20 @@ namespace ae
         }
     }
 
+    Population::Population(
+        std::vector<Organism> organisms
+    )
+        : organisms_(std::move(organisms))
+    {}
+
     std::size_t Population::size() const
     {
         return organisms_.size();
+    }
+
+    bool Population::empty() const
+    {
+        return organisms_.empty();
     }
 
     const Organism& Population::at(
