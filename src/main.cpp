@@ -1,139 +1,169 @@
+#include <iomanip>
 #include <iostream>
+#include <vector>
 
-#include "alien_evolution/development/Development.hpp"
-#include "alien_evolution/development/Phenotype.hpp"
 #include "alien_evolution/environment/Environment.hpp"
-#include "alien_evolution/evaluation/Energetics.hpp"
-#include "alien_evolution/evaluation/PhenotypeMetrics.hpp"
 #include "alien_evolution/genetics/Genome.hpp"
+#include "alien_evolution/simulation/Simulation.hpp"
 
 namespace
 {
 
-    void printPhenotype(const ae::Phenotype& phenotype)
+    void printStatistics(
+        const ae::GenerationStatistics& stats
+    )
     {
-        for (std::size_t y = 0; y < phenotype.height(); ++y)
-        {
-            for (std::size_t x = 0; x < phenotype.width(); ++x)
-            {
-                const double material =
-                    phenotype.materialAt(x, y);
+        const double boundaryMaterialRatio =
+            stats.meanMaterial > 0.0
+            ? stats.meanBoundary / stats.meanMaterial
+            : 0.0;
 
-                char symbol = ' ';
-
-                if (material >= 0.75)
-                {
-                    symbol = '#';
-                }
-                else if (material >= 0.50)
-                {
-                    symbol = 'O';
-                }
-                else if (material >= 0.25)
-                {
-                    symbol = 'o';
-                }
-                else if (material > 0.0)
-                {
-                    symbol = '.';
-                }
-
-                std::cout << symbol;
-            }
-
-            std::cout << '\n';
-        }
+        std::cout
+            << std::setw(4) << stats.generation
+            << "  "
+            << std::setw(3) << stats.populationSize
+            << "  "
+            << std::setw(10) << stats.meanFitness
+            << "  "
+            << std::setw(10) << stats.maximumFitness
+            << "  "
+            << std::setw(10) << stats.meanMaterial
+            << "  "
+            << std::setw(10) << stats.meanBoundary
+            << "  "
+            << std::setw(10) << boundaryMaterialRatio
+            << "  "
+            << std::setw(8) << stats.meanGenome.alphaR
+            << "  "
+            << std::setw(8) << stats.meanGenome.alphaE
+            << "  "
+            << std::setw(8) << stats.meanGenome.theta
+            << "  "
+            << std::setw(8) << stats.meanGenome.lambda
+            << "  "
+            << std::setw(8) << stats.meanGenome.beta
+            << "  "
+            << std::setw(8) << stats.meanGenome.growthRate
+            << "  "
+            << std::setw(8) << stats.meanGenome.metabolicCost
+            << '\n';
     }
 
 } // namespace
 
 int main()
 {
-    const ae::Environment environment{};
-    const ae::Genome genome{};
+    // ------------------------------------------------------------
+    // Environment
+    // ------------------------------------------------------------
 
-    const ae::Development development(
-        40,
-        30,
-        10
+    ae::Environment environment{};
+
+    environment.gravity = 9.80665;
+    environment.resourceAvailability = 1.0;
+
+    // ------------------------------------------------------------
+    // Founder genome
+    // ------------------------------------------------------------
+
+    ae::Genome founder{};
+
+    // ------------------------------------------------------------
+    // Simulation configuration
+    // ------------------------------------------------------------
+
+    ae::SimulationConfig config{};
+
+    config.populationSize = 100;
+
+    config.developmentWidth = 40;
+    config.developmentHeight = 30;
+    config.developmentSteps = 10;
+
+    // Initial population begins with variation around the founder.
+    config.initialVariation.probabilityPerParameter = 1.0;
+    config.initialVariation.logStandardDeviation = 0.10;
+
+    // Subsequent offspring mutate more conservatively.
+    config.offspringMutation.probabilityPerParameter = 0.10;
+    config.offspringMutation.logStandardDeviation = 0.05;
+
+    config.energetics.resourceGainPerBoundary = 1.0;
+    config.energetics.maintenanceCostPerMaterial = 0.10;
+
+    // ------------------------------------------------------------
+    // Experiment
+    // ------------------------------------------------------------
+
+    constexpr std::uint64_t seed = 12345;
+    constexpr std::size_t generations = 100;
+
+    ae::Simulation simulation(
+        environment,
+        founder,
+        config,
+        seed
     );
 
-    const ae::Phenotype phenotype =
-        development.develop(
-            genome,
-            environment
-        );
-
-    const ae::PhenotypeMetrics metrics =
-        ae::measurePhenotype(phenotype);
-
-    const ae::EnergeticsConfig energeticsConfig{};
-
-    const ae::EnergeticConsequences energetics =
-        ae::evaluateEnergetics(
-            metrics,
-            environment,
-            energeticsConfig
-        );
-
-    std::cout << "AlienEvolution v0.1.0\n\n";
-
-    std::cout << "Environment\n";
-    std::cout
-        << "  Gravity: "
-        << environment.gravity
-        << " m/s^2\n";
+    std::cout << std::fixed << std::setprecision(4);
 
     std::cout
-        << "  Resources: "
-        << environment.resourceAvailability
-        << "\n\n";
+        << "AlienEvolution v0.1.0\n"
+        << "First evolutionary experiment\n\n";
 
-    std::cout << "Genome\n";
-    std::cout << "  alphaR: " << genome.alphaR << '\n';
-    std::cout << "  alphaE: " << genome.alphaE << '\n';
-    std::cout << "  theta: " << genome.theta << '\n';
-    std::cout << "  lambda: " << genome.lambda << '\n';
-    std::cout << "  beta: " << genome.beta << '\n';
-    std::cout << "  growthRate: " << genome.growthRate << '\n';
-    std::cout << "  metabolicCost: " << genome.metabolicCost << '\n';
-
-    std::cout << "\nDeveloped phenotype\n";
     std::cout
-        << "  Grid: "
-        << phenotype.width()
-        << " x "
-        << phenotype.height()
+        << "Seed: " << seed << '\n'
+        << "Population: " << config.populationSize << '\n'
+        << "Generations: " << generations << "\n\n";
+
+    const std::vector<ae::GenerationStatistics> history =
+        simulation.run(generations);
+
+    std::cout
+        << " Gen  Pop"
+        << "    MeanFit"
+        << "      MaxFit"
+        << "    Material"
+        << "    Boundary"
+        << "       B/M"
+        << "    alphaR"
+        << "    alphaE"
+        << "     theta"
+        << "    lambda"
+        << "      beta"
+        << "    growth"
+        << "      cost"
         << '\n';
 
     std::cout
-        << "  Total material: "
-        << metrics.totalMaterial
-        << '\n';
+        << "-------------------------------------------------------------"
+        << "-------------------------------------------------------------"
+        << "--------------------------------\n";
 
-    std::cout
-        << "  Exposed boundary: "
-        << metrics.exposedBoundary
-        << '\n';
+    for (std::size_t i = 0; i < history.size(); ++i)
+    {
+        if (
+            i == 0
+            || i % 10 == 0
+            || i + 1 == history.size()
+            )
+        {
+            printStatistics(history[i]);
+        }
+    }
 
-    std::cout << "\nEnergetic consequences\n";
-
-    std::cout
-        << "  Resource acquisition: "
-        << energetics.resourceAcquisition
-        << '\n';
-
-    std::cout
-        << "  Maintenance cost: "
-        << energetics.maintenanceCost
-        << '\n';
-
-    std::cout
-        << "  Net energy: "
-        << energetics.netEnergy
-        << "\n\n";
-
-    printPhenotype(phenotype);
+    if (simulation.extinct())
+    {
+        std::cout
+            << "\nPopulation went extinct.\n";
+    }
+    else
+    {
+        std::cout
+            << "\nPopulation survived "
+            << history.size()
+            << " evaluated generations.\n";
+    }
 
     return 0;
 }
