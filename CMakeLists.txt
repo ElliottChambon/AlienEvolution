@@ -26,6 +26,7 @@ add_library(AlienEvolutionCore
     src/genetics/RegulatoryDynamics.cpp
     src/genetics/RegulatoryMutation.cpp
     src/genetics/RegulatoryMutationEvent.cpp
+    src/genetics/RegulatoryMutationRateModel.cpp
 
     src/evolution/Organism.cpp
     src/evolution/Population.cpp
@@ -241,6 +242,19 @@ if(BUILD_TESTING)
     add_test(
         NAME RegulatoryMutationEventTests
         COMMAND AlienEvolutionRegulatoryMutationEventTests
+    )
+
+    add_executable(
+        AlienEvolutionRegulatoryMutationRateModelTests
+        tests/regulatory_mutation_rate_model_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionRegulatoryMutationRateModelTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME RegulatoryMutationRateModelTests
+        COMMAND AlienEvolutionRegulatoryMutationRateModelTests
     )
 
 endif()
