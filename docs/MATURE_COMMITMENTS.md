@@ -386,6 +386,16 @@ Changes to structural sensory/developmental coupling should be introduced throug
 
 **Maturity:** Scaffolded: standalone DiffusiveField2D has fast tests but is not coupled to development; mature 3D/multifield physics remains open.
 
+M2 ([issue #25](https://github.com/ElliottChambon/AlienEvolution/issues/25)) adds
+[PCP schema vocabulary](../include/alien_evolution/physics/PhysicalCouplingProcess.hpp)
+only, verified by [fast schema tests](../tests/physical_coupling_process_schema_tests.cpp).
+It records neutral model-owned quantity types, port directionality, separate
+state/history/control/observables/ledger categories, M1 metadata and an optional
+region association. It selects no physical domain mechanism, executes no PCP,
+and provides no biological validation or automatic compatibility. Production
+behavior is unchanged and current sensing remains unmigrated. M3 Adaptive
+Certified Physics scaffold is next.
+
 ### Current simplification
 `DiffusiveField2D` implements:
 
@@ -754,7 +764,7 @@ Do not call architecture-level tests "biological validation."
 
 **Status:** Frozen architectural commitment.
 
-**Maturity:** Scaffolded: M1 ([issue #23](https://github.com/ElliottChambon/AlienEvolution/issues/23)) adds standalone [scientific metadata records](../include/alien_evolution/science/ScientificModelMetadata.hpp) for exact P1/B1/B2/M/X/S codes, layered evidence/literature, model identity/version, inert supersession/alternatives, parameters/units, assumptions/validity scope, and distinct numerical/reduction versus scientific/model-form uncertainty. [Fast tests](../tests/scientific_metadata_tests.cpp) verify metadata and syntactic validation only. This software infrastructure selects no scientific mechanism, provides no biological validation, and does not change production simulation behavior. Each mature replacement still needs its own review and evidence; M2 remains the next step.
+**Maturity:** Scaffolded: M1 ([issue #23](https://github.com/ElliottChambon/AlienEvolution/issues/23)) adds standalone [scientific metadata records](../include/alien_evolution/science/ScientificModelMetadata.hpp) for exact P1/B1/B2/M/X/S codes, layered evidence/literature, model identity/version, inert supersession/alternatives, parameters/units, assumptions/validity scope, and distinct numerical/reduction versus scientific/model-form uncertainty. [Fast tests](../tests/scientific_metadata_tests.cpp) verify metadata and syntactic validation only. This software infrastructure selects no scientific mechanism, provides no biological validation, and does not change production simulation behavior. Each mature replacement still needs its own review and evidence; M2 schema vocabulary is scaffolded (entry 12); M3 Adaptive Certified Physics scaffold is next.
 
 ### Current simplification
 Many early mechanisms are selected because they are useful architecture tests.
@@ -825,7 +835,7 @@ clarify entries 13, 18, 22–24. They do not invalidate prototype evidence.
 | Commitment | Frozen architectural contract | Required mature capability / implementation open | Maturity audit |
 | --- | --- | --- | --- |
 | S1 | Physics-first sensing; influence, detectability, internal integration, and adaptive relevance separate; primitive observables distinct from inference; no fixed named senses | Propagation/access, noise/information, internal use, and consequences for specific mechanisms | Deferred; B4–B6 scalar channels are prototype scaffolds |
-| S2 | PCP is fundamental; typed bidirectional ports, state/history, observables, control, exchange ledger; channels only validated reductions; evolution changes phi, simulator controls m | Domain-specific deterministic/stochastic/hybrid/quantum realizations; Adaptive Certified Physics and selection-aware adversarial validation | Deferred; no mature PCP or certification engine exists |
+| S2 | PCP is fundamental; typed bidirectional ports, state/history, observables, control, exchange ledger; channels only validated reductions; evolution changes phi, simulator controls m | Domain-specific deterministic/stochastic/hybrid/quantum realizations; Adaptive Certified Physics and selection-aware adversarial validation | Scaffolded: M2 schema vocabulary only; no PCP execution or certification engine exists |
 | S3 | Many-to-many physical coupling mechanisms/observables; geometry transforms information; polymodal structures allowed; Earth receptors are evidence | Versioned mechanisms, unresolved alternatives, layer-specific P1/B1/B2/M/X/S provenance and validation | Deferred; no mature coupling-mechanism catalog is implemented |
 | S4 | G -> development -> material state/geometry -> Material Compiler -> response models -> PCPs -> consequences -> reproduction; compilers/caches never inherited | Chemistry-agnostic construction representation, coupled development/material response, mutational-accessibility audits | Deferred; HeritableProgram is a compatibility scaffold |
 | S5 | Transformation System (G,I,M,P); physical opportunities and footprints, no automatic repair; separate ancestry/state/function; immutable provenance DAG distinct from derived dependency graph | Mechanism-dependent transformations, multi-parent history, incremental invalidation, novelty/innovation/adaptation diagnosis | Deferred; current regulatory/sensory mutation remains a null-model prototype |

@@ -509,13 +509,25 @@ supersession and alternatives are inert identifiers. Parameter units are declare
 text (use `dimensionless` explicitly), with no conversion or dimensional analysis.
 Assumptions and validity scope are human-readable declarations, not certification.
 There is no scientific mechanism selection or biological validation, and no
-production simulation integration. M2 remains the next step.
+production simulation integration. M2 is scaffolded below.
 
 ### M2 — Physical port + Physical Coupling Process software scaffold
 
 Stable abstract data/interface layer for typed bidirectional ports, state/history,
 control, accessible observables and exchange ledgers. No claim that current
 sensing has migrated; no universal domain port catalog or solver is selected.
+
+**Scaffolded (issue #25):**
+[PhysicalCouplingProcessSchema](../include/alien_evolution/physics/PhysicalCouplingProcess.hpp)
+provides schema vocabulary only: model-owned quantity/type identifiers with text
+units, input/output/bidirectional port boundaries, separate ordered state, history,
+control, observable and ledger descriptors, owned M1 scientific metadata, and an
+optional inert region binding identifier. Local keys are unique within each
+category; quantity keys inside ports are local to each port. Explicit validation
+checks syntax only and allows empty categories. It selects no physical domain
+mechanism, executes no PCP, and provides no biological validation. Matching type
+identifiers or units do not establish connections or compatibility. Current
+sensing remains unmigrated. M3 Adaptive Certified Physics scaffold is next.
 
 ### M3 — Adaptive Certified Physics scaffold
 
