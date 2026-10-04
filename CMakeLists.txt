@@ -108,6 +108,19 @@ target_link_libraries(
 if(BUILD_TESTING)
 
     add_executable(
+        AlienEvolutionHeritableConstructionStateTests
+        tests/heritable_construction_state_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionHeritableConstructionStateTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME HeritableConstructionStateTests
+        COMMAND AlienEvolutionHeritableConstructionStateTests
+    )
+
+    add_executable(
         AlienEvolutionAdaptiveCertifiedPhysicsTests
         tests/adaptive_certified_physics_tests.cpp
     )

@@ -554,13 +554,26 @@ validation artifacts, never inherited organism state. Selection-aware audit
 reasons can record concerns that approximation could alter a scientific or
 evolutionary decision; policy thresholds remain deferred. Pruning must never
 erase future evolutionary possibilities. Production behavior and current sensing
-remain unchanged. M4 Heritable Construction State compatibility scaffold is next.
+remain unchanged. M4 compatibility is scaffolded below.
 
 ### M4 — Heritable Construction State compatibility scaffold
 
 Introduce the mature wrapper/abstraction while preserving current HeritableProgram
 through an adapter/migration path. Do not universalize DNA or directly evolvable
 finished material/sensory properties.
+
+**Scaffolded (issue #29):**
+[HeritableConstructionState](../include/alien_evolution/genetics/HeritableConstructionState.hpp)
+is a type-safe migration seam owning only the current `HeritableProgram` prototype
+payload. Named prototype construction/access preserves value ownership and exact
+component content/order. `Organism` now owns one HCS; legacy constructors and
+accessors delegate to that same payload. Current mutation/reproduction algorithms,
+RNG sequences and B4–B6 behavior remain unchanged. HCS is organismal inherited
+state, distinct from simulator-owned scientific metadata and provenance history.
+This compatibility scaffold selects no mature inheritance chemistry or universal
+component ontology and implements no structural novelty, provenance or dependency
+mechanism. It provides no biological validation. M5 provenance DAG + causal
+dependency/invalidation infrastructure is next.
 
 ### M5 — Provenance DAG + causal dependency/invalidation infrastructure
 

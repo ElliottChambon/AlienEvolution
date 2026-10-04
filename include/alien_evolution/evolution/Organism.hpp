@@ -3,7 +3,7 @@
 #include <optional>
 
 #include "alien_evolution/development/Phenotype.hpp"
-#include "alien_evolution/genetics/HeritableProgram.hpp"
+#include "alien_evolution/genetics/HeritableConstructionState.hpp"
 
 namespace ae
 {
@@ -11,6 +11,12 @@ namespace ae
     class Organism
     {
     public:
+        explicit Organism(HeritableConstructionState constructionState);
+
+        [[nodiscard]] const HeritableConstructionState& constructionState() const;
+
+        // Prototype compatibility construction; current mutation/reproduction
+        // continue to operate on the HCS-owned HeritableProgram payload.
         explicit Organism(HeritableProgram heritableProgram);
 
         // Temporary migration aid: regulatory-only organisms have empty sensing.
@@ -48,7 +54,7 @@ namespace ae
         void clearEvaluation();
 
     private:
-        HeritableProgram heritableProgram_;
+        HeritableConstructionState constructionState_;
 
         std::optional<Phenotype> phenotype_;
 
