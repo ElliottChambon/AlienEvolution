@@ -29,6 +29,8 @@ add_library(
     src/genetics/RegulatoryDynamics.cpp
     src/genetics/RegulatoryInput.cpp
     src/genetics/SensoryProgram.cpp
+    src/genetics/SensoryMutation.cpp
+    src/genetics/HeritableMutation.cpp
     src/genetics/RegulatoryMutation.cpp
     src/genetics/RegulatoryMutationEvent.cpp
     src/genetics/RegulatoryMutationRateModel.cpp
@@ -90,6 +92,19 @@ target_link_libraries(
 include(CTest)
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionSensoryMutationTests
+        tests/sensory_mutation_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionSensoryMutationTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME SensoryMutationTests
+        COMMAND AlienEvolutionSensoryMutationTests
+    )
 
     add_executable(
         AlienEvolutionHeritableProgramTests

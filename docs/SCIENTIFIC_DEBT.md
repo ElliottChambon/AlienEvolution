@@ -35,9 +35,8 @@ regulation. V0.3B4 now implements `HeritableProgram` ownership of separate
 `RegulatoryProgram` and `SensoryProgram` components. The sensory container uses
 the existing ID-based shifted-Hill channels as a temporary phenomenological
 representation, not a mature receptor model. It derives the validated runtime
-adapter without duplicating transduction logic. Reproduction copies sensory
-data unchanged and retains the existing regulatory mutation/RNG sequence.
-Quantitative sensory mutation remains deferred to V0.3B5.
+adapter without duplicating transduction logic. The compatibility reproduction
+path copies sensory data unchanged and retains the regulatory mutation/RNG sequence.
 
 Regulatory topology changes may leave inherited sensory targets unusable. B4
 preserves those channels without deletion, retargeting, or repair; constructing
@@ -50,6 +49,39 @@ Before selecting a mature sensing mechanism, external literature review and
 quantitative benchmarks are still required for response laws, channel
 integration, timescales, and energetic costs in the modeled physical/chemical
 setting. The current response is a replaceable architectural assumption.
+
+## Quantitative sensory mutation null model (V0.3B5)
+
+`SensoryMutation` applies `p' = p * exp(epsilon)` with
+`epsilon ~ Normal(0, sigma)` to existing channels' fold change, half-saturation,
+and cooperativity. Rates (expected events per channel per replication) and effect
+scales are explicit model inputs, not biological constants; all default to zero.
+Waiting distances follow a constant-hazard Poisson process and channel selection
+is uniform, both deliberate null-model assumptions. The event safety limit throws
+rather than silently truncating mutation. Invalid multipliers and parameter
+overflow/underflow are rejected, without clipping or repairing the model.
+
+`HeritableMutationConfig` keeps regulatory and sensory configuration separate.
+Generation runs regulation first, then sensing, and returns both component event
+records. Zero sensory hazard draws no random numbers, preserving historical
+regulatory reproduction results and RNG state. The opt-in heritable reproduction
+overload places configuration before RNG to avoid ambiguity with legacy calls
+using an empty braced regulatory configuration. Production simulation retains
+the regulatory-only compatibility overload and legacy clamp development.
+
+Signal IDs, target node IDs, channel count, and ordering remain fixed. Channel
+index is temporary event identity and must be reviewed before structural sensory
+evolution. Regulatory node loss can still leave unusable sensory targets; runtime
+adapter validation rejects these without deletion, retargeting, or co-mutation.
+No new sensing modalities, costs, noise, delay, or adaptation are modeled.
+
+This is architecture/mechanism verification, not biological validation. V0.3B6
+will test whether selection can drive sensory response in controlled environments;
+those experiments are not run in B5. Structural sensory evolution remains behind
+an explicit user-reviewed architecture checkpoint. The
+[mature sensing commitment](MATURE_COMMITMENTS.md#6-separate-heritable-sensoryprogram)
+remains scaffolded: specificity must ultimately follow physical/chemical coupling,
+not mutations between arbitrary integer signal IDs.
 
 ---
 

@@ -121,8 +121,13 @@ inherited unchanged while regulatory mutation proceeds as before. `SensoryProgra
 derives the existing validated `RegulatoryInputInterface` when needed; inherited
 data and runtime transduction remain distinct. Regulatory-only organism construction
 and access are temporary migration aids. Production simulation still uses legacy
-clamp-based development. Quantitative sensory mutation is deferred to V0.3B5;
-structural sensory evolution requires a later explicit architecture checkpoint.
+clamp-based development. V0.3B5 adds opt-in quantitative sensory mutation via
+separate regulatory/sensory configuration in `HeritableMutationConfig`; the
+compatibility path retains zero sensory mutation and the historical RNG sequence.
+Only response parameters mutate; signal/target IDs and channel structure remain
+fixed. See the [B5 null-model debt](SCIENTIFIC_DEBT.md#quantitative-sensory-mutation-null-model-v03b5).
+V0.3B6 controlled selection experiments remain future work; structural sensory
+evolution requires a later explicit architecture checkpoint.
 
 The developmental causal chain remains:
 

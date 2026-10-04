@@ -133,10 +133,12 @@ int main()
         mutation.quantitativeEffects.interactionCooperativityLogStdDev = 0.2;
         for (auto mode : {ae::SelectionMode::FitnessProportional, ae::SelectionMode::Uniform})
         {
-            ae::Random random(1234), repeatRandom(1234), emptyRandom(1234), oracleRandom(1234);
+            ae::Random random(1234), repeatRandom(1234), emptyRandom(1234), oracleRandom(1234), heritableRandom(1234);
             const auto offspring = ae::reproducePopulation(ae::Population({parent}), 8, random, mutation, mode);
             const auto repeat = ae::reproducePopulation(ae::Population({parent}), 8, repeatRandom, mutation, mode);
             const auto empty = ae::reproducePopulation(ae::Population({compatibility}), 8, emptyRandom, mutation, mode);
+            const auto zeroSensory = ae::reproducePopulation(ae::Population({parent}), 8,
+                ae::HeritableMutationConfig{mutation, {}}, heritableRandom, mode);
             bool changed = false;
             for (std::size_t i = 0; i < offspring.size(); ++i)
             {
@@ -146,6 +148,9 @@ int main()
                 const auto expected = ae::generateRegulatoryOffspring(regulatory, mutation, oracleRandom);
                 const auto& child = offspring.at(i);
                 require(sameChannels(child.heritableProgram().sensoryProgram(), sensory), "Sensory inheritance changed.");
+                require(sameChannels(zeroSensory.at(i).heritableProgram().sensoryProgram(), sensory)
+                    && sameRegulation(child.regulatoryProgram(), zeroSensory.at(i).regulatoryProgram()),
+                    "Zero-sensory heritable reproduction differs from compatibility path.");
                 require(sameRegulation(child.regulatoryProgram(), expected.offspringProgram)
                     && sameRegulation(child.regulatoryProgram(), repeat.at(i).regulatoryProgram())
                     && sameRegulation(child.regulatoryProgram(), empty.at(i).regulatoryProgram()),
@@ -156,7 +161,9 @@ int main()
                 changed |= !sameRegulation(child.regulatoryProgram(), regulatory);
             }
             require(changed, "Mutation comparison did not exercise regulatory changes.");
-            require(random.raw() == oracleRandom.raw() && repeatRandom.raw() == emptyRandom.raw(),
+            const auto next = random.raw();
+            require(next == oracleRandom.raw() && next == heritableRandom.raw()
+                && repeatRandom.raw() == emptyRandom.raw(),
                 "Ownership migration consumed random draws.");
         }
 
@@ -198,6 +205,48 @@ int main()
             sawSecond |= !first;
         }
         require(sawFirst && sawSecond, "Parent-selection test did not exercise both lineages.");
+
+        ae::HeritableMutationConfig both{mutation, {}};
+        both.sensory.rates.channelParameterPerChannel = 10.0;
+        both.sensory.quantitativeEffects = {0.1, 0.2, 0.3};
+        ae::Random bothRandom(5678), orchestrationRandom(5678), regulatoryOracle(5678);
+        const auto composed = ae::generateHeritableOffspring(heritable, both, bothRandom);
+        const auto regulatoryExpected = ae::generateRegulatoryOffspring(regulatory, mutation, regulatoryOracle);
+        const auto sensoryExpected = ae::generateSensoryOffspring(sensory, both.sensory, regulatoryOracle);
+        const auto composedRepeat = ae::generateHeritableOffspring(heritable, both, orchestrationRandom);
+        require(!composed.regulatoryEvents.empty() && !composed.sensoryEvents.empty()
+            && sameRegulation(composed.offspringProgram.regulatoryProgram(), regulatoryExpected.offspringProgram)
+            && sameChannels(composed.offspringProgram.sensoryProgram(), sensoryExpected.offspringProgram)
+            && sameRegulation(composed.offspringProgram.regulatoryProgram(), composedRepeat.offspringProgram.regulatoryProgram())
+            && sameChannels(composed.offspringProgram.sensoryProgram(), composedRepeat.offspringProgram.sensoryProgram()),
+            "Heritable orchestration did not compose separate generators in order.");
+        require(bothRandom.raw() == regulatoryOracle.raw(), "Orchestration consumed extra RNG draws.");
+        ae::Random reproductionRandom(9876);
+        const auto mutated = ae::reproducePopulation(ae::Population({parent}), 4, both,
+            reproductionRandom, ae::SelectionMode::FitnessProportional);
+        for (const auto& child : mutated.organisms())
+        {
+            require(!sameRegulation(child.regulatoryProgram(), regulatory)
+                && !sameChannels(child.heritableProgram().sensoryProgram(), sensory),
+                "Reproduction failed to inherit both mutated components.");
+        }
+        both.regulatory = loss;
+        ae::Random targetLossRandom(1234);
+        const auto targetLoss = ae::generateHeritableOffspring(heritable, both, targetLossRandom);
+        require(targetLoss.offspringProgram.regulatoryProgram().nodeCount() == 1
+            && targetLoss.offspringProgram.sensoryProgram().channelCount() == sensory.channelCount(),
+            "Structural regulatory mutation altered sensory channel count.");
+        for (std::size_t i = 0; i < sensory.channelCount(); ++i)
+        {
+            const auto& channel = targetLoss.offspringProgram.sensoryProgram().channels()[i];
+            require(channel.signalId == sensory.channels()[i].signalId
+                && channel.targetNodeId == sensory.channels()[i].targetNodeId,
+                "Target loss retargeted or repaired sensory data.");
+        }
+        requireInvalid([&] {
+            (void)targetLoss.offspringProgram.sensoryProgram().makeRegulatoryInputInterface(
+                targetLoss.offspringProgram.regulatoryProgram());
+        });
         std::cout << "All heritable program tests passed.\n";
         return 0;
     }
