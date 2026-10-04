@@ -500,6 +500,17 @@ Pure software metadata/interfaces only, with no production behavior change.
 Record evidence categories, provenance, alternatives, versions/supersession,
 units/parameters and separate scientific/model-form versus numerical uncertainty.
 
+**Implemented/scaffolded (issue #23):**
+[ScientificModelMetadata](../include/alien_evolution/science/ScientificModelMetadata.hpp)
+provides standalone records and explicit syntactic validation, verified by
+[fast metadata tests](../tests/scientific_metadata_tests.cpp). Evidence codes are
+nominal categories, not a confidence ranking. Collections preserve insertion order;
+supersession and alternatives are inert identifiers. Parameter units are declared
+text (use `dimensionless` explicitly), with no conversion or dimensional analysis.
+Assumptions and validity scope are human-readable declarations, not certification.
+There is no scientific mechanism selection or biological validation, and no
+production simulation integration. M2 remains the next step.
+
 ### M2 — Physical port + Physical Coupling Process software scaffold
 
 Stable abstract data/interface layer for typed bidirectional ports, state/history,
