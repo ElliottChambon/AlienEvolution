@@ -19,6 +19,7 @@ add_library(
     AlienEvolutionCore
 
     src/core/Random.cpp
+    src/core/CausalDependencyGraph.cpp
 
     src/science/ScientificModelMetadata.cpp
 
@@ -43,6 +44,7 @@ add_library(
     src/genetics/RegulatoryMutationGenerator.cpp
 
     src/evolution/Organism.cpp
+    src/evolution/EvolutionaryProvenance.cpp
     src/evolution/Population.cpp
     src/evolution/Reproduction.cpp
 
@@ -106,6 +108,20 @@ target_link_libraries(
 )
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionProvenanceTests
+        tests/evolutionary_provenance_tests.cpp
+    )
+    target_link_libraries(AlienEvolutionProvenanceTests PRIVATE AlienEvolutionCore)
+    add_test(NAME EvolutionaryProvenanceTests COMMAND AlienEvolutionProvenanceTests)
+
+    add_executable(
+        AlienEvolutionCausalDependencyTests
+        tests/causal_dependency_graph_tests.cpp
+    )
+    target_link_libraries(AlienEvolutionCausalDependencyTests PRIVATE AlienEvolutionCore)
+    add_test(NAME CausalDependencyGraphTests COMMAND AlienEvolutionCausalDependencyTests)
 
     add_executable(
         AlienEvolutionHeritableConstructionStateTests

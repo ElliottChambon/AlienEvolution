@@ -572,14 +572,34 @@ RNG sequences and B4–B6 behavior remain unchanged. HCS is organismal inherited
 state, distinct from simulator-owned scientific metadata and provenance history.
 This compatibility scaffold selects no mature inheritance chemistry or universal
 component ontology and implements no structural novelty, provenance or dependency
-mechanism. It provides no biological validation. M5 provenance DAG + causal
-dependency/invalidation infrastructure is next.
+mechanism. It provides no biological validation. M5 bookkeeping is scaffolded below.
 
 ### M5 — Provenance DAG + causal dependency/invalidation infrastructure
 
 Separate immutable multi-parent history from derived causal dependencies.
 Both are simulator-owned, non-inherited, with no physical influence on organisms;
 dependencies support pleiotropy-aware invalidation and recomputation.
+
+**Scaffolded (issue #31):**
+[EvolutionaryProvenanceGraph](../include/alien_evolution/evolution/EvolutionaryProvenance.hpp)
+is simulator-owned immutable historical bookkeeping with distinct string-backed
+entity/event IDs, ordered multi-parent/multi-child events, and read-only ancestry
+queries. Parentless `DeNovoOrigin` events create roots. Parents must already exist
+and children must be fresh: attempts to reuse identities/back edges are rejected,
+so ancestry cycles cannot be appended. Event kinds record history, not mutation
+operators or mechanism-specific cardinalities. Rejected appends leave history intact.
+
+The separate [CausalDependencyGraph](../include/alien_evolution/core/CausalDependencyGraph.hpp)
+uses distinct neutral artifact IDs for simulator recomputation bookkeeping.
+Duplicate nodes/edges and unknown references are rejected. Computational cycles
+are permitted; direct-dependent/affected queries return artifact insertion order.
+Affected closure includes changed roots and reachable dependents once, independent
+of input-root order. Queries perform no actual incremental recomputation or cache
+mutation. Neither graph is inherited state or physically influences organisms.
+Current regulatory/sensory IDs have not been promoted to mature historical identities;
+HCS and current mutation/reproduction remain unchanged. No structural mutation or
+mutation footprint model exists yet, and no biological validation is claimed.
+M6 first migrated Physical Coupling benchmark is next.
 
 ### M6 — First migrated coupling benchmark
 
