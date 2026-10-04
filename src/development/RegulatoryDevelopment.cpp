@@ -435,6 +435,46 @@ namespace ae
         }
 
 
+        return developImpl(program, environment, localInputIndex,
+            resourceInputIndex, nullptr, {});
+    }
+
+    Phenotype RegulatoryDevelopment::develop(
+        const RegulatoryProgram& program,
+        const RegulatoryInputInterface& inputs,
+        const RegulatoryDevelopmentSignals signals,
+        const Environment& environment
+    ) const
+    {
+        if (signals.localMaterialSignalId == signals.resourceSignalId)
+        {
+            throw std::invalid_argument("Development measurements require distinct external signal IDs.");
+        }
+        inputs.validate(program);
+        // Validate all required signals and their values even when no
+        // developmental steps will run. Development supplies these two only.
+        const std::vector<ExternalSignalValue> values{
+            {signals.localMaterialSignalId, 0.0},
+            {signals.resourceSignalId, std::max(environment.resourceAvailability, 0.0)}
+        };
+        for (const RegulatoryNode& node : program.nodes())
+        {
+            (void)inputs.modulationFactor(node.id, values);
+        }
+        return developImpl(program, environment, 0, 0, &inputs, signals);
+    }
+
+    Phenotype RegulatoryDevelopment::developImpl(
+        const RegulatoryProgram& program,
+        const Environment& environment,
+        const std::size_t localInputIndex,
+        const std::size_t resourceInputIndex,
+        const RegulatoryInputInterface* inputs,
+        const RegulatoryDevelopmentSignals signals
+    ) const
+    {
+        const std::size_t outputIndex = nodeIndex(program, config_.depositionOutputNodeId);
+
         Phenotype phenotype(
             width_,
             height_
@@ -538,7 +578,9 @@ namespace ae
                     // stage, so mutations to the intrinsic kinetics of
                     // these interface nodes cannot alter the imposed
                     // physical measurements.
-                    const std::vector<RegulatoryStateClamp> clamps{
+                    const std::vector<RegulatoryStateClamp> clamps = inputs != nullptr
+                        ? std::vector<RegulatoryStateClamp>{}
+                        : std::vector<RegulatoryStateClamp>{
                         {
                             localInputIndex,
                             localSignal
@@ -549,6 +591,13 @@ namespace ae
                         }
                     };
 
+                    const std::vector<ExternalSignalValue> externalSignals = inputs != nullptr
+                        ? std::vector<ExternalSignalValue>{
+                            {signals.localMaterialSignalId, localSignal},
+                            {signals.resourceSignalId, resourceSignal}
+                        }
+                        : std::vector<ExternalSignalValue>{};
+
 
                     for (
                         std::size_t regulatoryStep = 0;
@@ -558,13 +607,23 @@ namespace ae
                         ++regulatoryStep
                         )
                     {
-                        state =
-                            RegulatoryDynamics::stepRK4(
-                                program,
-                                state,
-                                config_.regulatoryTimeStep,
-                                clamps
+                        if (inputs != nullptr)
+                        {
+                            state = RegulatoryDynamics::stepRK4(
+                                program, state, config_.regulatoryTimeStep,
+                                *inputs, externalSignals
                             );
+                        }
+                        else
+                        {
+                            state =
+                                RegulatoryDynamics::stepRK4(
+                                    program,
+                                    state,
+                                    config_.regulatoryTimeStep,
+                                    clamps
+                                );
+                        }
                     }
 
 
