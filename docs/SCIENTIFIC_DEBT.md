@@ -45,8 +45,24 @@ simulator-owned provenance. No mature inheritance chemistry is selected and no
 structural novelty, provenance or dependency mechanism is implemented. Existing
 direct parameter mutation and graph opportunity debt remain open; the wrapper
 does not reinterpret B6 evidence as mature construction-state mutation or provide
-biological validation. M5 provenance DAG + causal dependency/invalidation
-infrastructure is next; mechanism-specific inheritance still requires review.
+biological validation. M5 bookkeeping is scaffolded below; mechanism-specific
+inheritance still requires review.
+
+## Historical and dependency bookkeeping scaffold (M5, issue #31)
+
+[EvolutionaryProvenanceGraph](../include/alien_evolution/evolution/EvolutionaryProvenance.hpp)
+records simulator-owned immutable history; the separate
+[CausalDependencyGraph](../include/alien_evolution/core/CausalDependencyGraph.hpp)
+records simulator-owned recomputation dependencies. Neither graph is inherited state.
+Roots use parentless de novo records; existing parents and fresh children prevent
+ancestry cycles. Dependency cycles are allowed and closure queries terminate.
+Affected closure includes changed roots and downstream artifacts in registration
+order, with no actual incremental recomputation, cache mutation or biological effect.
+These are standalone in-memory scaffolds, not production simulation integrations.
+Current prototype regulatory/sensory IDs have not been assigned mature historical
+identities. No structural mutation or mutation footprint model exists yet; chemistry,
+identity integration and inheritance-event semantics still require scientific review.
+No biological validation is claimed. M6 first migrated Physical Coupling benchmark is next.
 
 ## External signal transduction interface (V0.3B1)
 
