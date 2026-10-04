@@ -20,6 +20,8 @@ add_library(
 
     src/core/Random.cpp
 
+    src/science/ScientificModelMetadata.cpp
+
     src/physics/DiffusiveField2D.cpp
 
     src/development/Phenotype.cpp
@@ -102,6 +104,19 @@ target_link_libraries(
 )
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionScientificMetadataTests
+        tests/scientific_metadata_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionScientificMetadataTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME ScientificMetadataTests
+        COMMAND AlienEvolutionScientificMetadataTests
+    )
 
     add_executable(
         AlienEvolutionSensorySelectionFixtureTests

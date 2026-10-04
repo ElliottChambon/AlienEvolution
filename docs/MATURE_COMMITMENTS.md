@@ -754,7 +754,7 @@ Do not call architecture-level tests "biological validation."
 
 **Status:** Frozen architectural commitment.
 
-**Maturity:** Scaffolded: project docs track assumptions and benchmarks; each mature replacement still needs its own review, model version, and evidence.
+**Maturity:** Scaffolded: M1 ([issue #23](https://github.com/ElliottChambon/AlienEvolution/issues/23)) adds standalone [scientific metadata records](../include/alien_evolution/science/ScientificModelMetadata.hpp) for exact P1/B1/B2/M/X/S codes, layered evidence/literature, model identity/version, inert supersession/alternatives, parameters/units, assumptions/validity scope, and distinct numerical/reduction versus scientific/model-form uncertainty. [Fast tests](../tests/scientific_metadata_tests.cpp) verify metadata and syntactic validation only. This software infrastructure selects no scientific mechanism, provides no biological validation, and does not change production simulation behavior. Each mature replacement still needs its own review and evidence; M2 remains the next step.
 
 ### Current simplification
 Many early mechanisms are selected because they are useful architecture tests.
