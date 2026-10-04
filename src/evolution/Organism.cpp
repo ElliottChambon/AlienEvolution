@@ -7,20 +7,25 @@
 namespace ae
 {
 
+    Organism::Organism(HeritableProgram heritableProgram)
+        : heritableProgram_(std::move(heritableProgram))
+    {}
+
     Organism::Organism(
         RegulatoryProgram regulatoryProgram
     )
-        : regulatoryProgram_(
-            std::move(
-                regulatoryProgram
-            )
-        )
+        : Organism(HeritableProgram(std::move(regulatoryProgram)))
     {}
+
+    const HeritableProgram& Organism::heritableProgram() const
+    {
+        return heritableProgram_;
+    }
 
     const RegulatoryProgram&
         Organism::regulatoryProgram() const
     {
-        return regulatoryProgram_;
+        return heritableProgram_.regulatoryProgram();
     }
 
     bool Organism::hasPhenotype() const

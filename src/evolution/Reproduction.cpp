@@ -217,8 +217,9 @@ namespace ae
                 );
 
             offspring.emplace_back(
-                std::move(
-                    mutationResult.offspringProgram
+                HeritableProgram(
+                    std::move(mutationResult.offspringProgram),
+                    parent->heritableProgram().sensoryProgram()
                 )
             );
         }

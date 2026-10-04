@@ -172,7 +172,7 @@ The public interface should allow exploration of that history.
 
 **Decision boundary:** Frozen architecture direction; exact internal representation remains evolvable.
 
-**Maturity:** Scaffolded: RegulatoryProgram replaced the V0.1 seven-parameter genome; compositional HeritableProgram remains deferred.
+**Maturity:** Scaffolded: V0.3B4 introduces [HeritableProgram](../include/alien_evolution/genetics/HeritableProgram.hpp) ownership of separate regulatory and sensory components; other mature hereditary components remain deferred. [Composition/inheritance tests](../tests/heritable_program_tests.cpp) verify this software boundary, not mature biology.
 
 ### Current simplification/history
 V0.1 used a seven-parameter genome.
@@ -198,7 +198,7 @@ Current GRN-like regulation is one component, not necessarily the entire mature 
 
 **Authority:** [Approved architecture decision #11](https://github.com/ElliottChambon/AlienEvolution/issues/11).
 
-**Maturity:** Scaffolded: external-input dynamics and opt-in development exist; jointly inherited SensoryProgram is not implemented. Structural sensory evolution still requires explicit user review.
+**Maturity:** Scaffolded: V0.3B4 adds [SensoryProgram](../include/alien_evolution/genetics/SensoryProgram.hpp) ownership and unchanged inheritance, with a validated runtime adapter. [Inheritance tests](../tests/heritable_program_tests.cpp) cover reproducibility and invalid target couplings. Production development remains legacy clamp-based. Quantitative sensory mutation is deferred to V0.3B5; structural sensory evolution still requires explicit user review.
 
 ### Current simplification
 V0.3 uses `signalId` plus shifted-Hill `RegulatoryInputChannel` objects.
@@ -559,7 +559,7 @@ Do not treat the current selection loop as a universal evolutionary population m
 
 **Status:** Prototype scientific/numerical debt.
 
-**Maturity:** Scaffolded: regulatory mutation events/rates/targets/effects are tested null models; coordinated sensory/heritable mutation is deferred.
+**Maturity:** Scaffolded: regulatory mutation events/rates/targets/effects remain tested null models. V0.3B4 copies sensory data unchanged alongside regulatory mutation; quantitative sensory mutation is deferred to V0.3B5. Structural co-evolution semantics remain a later user-reviewed checkpoint.
 
 ### Current simplification
 Current regulatory mutation uses:

@@ -3,7 +3,7 @@
 #include <optional>
 
 #include "alien_evolution/development/Phenotype.hpp"
-#include "alien_evolution/genetics/RegulatoryProgram.hpp"
+#include "alien_evolution/genetics/HeritableProgram.hpp"
 
 namespace ae
 {
@@ -11,10 +11,17 @@ namespace ae
     class Organism
     {
     public:
+        explicit Organism(HeritableProgram heritableProgram);
+
+        // Temporary migration aid: regulatory-only organisms have empty sensing.
         explicit Organism(
             RegulatoryProgram regulatoryProgram
         );
 
+        [[nodiscard]]
+        const HeritableProgram& heritableProgram() const;
+
+        // Temporary compatibility accessor for regulatory-only callers.
         [[nodiscard]]
         const RegulatoryProgram& regulatoryProgram() const;
 
@@ -41,7 +48,7 @@ namespace ae
         void clearEvaluation();
 
     private:
-        RegulatoryProgram regulatoryProgram_;
+        HeritableProgram heritableProgram_;
 
         std::optional<Phenotype> phenotype_;
 

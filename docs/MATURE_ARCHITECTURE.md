@@ -110,6 +110,22 @@ regulatory processes rather than final morphology.
 
 Conceptually:
 
+```text
+Organism -> HeritableProgram
+              -> RegulatoryProgram (internal dynamics)
+              -> SensoryProgram (sensing/transduction description)
+```
+
+V0.3B4 implements this ownership/composition boundary. Sensory channels are
+inherited unchanged while regulatory mutation proceeds as before. `SensoryProgram`
+derives the existing validated `RegulatoryInputInterface` when needed; inherited
+data and runtime transduction remain distinct. Regulatory-only organism construction
+and access are temporary migration aids. Production simulation still uses legacy
+clamp-based development. Quantitative sensory mutation is deferred to V0.3B5;
+structural sensory evolution requires a later explicit architecture checkpoint.
+
+The developmental causal chain remains:
+
 HeritableProgram
 → regulatory dynamics
 → local developmental behavior
