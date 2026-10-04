@@ -5,6 +5,34 @@ of frozen directions, required capabilities with open implementations, and
 prototype debt. Update both records when introducing or replacing a simplification;
 passing prototype tests does not close a mature commitment.
 
+## S1–S5 replacement map (M0, issue #21)
+
+The mature replacements are approved architecture, not implemented mechanisms.
+`SensoryProgram` is the validated B4–B6 prototype compatibility/scaffold; it is
+not the mature sensing endpoint. [Sensing foundations](SENSING_FOUNDATIONS.md),
+[PCP architecture](PHYSICAL_COUPLING_ARCHITECTURE.md), and
+[Heritable Construction](HERITABLE_CONSTRUCTION_ARCHITECTURE.md) define the target.
+
+| Current simplification | Mature replacement / remaining work |
+| --- | --- |
+| Arbitrary signal/output/target IDs; channel index as event identity | Physical access, recognition/compatibility/localization/timing/regulation through PCP networks; separate ancestry, current construction, and current role; no ID-retarget mutations |
+| Nonnegative scalar inputs, shifted-Hill response, independent multiplicative channels, constant sampled inputs | Typed bidirectional physical ports, state/history, observables and exchange ledgers; domain-specific models with noise, dynamics and uncertainty where justified; channels only certified reductions |
+| Direct fold-change/half-saturation/cooperativity mutation (B5); half-saturation only in B6 | G mutation through inheritance-dependent events -> coupled development -> materials/geometry -> compiled responses -> PCPs; direct effective-parameter mutation remains a scoped reduced experiment |
+| Graph gain/loss/duplication and software opportunity counts | Physical mutation footprints and inheritance opportunity hazards; no silent edge cloning, automatic deletion/retargeting, or interface repair; concrete backend still open |
+| Seven-parameter history / current RegulatoryProgram + SensoryProgram ownership | Chemistry-agnostic Heritable Construction State with an adapter for current HeritableProgram; inheritance does not universally require DNA |
+| 2D deposition and scalar occupancy, local neighborhood growth | Coupled development with material composition/phase/microstructure/orientation/interfaces/state/history and evolving geometry/topology; 3D, mechanics and transport still deferred |
+| Boundary-based energy, no modeled sensing costs/feedback | Actual physical/resource exchanges for construction, maintenance, repair, amplification, emission and nonequilibrium operation; no universal sensorCost |
+| Fixed numerical representation, no certification/adversarial registry | Quantity-specific Adaptive Certified Physics, reference/reduced relationships, selection-aware promotion and permanent challenge cases; evolution cannot mutate solver choice |
+| Limited component event records; no mature historical/dependency infrastructure | Immutable multi-parent provenance DAG separate from derived causal dependencies and pleiotropy-aware invalidation; neither physically influences organisms or is inherited |
+
+M0 does not retire any implementation. [M1–M7+](ROADMAP.md#m0m7-mature-architecture-migration)
+stages migration, with first-coupling equivalence required before replacement.
+The [B6 fixture and measured results](V0_3B6_VALIDATION.md) remain controlled
+prototype mechanism evidence. No mature sensing, material, inheritance, or
+biological validation is claimed. Layer-specific evidence categories and model
+versions/alternatives must accompany future replacements; scientific/model-form
+uncertainty remains separate from numerical/reduction uncertainty.
+
 ## External signal transduction interface (V0.3B1)
 
 `RegulatoryInputInterface` is an isolated phenomenological external-signal/
@@ -29,9 +57,9 @@ substeps; phenotype and regulatory states still update synchronously. The legacy
 clamp path remains the production simulation path, so current organism behavior
 is unchanged. The diffusive field is not connected.
 
-The [approved sensory-program direction](MATURE_COMMITMENTS.md#6-separate-heritable-sensoryprogram)
-requires a separate, jointly inherited sensory component alongside internal
-regulation. V0.3B4 now implements `HeritableProgram` ownership of separate
+The [historical approved sensory-program separation](MATURE_COMMITMENTS.md#6-separate-heritable-sensoryprogram)
+provided a separate, jointly inherited prototype component alongside internal
+regulation. V0.3B4 implements `HeritableProgram` ownership of separate
 `RegulatoryProgram` and `SensoryProgram` components. The sensory container uses
 the existing ID-based shifted-Hill channels as a temporary phenomenological
 representation, not a mature receptor model. It derives the validated runtime

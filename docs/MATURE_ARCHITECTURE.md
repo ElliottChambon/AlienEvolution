@@ -6,6 +6,13 @@ See the [mature-commitment registry](MATURE_COMMITMENTS.md) for approved
 directions, open implementation choices, prototype debt, and maturity audits.
 Frozen commitments do not imply that their solvers have been selected or validated.
 
+The approved S1–S5 architecture is formalized in [sensing foundations](SENSING_FOUNDATIONS.md),
+[physical coupling architecture](PHYSICAL_COUPLING_ARCHITECTURE.md), and
+[heritable construction architecture](HERITABLE_CONSTRUCTION_ARCHITECTURE.md).
+These records implement [issue #21](https://github.com/ElliottChambon/AlienEvolution/issues/21)
+at the documentation level only. Their stable causal/interfaces commitments
+leave specific mechanisms, chemistry, inheritance backends, and solvers open.
+
 This document describes the target scientific and software architecture for
 AlienEvolution.
 
@@ -100,15 +107,37 @@ mechanisms rather than automatically treated as universal requirements.
 
 ---
 
-# 4. Heritable Program
+# 4. Heritable Construction State and prototype program
 
-The mature system should contain a general heritable regulatory
-representation.
+The mature hereditary object is **Heritable Construction State** `G`: physically
+heritable information/state controlling descendant construction and regulation,
+without requiring DNA or a fixed Earth inheritance chemistry.
 
 The heritable representation should primarily specify developmental and
 regulatory processes rather than final morphology.
 
-Conceptually:
+The mature causal chain is:
+
+```text
+G -> development D -> material state M(x,t) + geometry/topology Omega(t)
+  -> Material Compiler H -> constitutive/response models C_k
+  -> Physical Coupling Processes P_j -> regulation/physiology/behavior/ecology
+  -> reproduction
+```
+
+Development is a coupled dynamical layer permitting bias, robustness, pleiotropy,
+epistasis, neutral/nonlinear changes, failures, and mechanochemical feedback.
+Materials include composition, phase, microstructure, orientation, interfaces,
+internal state, and relevant history; their effective properties are derived.
+Evolution changes `G`, not finished physical properties or simulator models.
+The [Transformation System](HERITABLE_CONSTRUCTION_ARCHITECTURE.md#approved-s5-heritable-construction-transformation-system)
+defines inheritance-dependent physical mutation opportunities and footprints.
+Historical/provenance identity, current construction state, and current functional
+role remain separate. Its immutable provenance DAG and derived causal dependency
+graph are distinct simulator bookkeeping with no inherited biological influence.
+Structural novelty, functional innovation, and adaptation are diagnosed separately.
+
+Current prototype compatibility/scaffold (not the mature endpoint):
 
 ```text
 Organism -> HeritableProgram
@@ -131,7 +160,7 @@ using the external-input path and fixed internal regulation. It does not switch
 production simulation or establish mature sensing biology. Structural sensory
 evolution requires a later explicit architecture checkpoint.
 
-The developmental causal chain remains:
+The prototype developmental causal chain remains:
 
 HeritableProgram
 → regulatory dynamics
@@ -150,11 +179,36 @@ encoded as instructions.
 
 The exact mature regulatory representation remains an open research decision.
 
-The [approved sensory separation](MATURE_COMMITMENTS.md#6-separate-heritable-sensoryprogram)
-places a distinct, jointly inherited sensory/transduction component alongside
-internal regulation within the compositional heritable program. Physical
-environmental quantities remain external. Exact class boundaries and mature
-mechanisms remain open; structural sensory evolution requires explicit user review.
+The [B4 sensory separation](MATURE_COMMITMENTS.md#6-separate-heritable-sensoryprogram)
+remains validated prototype history. `SensoryProgram` is a compatibility scaffold,
+not a mature fixed sensory component catalog. S1–S3 start from physical observables:
+physical state -> propagation/access -> material/structure coupling -> local change
+-> information above noise -> internal use -> control/development/physiology/behavior
+-> ecological/reproductive consequences. Influence, detectability, integrated sensing,
+and adaptive relevance are distinct. A sense is an emergent pathway through PCPs;
+semantic concepts are downstream inferences. Couplings can be polymodal, absent,
+lost, or degraded. Earth examples do not delimit the search space.
+
+The fundamental **Physical Coupling Process** supports typed bidirectional ports,
+state/history, accessible observables, internal control, and typed physical
+exchange ledgers. Deterministic, stochastic, event, field, hybrid, memory,
+multiphysics, and genuinely required quantum realizations remain possible;
+no universal ODE, GENERIC, or port-Hamiltonian solver is selected.
+A **Physical Coupling Channel** is only a validated reduced/compiled special case.
+Costs arise from actual construction, maintenance, repair, amplification,
+emission, and nonequilibrium physical/resource processes.
+
+**Adaptive Certified Physics** uses the cheapest adequate representation for the
+current quantity of interest. Certification carries domain, error estimate where
+possible, reference model, version, evidence, assumptions, units/parameters, and
+uncertainty; numerical/reduction and scientific/model-form uncertainty stay separate.
+Selection-aware promotion and evolutionary adversarial validation include validity
+boundaries, novelty/elite/sudden-gain audits, random shadow evaluations,
+cross-fidelity comparisons, repaired validity regions, and permanent challenge cases.
+Pruning cannot erase future evolutionary possibilities. Evolution changes phenotype
+`phi`; the simulator controls model `m`. No lineage chooses or mutates its solver.
+Implementation follows [M0–M7+](ROADMAP.md#m0m7-mature-architecture-migration);
+specific structural-evolution mechanisms still require explicit scientific checkpoints.
 
 Candidate approaches include gene-regulatory-network-like systems and other
 chemistry-agnostic regulatory networks capable of evolving nonlinear,

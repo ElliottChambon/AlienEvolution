@@ -179,7 +179,10 @@ V0.1 used a seven-parameter genome.
 V0.2 replaced that with `RegulatoryProgram`.
 
 ### Mature commitment
-The mature hereditary representation should be a compositional `HeritableProgram` that encodes processes controlling development rather than named final anatomy.
+The mature hereditary object is [Heritable Construction State `G`](HERITABLE_CONSTRUCTION_ARCHITECTURE.md),
+controlling construction/regulation through development without requiring DNA.
+`HeritableProgram` remains the current compositional compatibility scaffold,
+not the final representation of mature heredity (approved S4–S5, issue #21).
 
 It must not regress to direct parameters such as:
 
@@ -204,7 +207,17 @@ Current GRN-like regulation is one component, not necessarily the entire mature 
 V0.3 uses `signalId` plus shifted-Hill `RegulatoryInputChannel` objects.
 
 ### Mature commitment
-`HeritableProgram` contains a sensory/transduction component distinct from the internal regulatory network.
+`SensoryProgram` remains the B4–B6 prototype compatibility/scaffold. The
+[approved S1–S5 architecture (#21)](https://github.com/ElliottChambon/AlienEvolution/issues/21)
+supersedes its framing as the mature endpoint while preserving #11's validated
+prototype separation and all B4–B6 evidence.
+
+Mature sensing follows [physical foundations](SENSING_FOUNDATIONS.md) through
+networks of [Physical Coupling Processes](PHYSICAL_COUPLING_ARCHITECTURE.md).
+A sense is an emergent causal/informational pathway, not a named sense enum or
+permanent heritable component label. Heredity/development produces the materials
+and structures that couple to physics; it does not directly mutate final responses.
+The chain below is the retained prototype boundary, not a universal mature channel:
 
 Causal separation:
 environmental quantity
@@ -582,7 +595,8 @@ Requirements include:
 - sensitivity analysis,
 - no hidden assumption that today's null model is universal,
 - coordinated mutation across components of `HeritableProgram`,
-- eventual evolvability/fidelity traits where scientifically justified.
+- eventual evolvable inheritance machinery/mutation spectra where physically
+  justified; numerical/scientific solver fidelity remains simulator-owned.
 
 Current structural-opportunity bias must be considered when interpreting apparent evolution of network complexity.
 
@@ -801,6 +815,35 @@ Guardrails:
 This should remain future-only unless it clearly improves the research workflow.
 
 ---
+
+# S1–S5 architecture freeze (issue #21)
+
+**Authority:** [User-approved issue #21](https://github.com/ElliottChambon/AlienEvolution/issues/21).
+These commitments supersede older mature-endpoint language in entries 5–6 and
+clarify entries 13, 18, 22–24. They do not invalidate prototype evidence.
+
+| Commitment | Frozen architectural contract | Required mature capability / implementation open | Maturity audit |
+| --- | --- | --- | --- |
+| S1 | Physics-first sensing; influence, detectability, internal integration, and adaptive relevance separate; primitive observables distinct from inference; no fixed named senses | Propagation/access, noise/information, internal use, and consequences for specific mechanisms | Deferred; B4–B6 scalar channels are prototype scaffolds |
+| S2 | PCP is fundamental; typed bidirectional ports, state/history, observables, control, exchange ledger; channels only validated reductions; evolution changes phi, simulator controls m | Domain-specific deterministic/stochastic/hybrid/quantum realizations; Adaptive Certified Physics and selection-aware adversarial validation | Deferred; no mature PCP or certification engine exists |
+| S3 | Many-to-many physical coupling mechanisms/observables; geometry transforms information; polymodal structures allowed; Earth receptors are evidence | Versioned mechanisms, unresolved alternatives, layer-specific P1/B1/B2/M/X/S provenance and validation | Deferred; no mature coupling-mechanism catalog is implemented |
+| S4 | G -> development -> material state/geometry -> Material Compiler -> response models -> PCPs -> consequences -> reproduction; compilers/caches never inherited | Chemistry-agnostic construction representation, coupled development/material response, mutational-accessibility audits | Deferred; HeritableProgram is a compatibility scaffold |
+| S5 | Transformation System (G,I,M,P); physical opportunities and footprints, no automatic repair; separate ancestry/state/function; immutable provenance DAG distinct from derived dependency graph | Mechanism-dependent transformations, multi-parent history, incremental invalidation, novelty/innovation/adaptation diagnosis | Deferred; current regulatory/sensory mutation remains a null-model prototype |
+
+The detailed contracts are [S1/S3](SENSING_FOUNDATIONS.md),
+[S2](PHYSICAL_COUPLING_ARCHITECTURE.md), and [S4/S5](HERITABLE_CONSTRUCTION_ARCHITECTURE.md).
+Frozen architecture is separate from required mature capability: publication of
+these documents implements M0 only. No solver, material chemistry, inheritance
+backend, mutation kernel, probability assignment to unresolved models, or
+biological validation is frozen by this milestone. Mechanism-specific checkpoints
+and literature/benchmark review remain required at M7+.
+
+Every mechanism/architecture record distinguishes stable causal interfaces,
+replaceable mechanism models, unresolved alternatives, prototype/reduced
+abstractions, evidence/provenance, validity domain, and version/supersession.
+High numerical fidelity does not establish scientific truth. Evolutionary
+challenge cases must be retained and failed certified domains repaired/shrunk.
+Pruning cannot remove a coupling's future evolutionary possibility.
 
 # Maintenance rule
 
