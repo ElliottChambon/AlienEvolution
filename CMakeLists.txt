@@ -23,6 +23,7 @@ add_library(
     src/science/ScientificModelMetadata.cpp
 
     src/physics/DiffusiveField2D.cpp
+    src/physics/PhysicalCouplingProcess.cpp
 
     src/development/Phenotype.cpp
     src/development/RegulatoryDevelopment.cpp
@@ -104,6 +105,19 @@ target_link_libraries(
 )
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionPhysicalCouplingProcessSchemaTests
+        tests/physical_coupling_process_schema_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionPhysicalCouplingProcessSchemaTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME PhysicalCouplingProcessSchemaTests
+        COMMAND AlienEvolutionPhysicalCouplingProcessSchemaTests
+    )
 
     add_executable(
         AlienEvolutionScientificMetadataTests
