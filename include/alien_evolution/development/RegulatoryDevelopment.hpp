@@ -46,6 +46,14 @@ namespace ae
         double depositionRateScale = 0.0;
     };
 
+    // Runtime measurement identifiers only; this does not specify sensing
+    // channel inheritance, mutation, or evolution.
+    struct RegulatoryDevelopmentSignals
+    {
+        std::uint64_t localMaterialSignalId = 0;
+        std::uint64_t resourceSignalId = 1;
+    };
+
     class RegulatoryDevelopment
     {
     public:
@@ -62,12 +70,32 @@ namespace ae
             const Environment& environment
         ) const;
 
+        // Uses only internal regulatory nodes. Legacy input-node IDs in
+        // config are unused; depositionOutputNodeId remains the effector.
+        [[nodiscard]]
+        Phenotype develop(
+            const RegulatoryProgram& program,
+            const RegulatoryInputInterface& inputs,
+            RegulatoryDevelopmentSignals signals,
+            const Environment& environment
+        ) const;
+
     private:
         std::size_t width_;
         std::size_t height_;
         std::size_t steps_;
 
         RegulatoryDevelopmentConfig config_;
+
+        [[nodiscard]]
+        Phenotype developImpl(
+            const RegulatoryProgram& program,
+            const Environment& environment,
+            std::size_t localInputIndex,
+            std::size_t resourceInputIndex,
+            const RegulatoryInputInterface* inputs,
+            RegulatoryDevelopmentSignals signals
+        ) const;
 
         [[nodiscard]]
         std::size_t index(

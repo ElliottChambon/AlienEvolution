@@ -16,8 +16,18 @@ explicit upstream conversion to a nonnegative signal; no such conversion is
 implemented here. V0.3B2 connects the interface to regulatory dynamics by
 multiplying production at every RK4 derivative stage. Supplied signals remain
 constant throughout a step (or a constant-input simulation), with no modeled
-sensor kinetics or feedback to the external field. Development and the
-diffusive field are not yet connected, so existing organism behavior is unchanged.
+sensor kinetics or feedback to the external field. V0.3B3 adds an opt-in
+development overload supplying the existing local-material measurement and
+nonnegative resource availability as external signals. Measurements are sampled
+from the current phenotype and held constant during each location's regulatory
+substeps; phenotype and regulatory states still update synchronously. The legacy
+clamp path remains the production simulation path, so current organism behavior
+is unchanged. The diffusive field is not connected.
+
+Sensing-channel inheritance, mutation, and evolution are intentionally deferred
+to a separate user-reviewed architecture decision. Runtime signal identifiers
+and the separately supplied interface do not settle that decision. This step
+provides architecture/software and numerical validation, not biological validation.
 
 Before selecting a mature sensing mechanism, external literature review and
 quantitative benchmarks are still required for response laws, channel
