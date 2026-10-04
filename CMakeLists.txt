@@ -91,7 +91,34 @@ target_link_libraries(
 
 include(CTest)
 
+# Manual milestone validation; deliberately not registered with CTest.
+add_executable(
+    AlienEvolutionSensorySelectionValidation
+    experiments/sensory_selection_validation.cpp
+)
+target_link_libraries(
+    AlienEvolutionSensorySelectionValidation
+    PRIVATE AlienEvolutionCore
+)
+
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionSensorySelectionFixtureTests
+        tests/sensory_selection_fixture_tests.cpp
+    )
+    target_include_directories(
+        AlienEvolutionSensorySelectionFixtureTests
+        PRIVATE ${PROJECT_SOURCE_DIR}/experiments
+    )
+    target_link_libraries(
+        AlienEvolutionSensorySelectionFixtureTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME SensorySelectionFixtureTests
+        COMMAND AlienEvolutionSensorySelectionFixtureTests
+    )
 
     add_executable(
         AlienEvolutionSensoryMutationTests

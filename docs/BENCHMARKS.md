@@ -311,6 +311,30 @@ that were absent from the archived phenotype.
 
 ---
 
+# Controlled prototype benchmark — sensory-response evolution (V0.3B6)
+
+The [B6 validation record](V0_3B6_VALIDATION.md) tests whether selection shifts
+inherited resource sensitivity along a deterministic phenotype-fitness gradient.
+Internal regulation, wiring, fold change, and cooperativity are fixed; only
+half-saturation mutates. Thirty matched replicates compare selected mutation,
+neutral mutation, and selected no mutation, with standardized response curves
+and independent final phenotype assays.
+
+The first full local run supports the lower-K prediction at resource 2: paired
+adaptive shift 0.481431, sample SD 0.396876, approximate 95% mean interval
+[0.339411, 0.623452], positive/negative/tie counts 25/5/0. No extinctions or
+development failures occurred. No opposite-gradient candidate existed, so reversal
+and reciprocal-environment validation remain unavailable. Parameters were frozen
+before evolution and were not tuned after outcomes.
+
+This is mechanism evidence in a 2D, shifted-Hill, boundary-energy prototype,
+not biological calibration or closure of a mature benchmark. Mature sensing
+remains scaffolded; structural sensory evolution requires its architecture
+checkpoint. The executable is a manual milestone run outside CTest/CI; only
+small deterministic fixture tests join the fast suite.
+
+---
+
 # Acceptance Philosophy
 
 A candidate numerical or developmental model does not need to solve every

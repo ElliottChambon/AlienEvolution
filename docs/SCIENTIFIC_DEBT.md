@@ -75,13 +75,38 @@ evolution. Regulatory node loss can still leave unusable sensory targets; runtim
 adapter validation rejects these without deletion, retargeting, or co-mutation.
 No new sensing modalities, costs, noise, delay, or adaptation are modeled.
 
-This is architecture/mechanism verification, not biological validation. V0.3B6
-will test whether selection can drive sensory response in controlled environments;
-those experiments are not run in B5. Structural sensory evolution remains behind
+This is architecture/mechanism verification, not biological validation. The
+[V0.3B6 controlled experiment](V0_3B6_VALIDATION.md) now supports directional
+selection on half-saturation relative to matched neutral lines in one declared
+resource environment. Those experiments were not run in B5. Structural sensory evolution remains behind
 an explicit user-reviewed architecture checkpoint. The
 [mature sensing commitment](MATURE_COMMITMENTS.md#6-separate-heritable-sensoryprogram)
 remains scaffolded: specificity must ultimately follow physical/chemical coupling,
 not mutations between arbitrary integer signal IDs.
+
+## Controlled sensory-selection benchmark limits (V0.3B6)
+
+B6 freezes regulation, channel structure, fold change, and cooperativity and
+evolves only half-saturation with the B5 null model. The deterministic landscape
+selects resource 2 and a lower-K prediction before any stochastic run. The full
+30-replicate result supports that prediction, with paired adaptive shift 0.481431
+and approximate 95% mean interval [0.339411, 0.623452]; five of 30 paired shifts
+were negative. Direct response assays confirm the ensemble sensory change.
+
+All candidate gradients have the same sign and sampled optima lie on the lower
+scan boundary. Environment-specific reversal, reciprocal adaptation, and a global
+optimum are not established. Selected lines did not converge to that boundary
+within 100 generations. Fixed-size populations, one scalar resource, arbitrary
+signal/output IDs, shifted-Hill sensing, 2D deposition, and boundary-based energy
+remain prototype constraints. Seeds are matched, but divergent parent selection
+does not guarantee identical later RNG consumption. Descriptive intervals are
+not calibrated coverage guarantees. No costs, noise, delay, receptor dynamics,
+empirical calibration, or mature physics were added or validated.
+
+The [actual results and frozen fixture](V0_3B6_VALIDATION.md) are mechanism evidence,
+not mature biological validation. Production simulation retains its legacy path.
+No parameters were tuned after full outcomes and no architecture commitment was
+changed. Structural sensory evolution still requires explicit user review.
 
 ---
 

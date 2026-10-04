@@ -126,7 +126,9 @@ separate regulatory/sensory configuration in `HeritableMutationConfig`; the
 compatibility path retains zero sensory mutation and the historical RNG sequence.
 Only response parameters mutate; signal/target IDs and channel structure remain
 fixed. See the [B5 null-model debt](SCIENTIFIC_DEBT.md#quantitative-sensory-mutation-null-model-v03b5).
-V0.3B6 controlled selection experiments remain future work; structural sensory
+V0.3B6 adds an experiment-local [controlled sensory-selection benchmark](V0_3B6_VALIDATION.md)
+using the external-input path and fixed internal regulation. It does not switch
+production simulation or establish mature sensing biology. Structural sensory
 evolution requires a later explicit architecture checkpoint.
 
 The developmental causal chain remains:
