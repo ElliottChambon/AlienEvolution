@@ -155,7 +155,8 @@ namespace ae
         RegulatoryState calculateDerivatives(
             const RegulatoryProgram& program,
             const RegulatoryState& state,
-            const std::vector<bool>* clampedMask
+            const std::vector<bool>* clampedMask,
+            const std::vector<double>* inputFactors = nullptr
         )
         {
             validateState(
@@ -231,6 +232,11 @@ namespace ae
                         regulatoryEffect;
                 }
 
+                if (inputFactors != nullptr)
+                {
+                    production *= (*inputFactors)[targetIndex];
+                }
+
                 if (!std::isfinite(production))
                 {
                     throw std::overflow_error(
@@ -246,6 +252,22 @@ namespace ae
             }
 
             return derivative;
+        }
+
+        std::vector<double> externalInputFactors(
+            const RegulatoryProgram& program,
+            const RegulatoryInputInterface& inputs,
+            const std::vector<ExternalSignalValue>& signals
+        )
+        {
+            inputs.validate(program);
+            std::vector<double> factors;
+            factors.reserve(program.nodeCount());
+            for (const RegulatoryNode& node : program.nodes())
+            {
+                factors.push_back(inputs.modulationFactor(node.id, signals));
+            }
+            return factors;
         }
 
     } // namespace
@@ -378,6 +400,17 @@ namespace ae
         const std::vector<RegulatoryStateClamp>& clamps
     )
     {
+        return stepRK4Impl(program, state, timeStep, clamps, nullptr);
+    }
+
+    RegulatoryState RegulatoryDynamics::stepRK4Impl(
+        const RegulatoryProgram& program,
+        const RegulatoryState& state,
+        const double timeStep,
+        const std::vector<RegulatoryStateClamp>& clamps,
+        const std::vector<double>* inputFactors
+    )
+    {
         validateState(
             program,
             state
@@ -416,7 +449,8 @@ namespace ae
             calculateDerivatives(
                 program,
                 state1,
-                &clampedMask
+                &clampedMask,
+                inputFactors
             );
 
 
@@ -440,7 +474,8 @@ namespace ae
             calculateDerivatives(
                 program,
                 state2,
-                &clampedMask
+                &clampedMask,
+                inputFactors
             );
 
 
@@ -464,7 +499,8 @@ namespace ae
             calculateDerivatives(
                 program,
                 state3,
-                &clampedMask
+                &clampedMask,
+                inputFactors
             );
 
 
@@ -488,7 +524,8 @@ namespace ae
             calculateDerivatives(
                 program,
                 state4,
-                &clampedMask
+                &clampedMask,
+                inputFactors
             );
 
 
@@ -604,6 +641,65 @@ namespace ae
                 step;
         }
 
+        return state;
+    }
+
+    RegulatoryState RegulatoryDynamics::derivatives(
+        const RegulatoryProgram& program,
+        const RegulatoryState& state,
+        const RegulatoryInputInterface& inputs,
+        const std::vector<ExternalSignalValue>& signals
+    )
+    {
+        const auto factors = externalInputFactors(program, inputs, signals);
+        return calculateDerivatives(program, state, nullptr, &factors);
+    }
+
+    RegulatoryState RegulatoryDynamics::stepRK4(
+        const RegulatoryProgram& program,
+        const RegulatoryState& state,
+        const double timeStep,
+        const RegulatoryInputInterface& inputs,
+        const std::vector<ExternalSignalValue>& signals
+    )
+    {
+        // Constant signals allow factors to be calculated once, then applied
+        // to production in all four derivative evaluations.
+        const auto factors = externalInputFactors(program, inputs, signals);
+        return stepRK4Impl(program, state, timeStep, {}, &factors);
+    }
+
+    RegulatoryState RegulatoryDynamics::simulate(
+        const RegulatoryProgram& program,
+        RegulatoryState state,
+        const double duration,
+        const double timeStep,
+        const RegulatoryInputInterface& inputs,
+        const std::vector<ExternalSignalValue>& signals
+    )
+    {
+        validateState(program, state);
+        if (!std::isfinite(duration) || duration < 0.0)
+        {
+            throw std::invalid_argument("Simulation duration must be finite and nonnegative.");
+        }
+        if (!std::isfinite(timeStep) || timeStep <= 0.0)
+        {
+            throw std::invalid_argument("Simulation time step must be finite and positive.");
+        }
+        // Validate inputs even for a zero-duration simulation.
+        const auto factors = externalInputFactors(program, inputs, signals);
+        double elapsed = 0.0;
+        while (elapsed < duration)
+        {
+            const double step = std::min(timeStep, duration - elapsed);
+            if (step <= 0.0)
+            {
+                break;
+            }
+            state = stepRK4Impl(program, state, step, {}, &factors);
+            elapsed += step;
+        }
         return state;
     }
 

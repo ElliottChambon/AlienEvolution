@@ -13,8 +13,11 @@ Independent channels multiply their responses. This simplifies transduction
 and omits sensor dynamics, adaptation, cross-channel coupling, sensing costs,
 and explicit chemistry. Physical quantities that can be signed require an
 explicit upstream conversion to a nonnegative signal; no such conversion is
-implemented here. The interface is not yet connected to regulatory dynamics,
-development, or the diffusive field, so existing organism behavior is unchanged.
+implemented here. V0.3B2 connects the interface to regulatory dynamics by
+multiplying production at every RK4 derivative stage. Supplied signals remain
+constant throughout a step (or a constant-input simulation), with no modeled
+sensor kinetics or feedback to the external field. Development and the
+diffusive field are not yet connected, so existing organism behavior is unchanged.
 
 Before selecting a mature sensing mechanism, external literature review and
 quantitative benchmarks are still required for response laws, channel
