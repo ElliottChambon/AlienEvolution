@@ -2,6 +2,10 @@
 
 ## Purpose
 
+The [mature-commitment registry](MATURE_COMMITMENTS.md) tracks approved
+directions and deferred capabilities separately from prototype progress.
+Milestone completion must be assessed against its recorded validation evidence.
+
 This roadmap connects the current prototype to the mature scientific
 architecture described in `MATURE_ARCHITECTURE.md`.
 
