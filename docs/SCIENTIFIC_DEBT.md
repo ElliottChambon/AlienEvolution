@@ -31,9 +31,18 @@ is unchanged. The diffusive field is not connected.
 
 The [approved sensory-program direction](MATURE_COMMITMENTS.md#6-separate-heritable-sensoryprogram)
 requires a separate, jointly inherited sensory component alongside internal
-regulation. Its implementation is still deferred; runtime signal identifiers
-and the separately supplied interface do not provide sensory inheritance or
-evolution. Structural sensory evolution remains a separate user-reviewed
+regulation. V0.3B4 now implements `HeritableProgram` ownership of separate
+`RegulatoryProgram` and `SensoryProgram` components. The sensory container uses
+the existing ID-based shifted-Hill channels as a temporary phenomenological
+representation, not a mature receptor model. It derives the validated runtime
+adapter without duplicating transduction logic. Reproduction copies sensory
+data unchanged and retains the existing regulatory mutation/RNG sequence.
+Quantitative sensory mutation remains deferred to V0.3B5.
+
+Regulatory topology changes may leave inherited sensory targets unusable. B4
+preserves those channels without deletion, retargeting, or repair; constructing
+the runtime adapter rejects invalid targets. Co-evolution semantics are not
+decided here. Structural sensory evolution remains a separate user-reviewed
 architecture checkpoint. This step provides architecture/software and numerical
 validation, not biological validation.
 
