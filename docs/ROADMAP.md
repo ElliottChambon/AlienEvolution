@@ -599,14 +599,30 @@ mutation. Neither graph is inherited state or physically influences organisms.
 Current regulatory/sensory IDs have not been promoted to mature historical identities;
 HCS and current mutation/reproduction remain unchanged. No structural mutation or
 mutation footprint model exists yet, and no biological validation is claimed.
-M6 first migrated Physical Coupling benchmark is next.
+M6 migration benchmark is implemented below.
 
 ### M6 — First migrated coupling benchmark
 
-Re-express one deliberately simple current phenomenon through PCPs. Verify
+Re-express one deliberately simple current phenomenon as an explicit reduced PCC. Verify
 equivalence to the old validated mechanism in its declared regime before replacing
 anything. Preserve deterministic compatibility and B4–B6 history/evidence;
 equivalence is not mature biological validation.
+
+**Migration benchmark implemented (issue #33):**
+[PrototypeShiftedHillCouplingChannel](../include/alien_evolution/physics/PrototypeShiftedHillCouplingChannel.hpp)
+reuses the existing stable shifted-Hill kernel for one finite nonnegative scalar
+input with fixed finite positive parameters. It carries M1 scientific metadata,
+an M2 descriptive schema and M3 declared QoI/regime/reference/error vocabulary.
+[Fast benchmarks](../tests/prototype_shifted_hill_coupling_channel_tests.cpp) require
+bitwise equality to the kernel, single-channel V0.3 `RegulatoryInputInterface`,
+and controlled downstream derivative/RK4 calculations. Production `Simulation`
+still uses the existing input interface; `SensoryProgram`, multiple-channel
+multiplication, development and B4–B6 history/tests remain intact. The PCC has no
+state/history/control/ledger, physical transport, noise, receptor/material physics,
+adaptation or energetics. It neither executes a validity predicate nor estimates
+physical reduction error. Numerical equivalence is not biological validation;
+the mature target and replacement path remain [documented debt](SCIENTIFIC_DEBT.md#m6-prototype-shifted-hill-pcc-migration-benchmark).
+M7+ needs reviewed domain mechanisms before any production replacement.
 
 ### M7+ — Gradual domain mechanisms and structural evolution
 

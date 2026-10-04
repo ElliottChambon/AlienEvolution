@@ -26,6 +26,7 @@ add_library(
     src/physics/DiffusiveField2D.cpp
     src/physics/PhysicalCouplingProcess.cpp
     src/physics/AdaptiveCertifiedPhysics.cpp
+    src/physics/PrototypeShiftedHillCouplingChannel.cpp
 
     src/development/Phenotype.cpp
     src/development/RegulatoryDevelopment.cpp
@@ -108,6 +109,19 @@ target_link_libraries(
 )
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionPrototypeShiftedHillCouplingChannelTests
+        tests/prototype_shifted_hill_coupling_channel_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionPrototypeShiftedHillCouplingChannelTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME PrototypeShiftedHillCouplingChannelTests
+        COMMAND AlienEvolutionPrototypeShiftedHillCouplingChannelTests
+    )
 
     add_executable(
         AlienEvolutionProvenanceTests
