@@ -1,5 +1,28 @@
 # Scientific Model Debt
 
+## External signal transduction interface (V0.3B1)
+
+`RegulatoryInputInterface` is an isolated phenomenological external-signal/
+transduction abstraction, not a claim of universal Earth-like receptor biology.
+It maps caller-supplied nonnegative signal magnitudes to multiplicative
+regulatory target modulation using the existing shifted-Hill response. Signal
+units and normalization remain the caller's responsibility; half-saturation
+must use the same units as its signal.
+
+Independent channels multiply their responses. This simplifies transduction
+and omits sensor dynamics, adaptation, cross-channel coupling, sensing costs,
+and explicit chemistry. Physical quantities that can be signed require an
+explicit upstream conversion to a nonnegative signal; no such conversion is
+implemented here. The interface is not yet connected to regulatory dynamics,
+development, or the diffusive field, so existing organism behavior is unchanged.
+
+Before selecting a mature sensing mechanism, external literature review and
+quantitative benchmarks are still required for response laws, channel
+integration, timescales, and energetic costs in the modeled physical/chemical
+setting. The current response is a replaceable architectural assumption.
+
+---
+
 AlienEvolution uses simplified models during early development to validate
 the architecture and causal behavior of the simulation.
 
