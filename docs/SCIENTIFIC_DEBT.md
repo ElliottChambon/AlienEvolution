@@ -1,5 +1,10 @@
 # Scientific Model Debt
 
+See the [mature-commitment registry](MATURE_COMMITMENTS.md) for the master audit
+of frozen directions, required capabilities with open implementations, and
+prototype debt. Update both records when introducing or replacing a simplification;
+passing prototype tests does not close a mature commitment.
+
 ## External signal transduction interface (V0.3B1)
 
 `RegulatoryInputInterface` is an isolated phenomenological external-signal/
@@ -24,10 +29,13 @@ substeps; phenotype and regulatory states still update synchronously. The legacy
 clamp path remains the production simulation path, so current organism behavior
 is unchanged. The diffusive field is not connected.
 
-Sensing-channel inheritance, mutation, and evolution are intentionally deferred
-to a separate user-reviewed architecture decision. Runtime signal identifiers
-and the separately supplied interface do not settle that decision. This step
-provides architecture/software and numerical validation, not biological validation.
+The [approved sensory-program direction](MATURE_COMMITMENTS.md#6-separate-heritable-sensoryprogram)
+requires a separate, jointly inherited sensory component alongside internal
+regulation. Its implementation is still deferred; runtime signal identifiers
+and the separately supplied interface do not provide sensory inheritance or
+evolution. Structural sensory evolution remains a separate user-reviewed
+architecture checkpoint. This step provides architecture/software and numerical
+validation, not biological validation.
 
 Before selecting a mature sensing mechanism, external literature review and
 quantitative benchmarks are still required for response laws, channel

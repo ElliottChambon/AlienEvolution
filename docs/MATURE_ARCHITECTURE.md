@@ -2,6 +2,10 @@
 
 ## Status
 
+See the [mature-commitment registry](MATURE_COMMITMENTS.md) for approved
+directions, open implementation choices, prototype debt, and maturity audits.
+Frozen commitments do not imply that their solvers have been selected or validated.
+
 This document describes the target scientific and software architecture for
 AlienEvolution.
 
@@ -122,6 +126,12 @@ unless such quantities are being measured as phenotype outputs rather than
 encoded as instructions.
 
 The exact mature regulatory representation remains an open research decision.
+
+The [approved sensory separation](MATURE_COMMITMENTS.md#6-separate-heritable-sensoryprogram)
+places a distinct, jointly inherited sensory/transduction component alongside
+internal regulation within the compositional heritable program. Physical
+environmental quantities remain external. Exact class boundaries and mature
+mechanisms remain open; structural sensory evolution requires explicit user review.
 
 Candidate approaches include gene-regulatory-network-like systems and other
 chemistry-agnostic regulatory networks capable of evolving nonlinear,
