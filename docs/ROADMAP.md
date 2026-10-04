@@ -527,13 +527,34 @@ category; quantity keys inside ports are local to each port. Explicit validation
 checks syntax only and allows empty categories. It selects no physical domain
 mechanism, executes no PCP, and provides no biological validation. Matching type
 identifiers or units do not establish connections or compatibility. Current
-sensing remains unmigrated. M3 Adaptive Certified Physics scaffold is next.
+sensing remains unmigrated. M3 contracts are scaffolded below.
 
 ### M3 — Adaptive Certified Physics scaffold
 
 Validity contracts, quantity-of-interest/error/provenance hooks, reference/reduced
 model relationships and challenge-case registry concepts. Include selection-aware
 promotion/audit boundaries; solver choice stays simulator-owned.
+
+**Scaffolded (issue #27):**
+[Adaptive Certified Physics contracts](../include/alien_evolution/physics/AdaptiveCertifiedPhysics.hpp)
+record exact model ID/version references, M2 quantity descriptors as QoIs,
+declared validity criteria, numerical/reduction error-measure declarations tied
+to QoIs, reference-model edges, typed audit reasons, inert review requests, and
+an append-only in-memory challenge registry with read-only lookup. Collections
+preserve insertion order; reference edges apply to a contract's declared QoIs
+and do not define a universal fidelity ladder or biological truth. Contracts
+require at least one QoI; criteria, error measures and reference models may be
+absent. Review/challenge QoI lists may be empty; supplied keys must be nonblank,
+and optional contract-scoped syntax checks require declared-key membership.
+Challenge context/reproduction references are stored as text, not loaded or
+verified; registry retention is for its in-memory lifetime, with no persistence.
+No validity predicate or error estimator is executed, no solver/model selection
+occurs, and no scientific mechanism is certified. Challenge cases are simulator
+validation artifacts, never inherited organism state. Selection-aware audit
+reasons can record concerns that approximation could alter a scientific or
+evolutionary decision; policy thresholds remain deferred. Pruning must never
+erase future evolutionary possibilities. Production behavior and current sensing
+remain unchanged. M4 Heritable Construction State compatibility scaffold is next.
 
 ### M4 — Heritable Construction State compatibility scaffold
 
