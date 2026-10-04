@@ -24,6 +24,7 @@ add_library(
 
     src/physics/DiffusiveField2D.cpp
     src/physics/PhysicalCouplingProcess.cpp
+    src/physics/AdaptiveCertifiedPhysics.cpp
 
     src/development/Phenotype.cpp
     src/development/RegulatoryDevelopment.cpp
@@ -105,6 +106,19 @@ target_link_libraries(
 )
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionAdaptiveCertifiedPhysicsTests
+        tests/adaptive_certified_physics_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionAdaptiveCertifiedPhysicsTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME AdaptiveCertifiedPhysicsTests
+        COMMAND AlienEvolutionAdaptiveCertifiedPhysicsTests
+    )
 
     add_executable(
         AlienEvolutionPhysicalCouplingProcessSchemaTests
