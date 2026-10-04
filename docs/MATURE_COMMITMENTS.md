@@ -55,6 +55,23 @@ evidence and retain the distinction from the historical
 
 # Master registry
 
+M6 ([issue #33](https://github.com/ElliottChambon/AlienEvolution/issues/33)) adds one
+[prototype shifted-Hill PCC](../include/alien_evolution/physics/PrototypeShiftedHillCouplingChannel.hpp)
+with M1–M3 metadata and [bitwise scalar/integration compatibility benchmarks](../tests/prototype_shifted_hill_coupling_channel_tests.cpp).
+This verifies legacy single-channel mathematics only, not biological sensing or
+a full PCP. Production `Simulation` and `RegulatoryInputInterface` remain legacy;
+`SensoryProgram` and B4–B6 history remain intact. No universal PCP runtime API or
+M7+ mechanism is implemented. The mature target remains causal world/access ->
+developed material/geometry -> PCP chains -> local physical state/transduction ->
+internal integration -> ecological/reproductive consequences, with certified PCC
+reductions only where justified. See the [full mature target and replacement path](SCIENTIFIC_DEBT.md#m6-prototype-shifted-hill-pcc-migration-benchmark).
+M7+ requires reviewed domain mechanisms before production replacement; effective
+parameters generally derive from phenotype/material physics, evolution changes
+HCS rather than solver choice, and future Adaptive Certified Physics must invalidate/
+promote/refine reductions outside their validity region. Exchange/conservation,
+noise, energetic costs, history and model-form uncertainty remain required where
+relevant; no mature mechanism is certified by this milestone.
+
 M5 ([issue #31](https://github.com/ElliottChambon/AlienEvolution/issues/31)) provides
 [immutable provenance bookkeeping](../include/alien_evolution/evolution/EvolutionaryProvenance.hpp)
 and a separate [causal dependency graph](../include/alien_evolution/core/CausalDependencyGraph.hpp).
@@ -65,7 +82,7 @@ even with computational cycles. No actual incremental recomputation occurs. Curr
 prototype regulatory/sensory IDs have not been promoted to mature historical identities.
 HCS, current mutation and reproduction are unchanged; no structural mutation or
 mutation footprint model exists yet. This is software verification, not biological
-validation. M6 first migrated Physical Coupling benchmark is next.
+validation. M6 prototype PCC migration is benchmarked; M7+ domain mechanisms require review before production replacement.
 
 ## 1. Scientific scope: simulate worlds and evolutionary distributions, not one designed alien
 
@@ -204,8 +221,7 @@ and delegate to the same payload. [Fast compatibility tests](../tests/heritable_
 verify exact round trips, ownership and reproduction/mutation RNG compatibility.
 Current mutation/reproduction and B4–B6 behavior are unchanged. No mature inheritance
 chemistry, structural novelty, provenance or dependency mechanism is implemented;
-no biological validation is claimed. M5 bookkeeping is scaffolded; M6 first migrated
-Physical Coupling benchmark is next.
+no biological validation is claimed. M5 bookkeeping is scaffolded; M6 prototype PCC migration is benchmarked; M7+ domain mechanisms require review before production replacement.
 
 It must not regress to direct parameters such as:
 
@@ -417,7 +433,7 @@ state/history/control/observables/ledger categories, M1 metadata and an optional
 region association. It selects no physical domain mechanism, executes no PCP,
 and provides no biological validation or automatic compatibility. Production
 behavior is unchanged and current sensing remains unmigrated. M3 contracts are
-scaffolded below; M4 HCS compatibility is scaffolded (entry 5); M5 standalone bookkeeping is scaffolded; M6 first migrated Physical Coupling benchmark is next.
+scaffolded below; M4 HCS compatibility is scaffolded (entry 5); M5 standalone bookkeeping is scaffolded; M6 prototype PCC migration is benchmarked; M7+ domain mechanisms require review before production replacement.
 
 M3 ([issue #27](https://github.com/ElliottChambon/AlienEvolution/issues/27)) adds
 [Adaptive Certified Physics contracts](../include/alien_evolution/physics/AdaptiveCertifiedPhysics.hpp),
@@ -429,7 +445,7 @@ declarations remain separate from scientific/model-form uncertainty; reference
 edges are not a fidelity ranking or biological truth claim. Challenge cases are
 simulator validation artifacts retained in an append-only in-memory registry,
 not inherited organism state. Selection-aware policy thresholds remain deferred.
-M4 HCS compatibility is scaffolded (entry 5); M5 standalone bookkeeping is scaffolded; M6 first migrated Physical Coupling benchmark is next.
+M4 HCS compatibility is scaffolded (entry 5); M5 standalone bookkeeping is scaffolded; M6 prototype PCC migration is benchmarked; M7+ domain mechanisms require review before production replacement.
 
 ### Current simplification
 `DiffusiveField2D` implements:
@@ -799,7 +815,7 @@ Do not call architecture-level tests "biological validation."
 
 **Status:** Frozen architectural commitment.
 
-**Maturity:** Scaffolded: M1 ([issue #23](https://github.com/ElliottChambon/AlienEvolution/issues/23)) adds standalone [scientific metadata records](../include/alien_evolution/science/ScientificModelMetadata.hpp) for exact P1/B1/B2/M/X/S codes, layered evidence/literature, model identity/version, inert supersession/alternatives, parameters/units, assumptions/validity scope, and distinct numerical/reduction versus scientific/model-form uncertainty. [Fast tests](../tests/scientific_metadata_tests.cpp) verify metadata and syntactic validation only. This software infrastructure selects no scientific mechanism, provides no biological validation, and does not change production simulation behavior. Each mature replacement still needs its own review and evidence; M2 schema vocabulary is scaffolded (entry 12); M3 contracts are scaffolded (entry 12); M4 HCS compatibility is scaffolded (entry 5); M5 standalone bookkeeping is scaffolded; M6 first migrated Physical Coupling benchmark is next.
+**Maturity:** Scaffolded: M1 ([issue #23](https://github.com/ElliottChambon/AlienEvolution/issues/23)) adds standalone [scientific metadata records](../include/alien_evolution/science/ScientificModelMetadata.hpp) for exact P1/B1/B2/M/X/S codes, layered evidence/literature, model identity/version, inert supersession/alternatives, parameters/units, assumptions/validity scope, and distinct numerical/reduction versus scientific/model-form uncertainty. [Fast tests](../tests/scientific_metadata_tests.cpp) verify metadata and syntactic validation only. This software infrastructure selects no scientific mechanism, provides no biological validation, and does not change production simulation behavior. Each mature replacement still needs its own review and evidence; M2 schema vocabulary is scaffolded (entry 12); M3 contracts are scaffolded (entry 12); M4 HCS compatibility is scaffolded (entry 5); M5 standalone bookkeeping is scaffolded; M6 prototype PCC migration is benchmarked; M7+ domain mechanisms require review before production replacement.
 
 ### Current simplification
 Many early mechanisms are selected because they are useful architecture tests.

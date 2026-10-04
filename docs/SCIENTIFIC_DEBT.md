@@ -62,7 +62,79 @@ These are standalone in-memory scaffolds, not production simulation integrations
 Current prototype regulatory/sensory IDs have not been assigned mature historical
 identities. No structural mutation or mutation footprint model exists yet; chemistry,
 identity integration and inheritance-event semantics still require scientific review.
-No biological validation is claimed. M6 first migrated Physical Coupling benchmark is next.
+No biological validation is claimed. M6 prototype PCC migration is benchmarked below; M7+ domain mechanisms still require review.
+
+## M6 prototype shifted-Hill PCC migration benchmark
+
+[PrototypeShiftedHillCouplingChannel](../include/alien_evolution/physics/PrototypeShiftedHillCouplingChannel.hpp)
+is a deterministic memoryless phenomenological **reduced PCC**, not a full PCP.
+The only claim is that it reproduces the validated V0.3 single-channel external
+response mathematics within its declared scalar regime. It calls the existing
+stable shifted-Hill kernel and has fixed finite positive parameters and a finite
+nonnegative input in caller/model-defined units. Model ID/version is
+`alien_evolution.prototype.shifted_hill_pcc` / `m6-v1`. M1 metadata names source
+code and V0.3 prototype debt as provenance; evidence records remain empty rather
+than assigning a stronger scientific category or B1 biological evidence.
+
+M2 schema declares one neutral input and one dimensionless modulation observable;
+state/history/control/ledger are absent. M3 metadata declares the scalar assumptions
+and numerical compatibility measure/reference only. No validity predicate, formal
+physical error estimator or solver promotion is executed. Zero bitwise migration
+difference does not reduce scientific/model-form uncertainty. Mathematical output
+is positive, but extreme finite repression can round the legacy result to zero;
+M6 preserves that numerical limitation instead of changing production mathematics.
+Transport/access, receptor chemistry, physical noise, energy/material exchanges,
+adaptation and material coupling remain absent. No fake sensing cost is introduced.
+
+The mature sensing target remains:
+
+```text
+world/environment physical state
+-> propagation / physical accessibility
+-> organism-developed material + geometry
+-> physical coupling process(es)
+-> local material/molecular/field state change
+-> stochastic and/or deterministic transduction
+-> amplification / filtering / control where evolved
+-> regulatory / physiological integration
+-> behavior / development / ecology / reproduction
+```
+
+Future reviewed mechanisms may need transport/access, binding/association, chemical
+transformation, force/strain transfer, charge transport/polarization, photon
+absorption/excitation, magnetic/spin dynamics, or ionization/energy deposition.
+Geometry may filter/focus/resonate; composition and microstructure, physical noise
+and detection limits, nonequilibrium costs, bidirectional exchange, adaptation/
+hysteresis and stochastic/hybrid dynamics must be represented where relevant.
+No universal receptor mechanism is selected; domain models remain literature-reviewed,
+versioned and explicit about evidence, alternatives and scientific uncertainty.
+
+Effective gain, affinity, half-saturation, spectral response, stiffness, conductivity
+and similar parameters should generally derive from developed phenotype/material
+physics or be explicitly certified reduced parameters. Evolution changes HCS,
+development, material and geometry, never the scientific solver. Sensing emerges
+from PCP networks, not a permanent `SensoryProgram` channel catalog. A future PCC
+may serve as a compiled reduction only within its certified validity region;
+phenotype/material changes outside it must eventually trigger invalidation,
+promotion/refinement against more general physical models. Full exchange/conservation
+accounting, physical noise, energetic costs and model-form uncertainty remain
+required where relevant. None of that future machinery is implemented by M6.
+
+The replacement path is explicit:
+
+```text
+CURRENT: SensoryProgram -> RegulatoryInputChannel -> shifted-Hill modulation
+M6: same mathematics as a prototype PCC with scientific/schema/validity metadata
+FUTURE M7+: physical mechanism PCP chain -> certified compiled PCC where justified
+            -> internal regulatory integration
+EVENTUAL: retire the current SensoryProgram abstraction only after validated
+          domain mechanisms and reviewed migration exist
+```
+
+Production `Simulation` still uses `RegulatoryInputInterface`; all B4–B6 behavior
+and evidence remain unchanged. M6 schedules no deletion, supplies no universal PCP
+runtime API and migrates no multiple-channel multiplication. M7+ requires explicit
+mechanism checkpoints and literature/benchmark evidence before production replacement.
 
 ## External signal transduction interface (V0.3B1)
 
