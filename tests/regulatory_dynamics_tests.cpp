@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <vector>
 
@@ -38,6 +39,113 @@ namespace
             <= tolerance;
     }
 
+    template <typename Function>
+    void requireInvalid(Function function)
+    {
+        try
+        {
+            function();
+        }
+        catch (const std::invalid_argument&)
+        {
+            return;
+        }
+        throw std::runtime_error("Invalid external-input integration arguments accepted.");
+    }
+
+    void testExternalInputs()
+    {
+        using Dynamics = ae::RegulatoryDynamics;
+        const ae::RegulatoryProgram program({{10, 0.0, 2.0, 0.5}}, {});
+        const ae::RegulatoryState initial{1.0};
+        const ae::RegulatoryInputInterface empty(program, {});
+        const ae::RegulatoryInputInterface activation(program, {{100, 10, 5.0, 2.0, 2.0}});
+        const ae::RegulatoryInputInterface repression(program, {{100, 10, 0.25, 2.0, 2.0}});
+        const std::vector<ae::ExternalSignalValue> signals{{100, 2.0}};
+        const std::vector<ae::ExternalSignalValue> zero{{100, 0.0}};
+
+        require(Dynamics::derivatives(program, initial)
+            == Dynamics::derivatives(program, initial, empty, {}), "Empty input changed derivatives.");
+        require(Dynamics::stepRK4(program, initial, 0.5)
+            == Dynamics::stepRK4(program, initial, 0.5, empty, {}), "Empty input changed RK4.");
+        require(Dynamics::simulate(program, initial, 1.25, 0.5)
+            == Dynamics::simulate(program, initial, 1.25, 0.5, empty, {}), "Empty input changed simulation.");
+        require(Dynamics::derivatives(program, initial)
+            == Dynamics::derivatives(program, initial, activation, zero), "Zero signal changed derivatives.");
+        require(Dynamics::stepRK4(program, initial, 0.5)
+            == Dynamics::stepRK4(program, initial, 0.5, activation, zero), "Zero signal changed RK4.");
+        require(Dynamics::simulate(program, initial, 1.25, 0.5)
+            == Dynamics::simulate(program, initial, 1.25, 0.5, activation, zero), "Zero signal changed simulation.");
+
+        const auto baseline = Dynamics::simulate(program, initial, 3.0, 0.01);
+        const auto activated = Dynamics::simulate(program, initial, 3.0, 0.01, activation, signals);
+        const auto repressed = Dynamics::simulate(program, initial, 3.0, 0.01, repression, signals);
+        require(activated[0] > baseline[0] && repressed[0] < baseline[0],
+            "External activation/repression failed.");
+        // Exact solution of dx/dt = 6 - 0.5x with x(0)=1.
+        require(nearlyEqual(activated[0], 12.0 - 11.0 * std::exp(-1.5), 1e-9),
+            "Constant-input simulation disagrees with analytical solution.");
+        require(activated.size() == initial.size(), "External signal entered regulatory state.");
+        require(activated == Dynamics::simulate(program, initial, 3.0, 0.01, activation, signals),
+            "External-input simulation is not deterministic.");
+
+        // For dx/dt = 6 - 0.5x, x(0)=1 and h=1, RK4 yields 5.3255208333.
+        // This oracle detects missing modulation at any derivative stage,
+        // multiplying the full derivative, or scaling the completed step.
+        const auto stageResult = Dynamics::stepRK4(program, initial, 1.0, activation, signals);
+        require(nearlyEqual(stageResult[0], 5.325520833333333, 1e-12),
+            "External production modulation was not applied correctly at every RK4 stage.");
+
+        const ae::RegulatoryProgram intrinsic(
+            {{20, 1.0, 1.0, 1.0}, {10, 1.0, 2.0, 0.5}},
+            {{20, 10, 5.0, 1.0, 2.0}}
+        );
+        const ae::RegulatoryInputInterface combined(intrinsic, {{100, 10, 5.0, 2.0, 2.0}});
+        const auto derivative = Dynamics::derivatives(intrinsic, {1.0, 1.0}, combined, signals);
+        require(nearlyEqual(derivative[1], 17.5, 1e-12) && derivative[0] == 0.0,
+            "Intrinsic/external factors did not multiply production or changed untargeted node.");
+        // A constant external factor is equivalent to scaling basal production,
+        // even when intrinsic self-regulation changes between RK4 stages.
+        const ae::RegulatoryProgram feedback({{10, 0.4, 0.2, 1.0}}, {{10, 10, 5.0, 0.5, 2.0}});
+        const ae::RegulatoryProgram scaled({{10, 0.4, 0.6, 1.0}}, {{10, 10, 5.0, 0.5, 2.0}});
+        const auto feedbackStep = Dynamics::stepRK4(feedback, {0.4}, 0.5, activation, signals);
+        require(nearlyEqual(feedbackStep[0], Dynamics::stepRK4(scaled, {0.4}, 0.5)[0], 1e-12),
+            "External modulation failed with changing intrinsic feedback at RK4 stages.");
+
+        const auto partial = Dynamics::simulate(program, initial, 1.25, 0.5, activation, signals);
+        auto manual = Dynamics::stepRK4(program, initial, 0.5, activation, signals);
+        manual = Dynamics::stepRK4(program, manual, 0.5, activation, signals);
+        manual = Dynamics::stepRK4(program, manual, 0.25, activation, signals);
+        require(partial == manual, "Constant-input simulation mishandled final partial step.");
+        require(Dynamics::simulate(program, initial, 0.0, 0.5, activation, signals) == initial,
+            "Zero-duration simulation changed state.");
+
+        const ae::RegulatoryProgram other({{999, 0.0, 1.0, 1.0}}, {});
+        // Check interface errors propagate through every entry point, including
+        // a zero-duration simulation where no derivative would be evaluated.
+        for (int api = 0; api < 3; ++api)
+        {
+            const auto evaluate = [&](const ae::RegulatoryProgram& p,
+                const std::vector<ae::ExternalSignalValue>& values) {
+                if (api == 0) (void)Dynamics::derivatives(p, initial, activation, values);
+                if (api == 1) (void)Dynamics::stepRK4(p, initial, 0.1, activation, values);
+                if (api == 2) (void)Dynamics::simulate(p, initial, 0.0, 0.1, activation, values);
+            };
+            requireInvalid([&] { evaluate(program, {}); });
+            requireInvalid([&] { evaluate(program, {{100, 1.0}, {100, 2.0}}); });
+            requireInvalid([&] { evaluate(other, signals); });
+            for (double invalid : {-1.0, std::numeric_limits<double>::infinity(),
+                std::numeric_limits<double>::quiet_NaN()})
+            {
+                requireInvalid([&] { evaluate(program, {{100, invalid}}); });
+            }
+        }
+        requireInvalid([&] { (void)Dynamics::derivatives(program, {}, activation, signals); });
+        requireInvalid([&] { (void)Dynamics::stepRK4(program, initial, 0.0, activation, signals); });
+        requireInvalid([&] { (void)Dynamics::simulate(program, initial, -1.0, 0.1, activation, signals); });
+        requireInvalid([&] { (void)Dynamics::simulate(program, initial, 1.0, 0.0, activation, signals); });
+    }
+
 } // namespace
 
 
@@ -45,6 +153,7 @@ int main()
 {
     try
     {
+        testExternalInputs();
         // --------------------------------------------------------
         // Test 1:
         // Shifted Hill response has correct limiting behavior.
