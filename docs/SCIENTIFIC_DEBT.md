@@ -33,6 +33,21 @@ biological validation is claimed. Layer-specific evidence categories and model
 versions/alternatives must accompany future replacements; scientific/model-form
 uncertainty remains separate from numerical/reduction uncertainty.
 
+## Heritable Construction State compatibility scaffold (M4, issue #29)
+
+[HeritableConstructionState](../include/alien_evolution/genetics/HeritableConstructionState.hpp)
+now provides the migration seam, owning only the current `HeritableProgram`
+prototype heredity payload. `Organism` owns HCS without a duplicate program;
+named prototype adapters and legacy accessors preserve current behavior.
+Mutation/reproduction algorithms, random consumption and B4–B6 behavior remain
+unchanged. This is inherited organismal state, not scientific metadata or
+simulator-owned provenance. No mature inheritance chemistry is selected and no
+structural novelty, provenance or dependency mechanism is implemented. Existing
+direct parameter mutation and graph opportunity debt remain open; the wrapper
+does not reinterpret B6 evidence as mature construction-state mutation or provide
+biological validation. M5 provenance DAG + causal dependency/invalidation
+infrastructure is next; mechanism-specific inheritance still requires review.
+
 ## External signal transduction interface (V0.3B1)
 
 `RegulatoryInputInterface` is an isolated phenomenological external-signal/
