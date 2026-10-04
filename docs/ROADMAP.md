@@ -127,6 +127,9 @@ toward:
 
 # V0.3 — Three-Dimensional Developmental Units
 
+The validated B4–B6 sensing work and the new M0–M7+ migration below remain
+distinct from this deferred 3D capability milestone.
+
 ## Objective
 
 Move from the 2D material-field prototype to the first version of the mature
@@ -464,6 +467,78 @@ life.
 
 Its purpose is to explore scientifically constrained distributions of
 possible evolutionary outcomes.
+
+---
+
+## M0–M7+ mature architecture migration
+
+The former proposed **B7 structural sensory mutation** direction is superseded
+by this staged migration under [approved issue #21](https://github.com/ElliottChambon/AlienEvolution/issues/21).
+B7 is not implemented or authorized by M0. This sequence does not implement
+chemistry, quantum physics, mechanics, materials, or structural evolution all at once.
+
+### Retained validated milestones
+
+- **V0.3B4:** HeritableProgram composition and separate SensoryProgram ownership/
+  inheritance, validated runtime adapter, preserved regulatory compatibility.
+- **V0.3B5:** Explicit quantitative sensory mutation null model; fixed IDs and
+  structure, no automatic target repair, zero-hazard RNG compatibility.
+- **V0.3B6:** [Controlled sensory-selection validation](V0_3B6_VALIDATION.md):
+  fixed regulation/structure, half-saturation evolution, matched selected/neutral/
+  no-mutation lines and direct assays. Its evidence and limitations remain intact;
+  it does not validate mature biology or authorize structural sensory mutation.
+
+### M0 — Architecture freeze/documentation
+
+Issue #21 records approved S1–S5 in the foundation documents and guardrails.
+Documentation only; production behavior is unchanged. Freezing causal/interface
+commitments does not complete their mature capabilities or select mechanisms.
+
+### M1 — Scientific metadata/evidence/version primitives
+
+Pure software metadata/interfaces only, with no production behavior change.
+Record evidence categories, provenance, alternatives, versions/supersession,
+units/parameters and separate scientific/model-form versus numerical uncertainty.
+
+### M2 — Physical port + Physical Coupling Process software scaffold
+
+Stable abstract data/interface layer for typed bidirectional ports, state/history,
+control, accessible observables and exchange ledgers. No claim that current
+sensing has migrated; no universal domain port catalog or solver is selected.
+
+### M3 — Adaptive Certified Physics scaffold
+
+Validity contracts, quantity-of-interest/error/provenance hooks, reference/reduced
+model relationships and challenge-case registry concepts. Include selection-aware
+promotion/audit boundaries; solver choice stays simulator-owned.
+
+### M4 — Heritable Construction State compatibility scaffold
+
+Introduce the mature wrapper/abstraction while preserving current HeritableProgram
+through an adapter/migration path. Do not universalize DNA or directly evolvable
+finished material/sensory properties.
+
+### M5 — Provenance DAG + causal dependency/invalidation infrastructure
+
+Separate immutable multi-parent history from derived causal dependencies.
+Both are simulator-owned, non-inherited, with no physical influence on organisms;
+dependencies support pleiotropy-aware invalidation and recomputation.
+
+### M6 — First migrated coupling benchmark
+
+Re-express one deliberately simple current phenomenon through PCPs. Verify
+equivalence to the old validated mechanism in its declared regime before replacing
+anything. Preserve deterministic compatibility and B4–B6 history/evidence;
+equivalence is not mature biological validation.
+
+### M7+ — Gradual domain mechanisms and structural evolution
+
+Proceed only after explicit scientific architecture checkpoints for the specific
+mechanism/inheritance backend, with literature review, evidence/alternatives,
+validity/version records, and benchmarks. Physical inheritance opportunities and
+mutation footprints replace arbitrary graph edits; novelty and function are
+diagnosed after development/physics. Add neutral accessibility audits and
+evolutionary adversarial validation as the relevant capabilities land.
 
 ---
 
