@@ -105,6 +105,18 @@ namespace ae
         const SelectionMode selectionMode
     )
     {
+        return reproducePopulation(parents, offspringCount,
+            HeritableMutationConfig{mutationConfig, {}}, random, selectionMode);
+    }
+
+    Population reproducePopulation(
+        const Population& parents,
+        const std::size_t offspringCount,
+        const HeritableMutationConfig& mutationConfig,
+        Random& random,
+        const SelectionMode selectionMode
+    )
+    {
         if (offspringCount == 0)
         {
             return Population(
@@ -209,18 +221,15 @@ namespace ae
                 );
             }
 
-            RegulatoryMutationGenerationResult mutationResult =
-                generateRegulatoryOffspring(
-                    parent->regulatoryProgram(),
+            HeritableMutationGenerationResult mutationResult =
+                generateHeritableOffspring(
+                    parent->heritableProgram(),
                     mutationConfig,
                     random
                 );
 
             offspring.emplace_back(
-                HeritableProgram(
-                    std::move(mutationResult.offspringProgram),
-                    parent->heritableProgram().sensoryProgram()
-                )
+                std::move(mutationResult.offspringProgram)
             );
         }
 
