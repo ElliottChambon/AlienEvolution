@@ -55,6 +55,25 @@ evidence and retain the distinction from the historical
 
 # Master registry
 
+M7A ([issue #35](https://github.com/ElliottChambon/AlienEvolution/issues/35)) adds the
+[CHEM-1 analytical/well-mixed scaffold](CHEMICAL_COUPLING_ARCHITECTURE.md) for
+generic reversible chemical association. **Maturity: Scaffolded, not replaced and
+validated.** It freezes the mature chemical-coupling direction—physical coupling
+support rather than named senses, conservative bidirectional exchange,
+composition -> thermodynamic activity/chemical-potential closure, general
+state/reaction processes with Markov models only as scoped reductions,
+thermodynamic consistency and explicit free-energy driving for sustained
+nonequilibrium cycles, material/geometry causality for effective rates, and
+multidimensional ACP rather than a scalar fidelity ladder. The implemented slice
+remains ideal-dilute, spherical, open-reservoir/well-mixed and single-site, with
+collapsed rapid rebinding, probability rather than matter/energy accounting, fixed
+benchmark physical inputs, inert ACP declarations, no spatial stochastic reference
+and no production sensing replacement. The explicit
+[simplification/replacement map](CHEMICAL_COUPLING_ARCHITECTURE.md#m7a-simplifications-and-mature-replacements)
+and [CHEM-1A debt record](SCIENTIFIC_DEBT.md#chem-1a-analytical-and-well-mixed-scaffold)
+remain authoritative for the missing mature capabilities. Numerical/spatial solver
+choice remains a separate scientific checkpoint.
+
 M6 ([issue #33](https://github.com/ElliottChambon/AlienEvolution/issues/33)) adds one
 [prototype shifted-Hill PCC](../include/alien_evolution/physics/PrototypeShiftedHillCouplingChannel.hpp)
 with M1–M3 metadata and [bitwise scalar/integration compatibility benchmarks](../tests/prototype_shifted_hill_coupling_channel_tests.cpp).
