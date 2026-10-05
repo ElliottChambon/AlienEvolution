@@ -19,13 +19,15 @@ the physics-first causal structure—physical coupling support, conservative
 bidirectional interaction, thermodynamic driving, state/reaction processes,
 thermodynamic consistency, and multidimensional Adaptive Certified Physics.
 **M7A is the analytical/well-mixed scaffold; M7B adds one exact reversible
-isolated-pair 3-D Green-function reference oracle.** M7B does not turn the
-canonical sphere or SCK contact-reactivity model into universal mature chemistry,
-and it does not certify maintained-reservoir or many-particle behavior.
-Closed/finite-bath matter exchange, nonideal/electrochemical thermodynamics,
+isolated-pair 3-D Green-function reference oracle; M7C adds a conserved competitive
+capacity-one finite-bath calibration reference.** None of these turn the canonical
+sphere, radial reduction or SCK contact-reactivity model into universal mature
+chemistry. M7C adds bounded ligand-count conservation and finite-copy spatial
+competition, but explicit open-reservoir dynamics and general many-particle/runtime
+geometry remain open. Nonideal/electrochemical thermodynamics,
 mixtures, general reaction/state networks, explicit nonequilibrium driving,
-material-compiled rates, runtime certification and production replacement remain
-open mature work. See the explicit
+material-compiled rates, general spatial backends, runtime certification and
+production replacement remain open mature work. See the explicit
 [M7A simplification/replacement map](CHEMICAL_COUPLING_ARCHITECTURE.md#m7a-simplifications-and-mature-replacements)
 and [scientific debt](SCIENTIFIC_DEBT.md#chem-1a-analytical-and-well-mixed-scaffold).
 
