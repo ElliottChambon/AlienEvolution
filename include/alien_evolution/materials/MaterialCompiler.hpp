@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "alien_evolution/core/CausalDependencyGraph.hpp"
@@ -9,6 +10,17 @@
 
 namespace ae
 {
+    namespace material_update_points
+    {
+        inline constexpr std::string_view ConstituentPhysics = "constituent_physics";
+        inline constexpr std::string_view PhaseThermodynamics = "phase_thermodynamics";
+        inline constexpr std::string_view MicrostructureEvolution = "microstructure_evolution";
+        inline constexpr std::string_view Homogenization = "homogenization";
+        inline constexpr std::string_view ConstitutiveResponse = "constitutive_response";
+        inline constexpr std::string_view NumericalRealization = "numerical_realization";
+        inline constexpr std::string_view CalibrationReference = "calibration_reference";
+    }
+
     enum class MaterialCompilationDisposition
     {
         Compiled,
