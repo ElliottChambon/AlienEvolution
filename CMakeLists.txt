@@ -29,6 +29,7 @@ add_library(
     src/physics/PrototypeShiftedHillCouplingChannel.cpp
     src/physics/ReversibleChemicalAssociation.cpp
     src/physics/ReversibleChemicalAssociationSpatialReference.cpp
+    src/physics/ReversibleChemicalAssociationFiniteBath.cpp
 
     src/development/Phenotype.cpp
     src/development/RegulatoryDevelopment.cpp
@@ -110,7 +111,29 @@ target_link_libraries(
     PRIVATE AlienEvolutionCore
 )
 
+add_executable(
+    AlienEvolutionChem1CFiniteBathValidation
+    experiments/chem1c_finite_bath_validation.cpp
+)
+target_link_libraries(
+    AlienEvolutionChem1CFiniteBathValidation
+    PRIVATE AlienEvolutionCore
+)
+
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionReversibleChemicalAssociationFiniteBathTests
+        tests/reversible_chemical_association_finite_bath_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionReversibleChemicalAssociationFiniteBathTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME ReversibleChemicalAssociationFiniteBathTests
+        COMMAND AlienEvolutionReversibleChemicalAssociationFiniteBathTests
+    )
 
     add_executable(
         AlienEvolutionReversibleChemicalAssociationSpatialReferenceTests
