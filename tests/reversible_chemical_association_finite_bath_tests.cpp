@@ -117,6 +117,21 @@ namespace
             auto bad = config(2.0, 1.0e-8, 1.0e-12, 16);
             (void)Bath(parameters(1.0, 1.0), bad);
         });
+
+        // Weak but valid association must retain the slow positive reactive
+        // eigenmode; the z->0 phase sign is handled analytically to avoid
+        // cancellation of two nearly equal atan terms.
+        const Bath weak(parameters(1.0e-4, 1.0), config());
+        const auto weakRoots = weak.reactiveDimensionlessModeRoots();
+        require(!weakRoots.empty() && weakRoots.front() > 0.0
+            && std::isfinite(weakRoots.front()),
+            "CHEM-1C weak-association slow mode was not resolved");
+        const auto weakPhase =
+            weakRoots.front() * ell
+            - std::atan((1.0 + 1.0e-4) / weakRoots.front())
+            + std::atan(HOuter / weakRoots.front());
+        require(std::abs(weakPhase) < 2.0e-11,
+            "CHEM-1C weak-association slow-mode phase residual too large");
     }
 
     struct Golden
@@ -212,6 +227,31 @@ namespace
             bath.equilibriumBoundProbability(2),
             reduced.equilibriumOccupancy(cTotal),
             3.0e-13);
+
+        // Preserve tiny but representable equilibrium probabilities even when
+        // the intermediate K_D*V product would overflow double.
+        const ae::ChemicalAssociationParameters extremeParameters(
+            1.0,
+            1.0,
+            4.0 * std::numbers::pi,
+            1.0e308);
+        const Bath extreme(
+            extremeParameters,
+            config(100.0, 1.0e-4, 1.0e-12, 32768));
+        const auto extremeCount = std::numeric_limits<std::size_t>::max();
+        const auto extremeProbability =
+            extreme.equilibriumBoundProbability(extremeCount);
+        require(std::isfinite(extremeProbability)
+            && extremeProbability > 0.0
+            && extremeProbability < 1.0e-290,
+            "CHEM-1C representable tiny equilibrium probability collapsed");
+        const auto expectedExtreme =
+            std::exp(
+                std::log(static_cast<double>(extremeCount))
+                + std::log(4.0 * std::numbers::pi)
+                - std::log(1.0e308)
+                - std::log(extreme.accessibleVolume()));
+        nearRelative(extremeProbability, expectedExtreme, 2.0e-13);
 
         rejects<std::domain_error>([&] {
             (void)bath.reactiveSurvival(1.2, 0.5 * bath.diagnostics().minimumResolvedPhysicalTime);
