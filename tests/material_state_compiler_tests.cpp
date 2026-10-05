@@ -337,6 +337,12 @@ namespace
             (void)laminate(100.0, 10.0, -0.1);
         });
 
+        rejects([] {
+            auto inconsistent = laminate();
+            inconsistent.laminatePeriod = 0.02;
+            inconsistent.validate();
+        });
+
         const auto& metadata =
             ae::Mat1LaminateCalibrationCompiler::scientificMetadata();
         metadata.validate();
