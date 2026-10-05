@@ -17,12 +17,16 @@ The approved M7 chemical specialization is recorded in
 [chemical coupling architecture](CHEMICAL_COUPLING_ARCHITECTURE.md). It freezes
 the physics-first causal structure—physical coupling support, conservative
 bidirectional interaction, thermodynamic driving, state/reaction processes,
-thermodynamic consistency, and multidimensional Adaptive Certified Physics—but
-**M7A is only an analytical/well-mixed scaffold**. Spatial reaction-diffusion,
-closed-domain matter exchange, nonideal/electrochemical thermodynamics, mixtures,
-general reaction/state networks, explicit nonequilibrium driving, material-compiled
-rates, runtime certification, and production replacement remain open mature work.
-See the explicit [M7A simplification/replacement map](CHEMICAL_COUPLING_ARCHITECTURE.md#m7a-simplifications-and-mature-replacements)
+thermodynamic consistency, and multidimensional Adaptive Certified Physics.
+**M7A is the analytical/well-mixed scaffold; M7B adds one exact reversible
+isolated-pair 3-D Green-function reference oracle.** M7B does not turn the
+canonical sphere or SCK contact-reactivity model into universal mature chemistry,
+and it does not certify maintained-reservoir or many-particle behavior.
+Closed/finite-bath matter exchange, nonideal/electrochemical thermodynamics,
+mixtures, general reaction/state networks, explicit nonequilibrium driving,
+material-compiled rates, runtime certification and production replacement remain
+open mature work. See the explicit
+[M7A simplification/replacement map](CHEMICAL_COUPLING_ARCHITECTURE.md#m7a-simplifications-and-mature-replacements)
 and [scientific debt](SCIENTIFIC_DEBT.md#chem-1a-analytical-and-well-mixed-scaffold).
 
 This document describes the target scientific and software architecture for
@@ -635,6 +639,28 @@ Inspection Fidelity
 
 Results across fidelity levels must remain functionally consistent within
 defined tolerances.
+
+The mature scientific engine also separates **model role** from nominal fidelity:
+
+```text
+reference model
+!= runtime physical model
+!= compiled/reduced model
+```
+
+A high-fidelity reference may be too expensive for routine evolution and exists to
+establish or audit validity. Runtime physical models are used when explicit dynamics
+are required. Compiled/reduced models provide repeated cheap evaluations only inside
+certified regimes. Adaptive Certified Physics should choose the cheapest
+representation among those that are already scientifically adequate for the
+declared quantity of interest. Scientific adequacy is never traded away for speed.
+
+Computational cost, cache availability and scaling estimates are simulator-owned
+planning information. They are not phenotype, heredity, or selectable organism
+traits. High-fidelity work should be amortized through sparse audits, validated
+caching/interpolation, challenge cases and lineage/local reuse where scientifically
+valid; evolution must not be permitted to exploit the boundaries of those
+approximations.
 
 ---
 
