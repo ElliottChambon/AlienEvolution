@@ -30,16 +30,18 @@ int main()
     try
     {
         constexpr double lambda = 2.0;
-        constexpr int replicates = 100;
+        constexpr int replicates = 20;
         constexpr double horizon = 30.0;
         const std::vector<std::size_t> ligandCounts{1, 2, 5};
         const std::vector<double> chis{0.1, 1.0, 10.0};
         const std::vector<double> deltas{0.1, 1.0, 10.0};
+        const std::vector<double> tauMins{1.0e-4, 1.0e-5, 1.0e-6};
 
-        std::cout << "CHEM-1C manual finite-bath validation\n";
-        std::cout << "N,chi,delta,expected_bound,observed_bound,resolved,unresolved\n";
+        std::cout << "CHEM-1C resolution scan\n";
+        std::cout << "tau_min,N,chi,delta,reactive_modes,reflecting_modes,expected_bound,observed_bound,resolved,unresolved\n";
 
-        std::uint64_t seed = 390100;
+        std::uint64_t seed = 490100;
+        for (const auto tauMin : tauMins)
         for (const auto N : ligandCounts)
         {
             for (const auto chi : chis)
@@ -48,7 +50,7 @@ int main()
                 {
                     ae::FiniteChemicalBathConfig config;
                     config.outerRadius = lambda;
-                    config.minimumResolvedDimensionlessTime = 1.0e-4;
+                    config.minimumResolvedDimensionlessTime = tauMin;
                     config.spectralTolerance = 1.0e-12;
                     config.maxModes = 32768;
 
@@ -88,9 +90,12 @@ int main()
                         : static_cast<double>(bound) / static_cast<double>(resolved);
 
                     std::cout
+                        << tauMin << ','
                         << N << ','
                         << chi << ','
                         << delta << ','
+                        << bath.diagnostics().reactiveModeCount << ','
+                        << bath.diagnostics().reflectingModeCount << ','
                         << std::setprecision(10)
                         << bath.equilibriumBoundProbability(N) << ','
                         << observed << ','
