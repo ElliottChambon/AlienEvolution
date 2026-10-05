@@ -645,12 +645,39 @@ A mature organism may require regions that differ in properties such as:
 Without material differentiation, structures with different physical roles
 cannot properly diverge.
 
-### Future direction
+### M8A scaffold now implemented
 
-Add evolvable and developmentally regulated material states.
+M8A adds the first scale-aware developed-material state envelope and Material
+Compiler contract plus MAT-1, an exact one-dimensional two-phase laminate
+calibration. It demonstrates that equal constituent identities/fractions can
+produce different compiled response because of structure/orientation and query.
 
-Material categories should be defined primarily through physical and chemical
-properties rather than Earth-specific anatomical names.
+This does **not** solve mature material differentiation. Production phenotype
+occupancy is still a scalar prototype and no development output is currently
+converted into mature material state.
+
+MAT-1 benchmark phase moduli are simulator/reference inputs, not heritable material
+properties. Its arithmetic iso-strain and harmonic iso-stress formulas are exact
+only for the stated scalar one-dimensional calibration problems and must not be
+promoted to general 3-D laminate Young's-modulus rules.
+
+Still deferred:
+- distributed material state over developed organism geometry;
+- constituent chemistry/thermodynamic derivation;
+- phase equilibria/metastability;
+- evolving microstructure/interfaces/porosity/internal variables;
+- full tensor elasticity and objectivity/material-symmetry implementation;
+- QoI-specific finite-scale RVE/SVE certification;
+- Hashin-Shtrikman/other rigorous bounds in executable compiler logic;
+- FE/FFT/full-field homogenization;
+- phase-field/CALPHAD/atomistic backends;
+- plasticity, viscoelasticity, damage and fracture;
+- thermal/electrical/transport material views;
+- automatic material ACP promotion/caching;
+- selection-aware adversarial material cross-fidelity validation.
+
+Material categories remain physical-state representations rather than Earth-specific
+anatomical names.
 
 ---
 
