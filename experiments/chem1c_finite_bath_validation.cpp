@@ -30,11 +30,11 @@ int main()
     try
     {
         constexpr double lambda = 2.0;
-        constexpr int replicates = 20;
+        constexpr int replicates = 10;
         constexpr double horizon = 30.0;
         const std::vector<std::size_t> ligandCounts{1, 2, 5};
-        const std::vector<double> chis{0.1, 1.0, 10.0};
-        const std::vector<double> deltas{0.1, 1.0, 10.0};
+        const std::vector<double> chis{1.0, 10.0};
+        const std::vector<double> deltas{1.0, 10.0};
         const std::vector<double> tauMins{1.0e-4, 1.0e-5, 1.0e-6};
 
         std::cout << "CHEM-1C resolution scan\n";
