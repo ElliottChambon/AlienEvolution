@@ -362,7 +362,7 @@ namespace
                     "Exact periodic layered-composite effective properties and local fields"},
                 {"Ostoja-Starzewski (2006)", "https://doi.org/10.1016/j.probengmech.2005.07.007",
                     "Scale-dependent SVE/RVE concepts and bounds"},
-                {"Nagel et al. (2016)", "https://doi.org/10.1007/s00466-016-1264-5",
+                {"Nagel et al. (2016)", "https://doi.org/10.1007/s12665-016-5429-4",
                     "Kelvin mapping advantages for tensor-consistent numerical implementation"}
             },
             "MAT-2 uses a static analytical laminate reference and does not validate general organism mechanics."}};
