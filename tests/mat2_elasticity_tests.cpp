@@ -146,6 +146,21 @@ namespace
         const ae::IsotropicLinearElasticity auxetic{1.0, 3.0};
         require(auxetic.poissonRatio() < 0.0, "Positive K/G should permit auxetic benchmark state");
 
+        const ae::IsotropicLinearElasticity huge{1.0e150, 2.0e150};
+        require(std::isfinite(huge.youngModulus())
+            && std::isfinite(huge.poissonRatio()),
+            "Large finite K/G should retain representable derived elastic constants");
+        huge.tensor().validate();
+
+        const ae::IsotropicLinearElasticity tiny{1.0e-150, 2.0e-150};
+        require(std::isfinite(tiny.youngModulus())
+            && tiny.youngModulus() > 0.0,
+            "Tiny finite K/G should retain positive derived elastic constants");
+        tiny.tensor().validate();
+        require(
+            !huge.tensor().approximatelyEqual(tiny.tensor(), 1.0e-12),
+            "Scale-aware tensor comparison collapsed huge and tiny stiffness states");
+
         const auto rotation =
             ae::Rotation3::fromAxisAngle({2.0, -1.0, 0.5}, 1.1);
         require(
