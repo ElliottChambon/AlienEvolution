@@ -316,7 +316,14 @@ controlled handoff error. Two scientifically credible future routes remain:
    current long-time spectral representation.
 
 Neither route is implemented by M7C-R1. Either must carry explicit overlap/error
-tests before it may remove the current `tau_min` boundary.
+tests before it may remove the current `tau_min` boundary. The protective-domain
+decision is grounded in [van Zon & ten Wolde (2005)](https://doi.org/10.1103/PhysRevLett.94.128103)
+and the exact asynchronous eGFRD construction discussed by
+[Takahashi, Tănase-Nicola & ten Wolde (2010)](https://doi.org/10.1073/pnas.0906885107).
+The short-time alternative is supported by explicit/local Robin heat-kernel theory
+and multiple-reflection constructions, e.g.
+[Nursultanov, Rowlett & Sher (2024)](https://doi.org/10.1007/s40316-024-00237-4)
+and [Bordag et al. (2002)](https://doi.org/10.1103/PhysRevD.65.064032).
 
 M7C remains calibration geometry and a reference role. It does not make concentric
 spheres, radial state, SCK contact reactivity, or the spectral algorithm into the
