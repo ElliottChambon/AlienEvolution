@@ -938,8 +938,32 @@ The event-driven reference uses truncated spectral expansions. Its configured
 simulator-owned numerical policy. Propagations below the time floor and mode budgets
 that cannot satisfy the attenuation criterion are rejected rather than repaired
 silently. The current attenuation criterion is a practical truncation policy, not
-a rigorous universal error bound. Short-time asymptotics, accelerated transforms,
-higher precision or alternative solvers remain possible reviewed replacements.
+a rigorous universal error bound.
+
+M7C-R1 reduces reference cost without changing the model by using only the active
+prefix of the already-compiled ordered mode table needed by the same attenuation
+policy at each query time. This optimization does **not** justify lowering
+`tau_min` automatically; a lower floor still requires benchmark evidence and
+pays the high-mode cost near genuinely short events.
+
+The short-time hybrid review explicitly rejected a raw clock-based switch to M7B:
+the isolated-pair kernel is unbounded whereas M7C has a reflecting outer boundary,
+so the switch would silently alter boundary physics. A future exact/event-driven
+hybrid may instead use GFRD/eGFRD-style protective domains with first-passage
+handoffs. A second future option is a short-time local Robin/multiple-reflection
+representation of the **same bounded heat kernel**, matched and cross-validated
+against the spectral form. Both are deferred until the remaining unresolved
+short-time fraction warrants their implementation. Higher precision and other
+reviewed transforms also remain possible replacements.
+
+A focused hard-regime scan quantified the tradeoff: lowering `tau_min` from
+`1e-4` to `1e-5` to `1e-6` increased compiled reactive modes from
+176 to 552 to 1743 and improved resolved trajectories from 46/120 to 70/120 to
+81/120. Strong/rapid `chi=10,delta=10` cases remained largely unresolved.
+Therefore M7C-R1 does **not** lower the default `tau_min=1e-5`; brute-force mode
+depth has diminishing scientific coverage per unit compute. The unresolved
+near-contact/high-turnover regime remains explicit debt for a future verified
+short-time representation or protective-domain method.
 
 For the ideal capacity-one finite system,
 `P_bound=N/(N+K_D V)` is algebraically the same Langmuir form when expressed using

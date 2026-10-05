@@ -75,6 +75,8 @@ namespace ae
         [[nodiscard]] const FiniteChemicalBathDiagnostics& diagnostics() const;
         [[nodiscard]] std::vector<double> reactiveDimensionlessModeRoots() const;
         [[nodiscard]] std::vector<double> reflectingDimensionlessModeRoots() const;
+        [[nodiscard]] std::size_t activeReactiveModeCount(double elapsedTime) const;
+        [[nodiscard]] std::size_t activeReflectingModeCount(double elapsedTime) const;
 
         [[nodiscard]] double accessibleVolume() const;
         [[nodiscard]] double equilibriumBoundProbability(std::size_t totalLigands) const;
@@ -131,6 +133,9 @@ namespace ae
         std::vector<SpectralMode> reflectingModes_;
 
         [[nodiscard]] double dimensionlessTime(double elapsedTime) const;
+        [[nodiscard]] std::size_t activeModeCount(
+            const std::vector<SpectralMode>& modes,
+            double tau) const;
         [[nodiscard]] double reactiveSurvivalDimensionless(
             double rho0,
             double tau) const;

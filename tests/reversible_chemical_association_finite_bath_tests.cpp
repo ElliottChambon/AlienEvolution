@@ -64,6 +64,34 @@ namespace
         require(d.reactiveModeCount >= 16 && d.reflectingModeCount >= 16,
             "CHEM-1C did not compile sufficient spectral modes");
 
+        // M7C-R1: the compiled table is sized for tau_min, while individual
+        // longer-time queries use only the active prefix required by the same
+        // attenuation policy. Cost diagnostics are simulator-owned.
+        const auto reactiveAtMin =
+            bath.activeReactiveModeCount(d.minimumResolvedPhysicalTime);
+        const auto reflectingAtMin =
+            bath.activeReflectingModeCount(d.minimumResolvedPhysicalTime);
+        require(reactiveAtMin == d.reactiveModeCount
+            && reflectingAtMin == d.reflectingModeCount,
+            "CHEM-1C active mode budget at tau_min differs from compiled table");
+
+        const auto reactiveAt10 =
+            bath.activeReactiveModeCount(10.0 * d.minimumResolvedPhysicalTime);
+        const auto reactiveAt100 =
+            bath.activeReactiveModeCount(100.0 * d.minimumResolvedPhysicalTime);
+        const auto reflectingAt10 =
+            bath.activeReflectingModeCount(10.0 * d.minimumResolvedPhysicalTime);
+        const auto reflectingAt100 =
+            bath.activeReflectingModeCount(100.0 * d.minimumResolvedPhysicalTime);
+        require(reactiveAt100 <= reactiveAt10 && reactiveAt10 <= reactiveAtMin
+            && reflectingAt100 <= reflectingAt10 && reflectingAt10 <= reflectingAtMin,
+            "CHEM-1C active spectral cost did not decrease monotonically with time");
+        require(reactiveAt100 >= 16 && reflectingAt100 >= 16,
+            "CHEM-1C active spectral evaluation violated the minimum mode policy");
+        rejects<std::domain_error>([&] {
+            (void)bath.activeReactiveModeCount(0.5 * d.minimumResolvedPhysicalTime);
+        });
+
         const auto reactive = bath.reactiveDimensionlessModeRoots();
         const auto reflecting = bath.reflectingDimensionlessModeRoots();
         require(reactive.size() == d.reactiveModeCount
