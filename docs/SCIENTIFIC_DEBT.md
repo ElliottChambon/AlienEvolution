@@ -938,8 +938,23 @@ The event-driven reference uses truncated spectral expansions. Its configured
 simulator-owned numerical policy. Propagations below the time floor and mode budgets
 that cannot satisfy the attenuation criterion are rejected rather than repaired
 silently. The current attenuation criterion is a practical truncation policy, not
-a rigorous universal error bound. Short-time asymptotics, accelerated transforms,
-higher precision or alternative solvers remain possible reviewed replacements.
+a rigorous universal error bound.
+
+M7C-R1 reduces reference cost without changing the model by using only the active
+prefix of the already-compiled ordered mode table needed by the same attenuation
+policy at each query time. This optimization does **not** justify lowering
+`tau_min` automatically; a lower floor still requires benchmark evidence and
+pays the high-mode cost near genuinely short events.
+
+The short-time hybrid review explicitly rejected a raw clock-based switch to M7B:
+the isolated-pair kernel is unbounded whereas M7C has a reflecting outer boundary,
+so the switch would silently alter boundary physics. A future exact/event-driven
+hybrid may instead use GFRD/eGFRD-style protective domains with first-passage
+handoffs. A second future option is a short-time local Robin/multiple-reflection
+representation of the **same bounded heat kernel**, matched and cross-validated
+against the spectral form. Both are deferred until the remaining unresolved
+short-time fraction warrants their implementation. Higher precision and other
+reviewed transforms also remain possible replacements.
 
 For the ideal capacity-one finite system,
 `P_bound=N/(N+K_D V)` is algebraically the same Langmuir form when expressed using
