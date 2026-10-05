@@ -230,6 +230,79 @@ can ultimately escape; it must not be required to approach Langmuir equilibrium.
 Finite/open baths, depletion, conservation and many-particle arrival statistics
 remain M7C+ work.
 
+## M7C conserved competitive finite-bath reference
+
+[ReversibleChemicalAssociationFiniteBath](../include/alien_evolution/physics/ReversibleChemicalAssociationFiniteBath.hpp)
+implements the next CHEM-1 calibration layer: a fixed total number of identical
+ligands diffuse in a concentric spherical shell and compete for one capacity-one
+reactive target. The outer sphere is reflecting. When the site is free, the inner
+sphere has the Collins-Kimball Robin condition; while occupied, competitors see a
+reflecting inner boundary. Dissociation returns the same bound ligand to `r=a`
+without an arbitrary unbinding radius.
+
+Spherical symmetry is used aggressively for computational control: each free ligand
+is represented only by its radial coordinate. The radial diffusion equation is
+reduced with `u=r p` to a one-dimensional heat equation. Robin-Neumann and
+Neumann-Neumann propagators are represented by cached spectral modes whose
+dimensionless roots obey the pole-free phase equation
+
+```text
+z*(Lambda-1) - atan(H_in/z) + atan((1/Lambda)/z) = n*pi
+```
+
+with `H_in=1+chi` for a free/reactive site and `H_in=1` for an occupied/
+reflecting site. The reflecting kernel additionally includes the uniform zero mode.
+
+The competitive trajectory is event-driven rather than Brownian-timestep based.
+When the site is free, the earliest binding time is sampled from the product of
+single-ligand survival probabilities. The winner is selected by its instantaneous
+first-reaction hazard, while all nonwinning ligands are propagated from the
+**conditional distribution given that they did not react**. While occupied,
+competitors propagate with the reflecting kernel until intrinsic dissociation.
+Thus the ligands are independent in bulk motion but coupled through target
+availability; M7C is not `N` independent M7B copies.
+
+M7C adds an actual matter-count invariant for this calibration problem:
+
+```text
+N_free + B = N_total,   B in {0,1}
+```
+
+and exact analytical anchors including the bounded mean first-reaction time and
+
+```text
+P_bound(eq) = N / (N + K_D V).
+```
+
+For this ideal single-site finite system, writing total number concentration as
+`c_total=N/V` makes the equilibrium expression algebraically identical to
+`c_total/(c_total+K_D)`; finite-bath physics is therefore diagnosed primarily
+through kinetics, depletion, confinement, low-copy noise, rebinding/history and
+correlations rather than by inventing a different equilibrium affinity curve.
+A maintained open reservoir is still a distinct dynamical configuration.
+
+### M7C numerical-resolution policy
+
+The bounded spectral series becomes expensive at extremely short dimensionless
+times. M7C-v1 therefore declares `minimumResolvedDimensionlessTime`,
+`spectralTolerance`, and `maxModes` as simulator-owned numerical settings.
+Mode tables are compiled once per physical configuration and reused. A propagation
+below the declared time floor, or a requested tolerance that cannot be met within
+the mode budget, is reported as numerically unresolved; the implementation does
+not silently switch to Brownian dynamics, loosen accuracy, or modify organismal
+physics.
+
+The attenuation-based mode-count rule is a numerical policy, not a universal error
+bound. Fast tests use independent high-precision fixtures and exact analytical
+relations; broader `N,chi,delta,Lambda` sweeps live in a manual experiment outside
+CTest. Future short-time asymptotics, alternative spectral acceleration, or general
+spatial solvers require their own validation before replacing this numerical
+boundary.
+
+M7C remains calibration geometry and a reference role. It does not make concentric
+spheres, radial state, SCK contact reactivity, or the spectral algorithm into the
+mature universal chemistry architecture.
+
 ## Computational role separation
 
 Mature Adaptive Certified Physics distinguishes three roles:
@@ -262,7 +335,7 @@ to become the permanent chemical-sensing architecture:
 | --- | --- |
 | Ideal-dilute scalar concentration | Thermodynamic closure from conserved composition/state to activity/chemical potential, including nonideal and electrochemical models where required |
 | Spherical support and constant open reservoir | General physical coupling support over surfaces, volumes, porous/distributed regions and internal interfaces, with explicit open/closed domains and transport |
-| Effective two-state Markov rates with collapsed rapid rebinding | M7B exact isolated-pair spatial reference for local contact/rebinding physics, followed by finite/open-bath and many-particle references when depletion, confinement or correlations matter |
+| Effective two-state Markov rates with collapsed rapid rebinding | M7B exact isolated-pair reference plus M7C conserved competitive finite-bath reference; later general/open-bath references remain required when evolved geometry, mixtures or broader many-particle physics matter |
 | One ligand + one noncooperative site | Multispecies mixtures, competition/promiscuity, interacting sites/cooperativity and general physical state/reaction networks when justified |
 | Passive reversible association only | Chemical transformation, adsorption/permeation, protonation, redox, catalysis and other mechanism families; driven cycles require explicit free-energy reservoirs |
 | Probability normalization ledger only | Bidirectional matter, charge and energy/free-energy exchange accounting across the coupling support |
@@ -312,7 +385,8 @@ cooperativity, amplification/adaptation/proofreading, and evolutionary/selection
 cross-validation remain [debt](SCIENTIFIC_DEBT.md#chem-1a-analytical-and-well-mixed-scaffold).
 Production `Simulation`, `SensoryProgram`, `RegulatoryInputInterface`, development,
 mutation/reproduction, B4–B6 and the separate M6 phenomenological PCC benchmark
-remain unchanged. M7A plus M7B now provide a well-mixed scaffold and one exact
-isolated-pair spatial reference kernel, not full CHEM-1 or mature sensing. M7C+
-still requires a reviewed finite/open-bath strategy before reservoir/depletion
-claims or production migration.
+remain unchanged. M7A–M7C now provide a well-mixed scaffold, an exact isolated-pair
+reference, and a conserved competitive finite-bath calibration reference. This is
+still not full CHEM-1 or mature sensing: explicit open-reservoir dynamics, arbitrary
+developed geometry, mixtures, nonideal chemistry and production migration remain
+future reviewed work.

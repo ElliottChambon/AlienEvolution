@@ -640,10 +640,17 @@ This is a reference oracle rather than a general particle engine. It does not ye
 certify maintained-reservoir CTMC occupancy/rates because those are physically
 different configurations and non-overlapping QoIs.
 
-The next chemical checkpoint is M7C+: reviewed finite/open-bath and many-particle
-physics for depletion, conservative matter exchange, low-copy arrival statistics
-and true reservoir-reduction tests. General spatial solver selection remains open
-beyond the narrow isolated-pair reference. Mature chemical sensing and production
+**M7C implemented on issue #39 / PR #40:** CHEM-1 now also has a conserved
+capacity-one finite-bath calibration reference in a concentric reflecting spherical
+shell. Robin-Neumann and Neumann-Neumann radial spectral kernels are cached and used
+by a seeded event-driven competitive simulator. Exact ligand-count bookkeeping,
+mean first-reaction time and finite-system equilibrium provide analytical anchors.
+A declared minimum resolved dimensionless time, spectral tolerance and mode budget
+bound reference cost explicitly; large validation sweeps remain manual.
+
+M7C still does not select a universal many-particle/runtime spatial solver. Explicit
+maintained-reservoir injection, arbitrary evolved geometry, mixtures, nonideal
+thermodynamics, material-compiled chemistry, runtime ACP and production sensing
 replacement remain incomplete. Production sensing, evolution and M6 are unchanged.
 
 Proceed only after explicit scientific architecture checkpoints for the specific

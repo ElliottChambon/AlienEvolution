@@ -335,7 +335,7 @@ small deterministic fixture tests join the fast suite.
 
 ---
 
-# CHEM-1 mature migration benchmark: M7A scaffold + M7B spatial oracle
+# CHEM-1 mature migration benchmark: M7A reductions + M7B isolated pair + M7C finite bath
 
 [CHEM-1](CHEMICAL_COUPLING_ARCHITECTURE.md) is generic physical association
 `L + S <-> LS`, distinct from the controlled V0.3B6 sensory-selection prototype.
@@ -350,8 +350,11 @@ not establish validity. Frozen spatial configurations are an open/reservoir
 reactive sphere for association rates and a closed finite spherical domain with
 reflecting outer boundary for depletion/conservation. M7B now implements the exact
 **isolated-pair, unbounded-3D radial Green-function kernel** for the same SCK/
-back-reaction mechanism. The maintained-reservoir and closed finite-bath benchmark
-configurations remain unimplemented and are physically distinct from that isolated pair.
+back-reaction mechanism. M7C adds the closed finite **competitive capacity-one**
+bath: N conserved ligands in a concentric reflecting shell, radial spectral
+propagation, conditional loser updates, intrinsic dissociation back to r=a, and
+exact ligand-count bookkeeping. An explicit maintained open-reservoir particle
+source remains unimplemented and is physically distinct from both references.
 
 The dedicated fast `ReversibleChemicalAssociationTests` checks input validation,
 chi sweep/limits/crossover, rebinding/effective-rate consistency, occupancy bounds,
@@ -372,8 +375,17 @@ their own QoIs**. M7B currently references radial volume/shell density, not the
 reservoir `k_on`, occupancy-response/variance, depletion or finite-domain QoIs
 needed to close those challenges. The first reference kernel therefore enables
 future cross-fidelity work without silently marking non-overlapping benchmarks passed.
-Full CHEM-1 still needs overlapping QoI-specific validation, including M7C+ finite/
-open-bath physics.
+M7C now provides overlapping finite-bath conservation/occupancy-trajectory QoIs,
+but it does not automatically certify every M7A challenge. Open-reservoir dynamics,
+arbitrary geometry and broader many-particle chemistry still need separate reviewed
+references where their QoIs matter.
+
+M7C dedicated fast tests verify Robin-Neumann/Neumann-Neumann spectral roots,
+independent high-precision survival/first-reaction/density/CDF fixtures, exact mean
+first-reaction time, finite-system equilibrium, CDF bounds/monotonicity, explicit
+spectral-resolution failure, seeded competitive trajectories and capacity-one
+conservation. The larger N/chi/delta/Lambda experiment is built as
+`AlienEvolutionChem1CFiniteBathValidation` but deliberately excluded from CTest.
 
 The validity-boundary challenge is onset of rebinding interference/spatial memory
 inside ideal-dilute chemistry. Nonideal thermodynamic promotion cannot be certified

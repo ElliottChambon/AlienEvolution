@@ -55,6 +55,25 @@ evidence and retain the distinction from the historical
 
 # Master registry
 
+M7C ([issue #39](https://github.com/ElliottChambon/AlienEvolution/issues/39)) adds the
+[CHEM-1 conserved competitive finite-bath reference](CHEMICAL_COUPLING_ARCHITECTURE.md).
+**Maturity: Scaffolded calibration reference, not mature chemical sensing.** N
+identical point ligands compete for one capacity-one spherical target in a concentric
+reflecting bath. Radial symmetry, cached Robin-Neumann/Neumann-Neumann spectra,
+conditional survivor propagation and intrinsic dissociation give a specialized
+event-driven reference without a general 3-D particle engine. Ligand count is an
+exact bookkeeping invariant.
+
+M7C deliberately preserves a numerical resolution boundary: very short spectral
+propagations below the configured dimensionless time floor are reported unresolved,
+and mode-budget limits cannot silently relax accuracy. The calibration sphere,
+radial state, reflecting bath and SCK mechanism remain replaceable benchmark
+choices. Mature work still requires arbitrary developed support, open/reservoir
+dynamics where needed, mixtures/cooperativity, nonideal chemistry, material-derived
+parameters, general runtime spatial backends, full exchange ledgers and production
+PCP/ACP integration. Expensive M7C evaluation is reference/audit infrastructure,
+not a per-organism default.
+
 M7B ([issue #37](https://github.com/ElliottChambon/AlienEvolution/issues/37)) adds the
 exact [CHEM-1 isolated-pair spatial reference](CHEMICAL_COUPLING_ARCHITECTURE.md)
 for the chosen 3-D Smoluchowski/Collins-Kimball contact-reactivity/back-reaction
@@ -800,7 +819,7 @@ Presentation-only inferred detail must remain distinguishable from simulation-gr
 
 **Decision boundary:** Frozen architecture direction; exact methods open.
 
-**Maturity:** Scaffolded: M3 provides inert certification contracts and M7B provides one exact chemical reference oracle; runtime adaptive reductions/promotions, cost policy and state/conservation mappings are not implemented.
+**Maturity:** Scaffolded: M3 provides inert certification contracts; M7B supplies an exact isolated-pair oracle and M7C a bounded competitive calibration reference. Runtime adaptive reductions/promotions, general cost policy and mature cross-domain state/conservation mappings are not implemented.
 
 ### Current simplification
 Current development/physics uses fixed representations.
