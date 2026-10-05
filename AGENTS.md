@@ -41,6 +41,11 @@
   compiled responses with query/QoI validity and provenance. Do not silently
   homogenize when representativity is unresolved, and do not promote MAT-1's scalar
   arithmetic/harmonic laminate calibration into a general 3-D material law.
+- Follow [elasticity architecture](docs/ELASTICITY_ARCHITECTURE.md): MAT-2's
+  3-D elasticity tensor and exact laminate homogenization remain Material Compiler
+  reference physics. Do not treat compiled C as inherited state, do not replace
+  Mandel-Kelvin/tensor energy with ad hoc scalar stiffness, and do not claim that
+  MAT-2 solves organism structural equilibrium or certifies arbitrary finite RVEs.
 - Reductions require quantity-specific validity/error/reference/provenance/version
   records and selection-aware adversarial checks. Separate numerical uncertainty
   from scientific/model-form uncertainty; pruning cannot erase future possibilities.

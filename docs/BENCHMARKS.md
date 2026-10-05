@@ -465,3 +465,33 @@ Fast tests verify:
 
 Full 3-D laminate mechanics, Hill-Mandel/RVE solver validation and material-field
 integration are later benchmarks.
+
+
+# MAT-2 3-D elasticity / laminate homogenization calibration
+
+M8B adds MAT-2 as the full tensor successor to MAT-1.
+
+Two abstract isotropic phases are parameterized by positive benchmark bulk/shear
+moduli K/G and arranged as a perfectly bonded periodic planar laminate. In local
+coordinates the exact layer equilibrium/compatibility block system is condensed
+analytically to a 3-D effective elasticity operator.
+
+MAT-2 fast tests verify:
+- Mandel-Kelvin tensor inner-product/norm preservation;
+- proper rotation covariance;
+- isotropic rotation invariance;
+- volumetric K and deviatoric G response;
+- positive elastic energy;
+- pure-phase and identical-phase limits;
+- phase-label/fraction exchange invariance;
+- transverse isotropy about the layer normal;
+- non-isotropy of generic unequal layered phases;
+- exact phase-local field recovery;
+- volume-average strain/stress consistency;
+- Hill-Mandel work and energy equality;
+- Voigt/Reuss tensor-energy bounds;
+- a genuine MAT-1 overlap at zero Poisson ratio;
+- high-contrast, near-incompressible and auxetic analytical challenge states.
+
+MAT-2 introduces no discretized RVE solver. FEM/FFT validation is deferred until a
+future full-field homogenization milestone is scientifically required.

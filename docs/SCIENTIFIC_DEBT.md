@@ -661,12 +661,16 @@ properties. Its arithmetic iso-strain and harmonic iso-stress formulas are exact
 only for the stated scalar one-dimensional calibration problems and must not be
 promoted to general 3-D laminate Young's-modulus rules.
 
+M8B now removes one item from that list: full 3-D **benchmark**
+energy-based linear elasticity, rotation covariance and exact periodic-laminate
+homogenization/local fields are implemented in MAT-2. This does not make mature
+mechanics complete.
+
 Still deferred:
 - distributed material state over developed organism geometry;
 - constituent chemistry/thermodynamic derivation;
 - phase equilibria/metastability;
 - evolving microstructure/interfaces/porosity/internal variables;
-- full tensor elasticity and objectivity/material-symmetry implementation;
 - QoI-specific finite-scale RVE/SVE certification;
 - Hashin-Shtrikman/other rigorous bounds in executable compiler logic;
 - FE/FFT/full-field homogenization;
@@ -707,6 +711,15 @@ Instead, gravity should affect:
 - failure probability.
 
 Evolution can then respond to those physical consequences.
+
+### M8B constitutive foundation now available
+
+M8B/MAT-2 provides the first exact 3-D constitutive/homogenization reference:
+Mandel-Kelvin elasticity, isotropic K/G constituents, exact periodic layered
+effective tensors, exact local fields, tensor bounds and Hill-Mandel checks.
+
+This is **not** phenotype mechanics. No organism equilibrium PDE, gravity/body-force
+solve, buckling/contact, finite deformation, damage or dynamics is implemented.
 
 ### Future direction
 

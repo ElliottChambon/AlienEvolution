@@ -151,8 +151,11 @@ M8A freezes the scale-aware state/response separation and first Material Compile
 contract in [material architecture](MATERIAL_ARCHITECTURE.md): the stable envelope
 is extensible/versioned, homogenization may be refused, and compiled responses retain
 query/QoI, validity, provenance, scientific update-point and dependency information.
-MAT-1 is only a scalar one-dimensional laminate calibration, not the mature mechanics
-model. Evolution changes `G`, not finished physical properties or simulator models.
+MAT-1 is only a scalar one-dimensional laminate calibration. M8B/MAT-2 now add the
+first full 3-D energy-based elasticity operator and exact periodic-laminate
+homogenization reference; this is still constitutive/material physics, not the
+organism structural-mechanics solver. See
+[elasticity architecture](ELASTICITY_ARCHITECTURE.md). Evolution changes `G`, not finished physical properties or simulator models.
 The [Transformation System](HERITABLE_CONSTRUCTION_ARCHITECTURE.md#approved-s5-heritable-construction-transformation-system)
 defines inheritance-dependent physical mutation opportunities and footprints.
 Historical/provenance identity, current construction state, and current functional

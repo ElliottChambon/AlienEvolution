@@ -24,6 +24,8 @@ add_library(
     src/materials/DevelopedMaterialState.cpp
     src/materials/MaterialCompiler.cpp
     src/materials/Mat1LaminateCalibration.cpp
+    src/materials/LinearElasticity.cpp
+    src/materials/Mat2LaminateCalibration.cpp
 
     src/science/ScientificModelMetadata.cpp
 
@@ -125,6 +127,19 @@ target_link_libraries(
 )
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionMat2ElasticityTests
+        tests/mat2_elasticity_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionMat2ElasticityTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME Mat2ElasticityTests
+        COMMAND AlienEvolutionMat2ElasticityTests
+    )
 
     add_executable(
         AlienEvolutionMaterialStateCompilerTests
