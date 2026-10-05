@@ -532,6 +532,11 @@ namespace ae
             throw std::invalid_argument(
                 "MAT-2 laminate period must remain consistent with material-state envelope scales.");
 
+        const auto normalNorm =
+            std::hypot(layerNormal[0], layerNormal[1], layerNormal[2]);
+        if (!std::isfinite(normalNorm) || std::abs(normalNorm - 1.0) > 1.0e-12)
+            throw std::invalid_argument(
+                "MAT-2 stored layer normal must remain a finite unit vector.");
         (void)Rotation3::fromLayerNormal(layerNormal);
     }
 
