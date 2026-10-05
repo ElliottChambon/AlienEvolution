@@ -473,15 +473,24 @@ namespace ae
             config_.spectralTolerance * 0.1);
         const auto requiredExponent = -std::log(attenuationTarget);
 
-        auto count = std::min(kMinimumModes, modes.size());
-        while (count < modes.size())
-        {
-            const auto& lastIncluded = modes[count - 1];
-            if (lastIncluded.z * lastIncluded.z * tau >= requiredExponent)
-                break;
-            ++count;
-        }
-        return count;
+        const auto minimumCount = std::min(kMinimumModes, modes.size());
+        if (minimumCount == modes.size()) return minimumCount;
+
+        const auto requiredZ = std::sqrt(requiredExponent / tau);
+        const auto searchBegin = modes.begin()
+            + static_cast<std::ptrdiff_t>(minimumCount - 1);
+        const auto firstSufficient = std::lower_bound(
+            searchBegin,
+            modes.end(),
+            requiredZ,
+            [](const SpectralMode& mode, double threshold)
+            {
+                return mode.z < threshold;
+            });
+
+        if (firstSufficient == modes.end()) return modes.size();
+        return static_cast<std::size_t>(
+            std::distance(modes.begin(), firstSufficient)) + 1;
     }
 
     double ReversibleChemicalAssociationFiniteBath::reactiveSurvivalDimensionless(
