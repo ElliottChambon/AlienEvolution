@@ -861,13 +861,26 @@ The first geometry challenge varies spherical radius/support size; nonspherical
 supports remain a later extension. Nonideal thermodynamics requires separate future
 reference work, beyond the planned ideal-dilute spatial reference.
 
-The spatial stochastic reference remains unselected/unimplemented. Isolated-pair
-Green's-function, Brownian/Smoldyn-style, GFRD/eGFRD, RDME and general 3D PDE/
-many-particle methods need a separate scientific checkpoint before backend selection.
-The inert `review-pending` reference and eight UNRESOLVED challenge cases are not
-spatial validation. Rebinding/arrival history, finite-domain depletion/conservative
-matter exchange, geometry variation and selection-aware adversarial comparisons
-remain untested physically.
+M7B selects and implements the exact reversible **isolated-pair** 3-D Green's
+function as the first CHEM-1 spatial reference oracle. It evaluates radial
+volume/shell density under the SCK contact-reactivity/back-reaction model with no
+Brownian timestep or spatial mesh. The exact `k_d=0` radiation-boundary limit is
+handled separately; complex characteristic roots and numerical conditioning are
+explicit.
+
+This does not close the eight M7A challenge cases because their declared QoIs
+include reservoir `k_on`, occupancy response/variance, depletion and geometry-rate
+comparisons that M7B does not yet expose. The M7A `review-pending` edges therefore
+remain appropriate for those non-overlapping QoIs. Direct bound probability,
+time-dependent rate/flux and initially-bound reference QoIs remain future M7B
+extensions unless independently verified.
+
+General Brownian/Smoldyn-style, GFRD/eGFRD, RDME, Doi, 3-D PDE and many-particle
+methods remain separate future choices. M7B does not select a universal spatial
+solver. Doi volume reactivity is an alternative microscopic physical model rather
+than a numerical promotion of the SCK contact model. Finite-domain depletion,
+conservative matter exchange, many-particle arrival statistics, arbitrary geometry
+and selection-aware adversarial comparisons remain physically untested.
 
 Concentration is an ideal-dilute reservoir input, not universal activity. Nonideal
 thermodynamics, mixtures/competition, cooperativity, electrochemistry/redox/protonation,
@@ -879,7 +892,37 @@ and the nonunique equilibrium at `c=k_d=0` are explicitly documented.
 
 Production sensing/evolution and M6 are unchanged. The mature target is materially
 caused conservative coupling with quantity-specific validation, not a permanent
-one-way occupancy-to-trait rule. M7A completes the scaffold for later cross-validation.
+one-way occupancy-to-trait rule. M7A supplies the reduced scaffold and M7B supplies
+one exact isolated-pair spatial reference kernel; neither is full mature sensing.
+
+## CHEM-1B numerical/reference debt and computational budget
+
+M7B's Green-function formula is exact for the chosen SCK/back-reaction physical
+model, but its finite-precision evaluator is not mathematically exact. Complex
+scaled-erfc evaluation, cubic roots and cancellation near repeated roots create
+numerical uncertainty. Independent high-precision fixtures test ordinary regimes;
+near-degenerate root configurations are explicitly rejected until repeated-root
+limits or a higher-precision/alternative evaluator are reviewed. Numerical error
+must not be confused with scientific/model-form uncertainty about SCK itself.
+
+The high-fidelity reference is not intended to execute for every organism or every
+simulation step. Mature ACP must keep separate:
+
+```text
+reference model != runtime physical model != compiled/reduced model
+```
+
+Routine evolution should use the cheapest representation that is already
+scientifically adequate for its QoI. High-fidelity references are reserved for
+certification, validity-boundary and adversarial audits, and selected shadow
+evaluations. Dimensionless/root work may be cached or interpolated by the simulator
+only with explicit numerical/reduction error controls; caches are never inherited.
+
+A future cost-aware ACP policy may record simulator-owned estimates of CPU time,
+memory/scaling and cache availability, but computational cost can only choose among
+scientifically adequate models. It can never justify using a model whose omitted
+physics could change the scientific/evolutionary conclusion, and organisms never
+choose or mutate solver/cost policy.
 
 # Guiding Rule
 
