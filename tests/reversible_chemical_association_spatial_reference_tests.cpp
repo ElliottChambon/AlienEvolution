@@ -127,7 +127,7 @@ namespace
 
     void reversibleGoldenValues()
     {
-        // Independently generated with 80-digit mpmath arithmetic from
+        // Independently generated with mpmath 1.3.0 at 80 decimal digits from
         // Prüstel & Meier-Schellersheim (2021), Appendix A, Eqs. A12-A13.
         // a=D=1, k_a=4*pi*chi, k_d=delta.
         const std::array<GoldenCase, 7> cases{{
@@ -171,7 +171,7 @@ namespace
 
     void irreversibleLimitGoldenValues()
     {
-        // Independent high-precision A3 radiation-boundary fixtures for k_d=0.
+        // Independent mpmath 1.3.0 / 80-digit A3 radiation-boundary fixtures for k_d=0.
         const std::array<GoldenCase, 3> cases{{
             {0.01, 0.0, 1.1, 1.5, 0.1,
                 0.03912061931382769905933833474951107143},
