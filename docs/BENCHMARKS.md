@@ -335,6 +335,29 @@ small deterministic fixture tests join the fast suite.
 
 ---
 
+# CHEM-1 mature migration benchmark: M7A scaffold
+
+[CHEM-1](CHEMICAL_COUPLING_ARCHITECTURE.md) is generic physical association
+`L + S <-> LS`, distinct from the controlled V0.3B6 sensory-selection prototype.
+Its ideal 3D spherical reference has finite intrinsic reactivity; the sphere is
+benchmark geometry, not anatomy. M7A implements analytical rates/equilibrium and
+deterministic/stochastic well-mixed constant-reservoir reductions only. It supplies
+no biological calibration, evolutionary evidence or production sensing replacement.
+
+The dedicated fast `ReversibleChemicalAssociationTests` checks input validation,
+chi sweep/limits/crossover, rebinding/effective-rate consistency, occupancy bounds,
+exact relaxation, equal affinity with different response times, seeded CTMC
+trajectories and stationary mean/variance. The statistical tolerance is fixed:
+12,000 trajectories, seed 3502, 16 relaxation times, absolute tolerance 0.025.
+M1/M2/M3 declarations and eight challenge entries are checked. B4–B6 and M6
+retain their separate scope.
+
+Spatial rebinding, finite-domain conservation/depletion, geometry changes, low-copy
+spatial effects, forcing, reaction/diffusion regimes and validity-boundary
+cross-fidelity challenges remain declared UNRESOLVED. No spatial solver is selected;
+these are not passed spatial benchmarks. Full CHEM-1 needs the reviewed reference
+and overlapping QoI-specific cross-validation.
+
 # Acceptance Philosophy
 
 A candidate numerical or developmental model does not need to solve every

@@ -1,5 +1,10 @@
 # Physical coupling architecture (S2)
 
+The approved M7 chemical specialization and M7A analytical/well-mixed CHEM-1
+scaffold are recorded in [chemical coupling architecture](CHEMICAL_COUPLING_ARCHITECTURE.md).
+The spatial stochastic reference remains a separate scientific checkpoint;
+this does not replace S1–S5 or the production prototype sensing path.
+
 ## Authority and implementation status
 
 This records the user-approved S1–S5 architecture in [issue #21](https://github.com/ElliottChambon/AlienEvolution/issues/21). It freezes causal/interface commitments, not scientific mechanism choices, numerical solvers, or an inheritance chemistry. No mature implementation or biological validation is claimed. See the [commitment registry](MATURE_COMMITMENTS.md), [prototype debt](SCIENTIFIC_DEBT.md), and [M0–M7+ migration sequence](ROADMAP.md#m0m7-mature-architecture-migration).

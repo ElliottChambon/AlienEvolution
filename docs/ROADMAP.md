@@ -626,6 +626,15 @@ M7+ needs reviewed domain mechanisms before any production replacement.
 
 ### M7+ — Gradual domain mechanisms and structural evolution
 
+**M7A implemented (issue #35):** [CHEM-1](CHEMICAL_COUPLING_ARCHITECTURE.md)
+has ideal-sphere analytical rates, noncooperative equilibrium, exact constant-reservoir
+deterministic kinetics and a seeded two-state well-mixed CTMC benchmark. M1/M2/M3
+declarations attach identities, assumptions, neutral quantities, capability profiles
+and unresolved spatial challenges without runtime policy. This completes the
+analytical/well-mixed scaffold only. Spatial stochastic reference selection remains
+a separate scientific checkpoint; mature chemical sensing and the full CHEM-1
+spatial benchmark remain incomplete. Production sensing, evolution and M6 are unchanged.
+
 Proceed only after explicit scientific architecture checkpoints for the specific
 mechanism/inheritance backend, with literature review, evidence/alternatives,
 validity/version records, and benchmarks. Physical inheritance opportunities and

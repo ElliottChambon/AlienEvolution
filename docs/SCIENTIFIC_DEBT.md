@@ -844,6 +844,35 @@ merely a performance optimization.
 
 ---
 
+# CHEM-1A analytical and well-mixed scaffold
+
+[Issue #35's approved architecture](CHEMICAL_COUPLING_ARCHITECTURE.md) is executable
+for ideal dilute spherical rates, single-site noncooperative equilibrium, exact
+constant-reservoir deterministic relaxation and well-mixed two-state CTMC only.
+Effective rates, rebinding and `K_D` are compiled benchmark quantities with no
+mutation path. P1 physical interaction evidence is not biological sensory-use
+evidence; numerical checks do not certify scientific/model-form adequacy.
+
+The spatial stochastic reference remains unselected/unimplemented. Isolated-pair
+Green's-function, Brownian/Smoldyn-style, GFRD/eGFRD, RDME and general 3D PDE/
+many-particle methods need a separate scientific checkpoint before backend selection.
+The inert `review-pending` reference and eight UNRESOLVED challenge cases are not
+spatial validation. Rebinding/arrival history, finite-domain depletion/conservative
+matter exchange, geometry variation and selection-aware adversarial comparisons
+remain untested physically.
+
+Concentration is an ideal-dilute reservoir input, not universal activity. Nonideal
+thermodynamics, mixtures/competition, cooperativity, electrochemistry/redox/protonation,
+explicit driving, amplification, adaptation and proofreading remain deferred
+mechanisms requiring review. No general chemistry engine, support framework,
+runtime PCP wiring or automatic ACP policy is added. Probability balance does not
+implement mature bidirectional matter/energy accounting. Finite-double range limits
+and the nonunique equilibrium at `c=k_d=0` are explicitly documented.
+
+Production sensing/evolution and M6 are unchanged. The mature target is materially
+caused conservative coupling with quantity-specific validation, not a permanent
+one-way occupancy-to-trait rule. M7A completes the scaffold for later cross-validation.
+
 # Guiding Rule
 
 AlienEvolution may simplify aggressively during development and large-scale
