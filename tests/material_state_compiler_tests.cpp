@@ -141,9 +141,30 @@ namespace
             contract,
             {custom},
             {ae::DerivedArtifactId("material.fixture")},
+            {{"composition_measurement", "composition", "fixture.interval", "dimensionless",
+                "Underlying state uncertainty remains separate"}},
             {{"cpu_estimate", 2.0, "arbitrary_cost_unit", "Simulator metadata"}},
             "fixture"};
         compiled.validate();
+        require(compiled.materialStateUncertainties.size() == 1
+            && compiled.materialStateUncertainties[0].stateComponentKey == "composition",
+            "Material-state uncertainty was not retained separately");
+
+        rejects([&] {
+            auto bad = compiled;
+            bad.updateBindings.clear();
+            bad.validate();
+        });
+        rejects([&] {
+            auto bad = compiled;
+            bad.dependencies.clear();
+            bad.validate();
+        });
+        rejects([&] {
+            auto bad = compiled;
+            bad.adaptivePhysicsContract->quantitiesOfInterest.clear();
+            bad.validate();
+        });
 
         ae::MaterialCompilationRecord unresolved{
             "material.fixture",
@@ -153,6 +174,7 @@ namespace
             std::nullopt,
             {},
             {ae::DerivedArtifactId("material.fixture")},
+            {},
             {},
             "Compiler is allowed to refuse homogenization"};
         unresolved.validate();
