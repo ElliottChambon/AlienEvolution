@@ -13,6 +13,18 @@ These records implement [issue #21](https://github.com/ElliottChambon/AlienEvolu
 at the documentation level only. Their stable causal/interfaces commitments
 leave specific mechanisms, chemistry, inheritance backends, and solvers open.
 
+The approved M7 chemical specialization is recorded in
+[chemical coupling architecture](CHEMICAL_COUPLING_ARCHITECTURE.md). It freezes
+the physics-first causal structure—physical coupling support, conservative
+bidirectional interaction, thermodynamic driving, state/reaction processes,
+thermodynamic consistency, and multidimensional Adaptive Certified Physics—but
+**M7A is only an analytical/well-mixed scaffold**. Spatial reaction-diffusion,
+closed-domain matter exchange, nonideal/electrochemical thermodynamics, mixtures,
+general reaction/state networks, explicit nonequilibrium driving, material-compiled
+rates, runtime certification, and production replacement remain open mature work.
+See the explicit [M7A simplification/replacement map](CHEMICAL_COUPLING_ARCHITECTURE.md#m7a-simplifications-and-mature-replacements)
+and [scientific debt](SCIENTIFIC_DEBT.md#chem-1a-analytical-and-well-mixed-scaffold).
+
 This document describes the target scientific and software architecture for
 AlienEvolution.
 
