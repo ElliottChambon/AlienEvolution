@@ -61,6 +61,15 @@ Material behavior may be:
 
 The mature **Material Compiler** derives/cache-validates usable physical response representations from developed material state.
 
+M8A freezes the first executable form of this boundary in
+[material architecture](MATERIAL_ARCHITECTURE.md). A stable
+`DevelopedMaterialStateEnvelope` records representation identity, declared scale
+and versioned state components without storing a universal effective-property sheet.
+`MaterialCompilationRecord` records query/QoI, disposition, compiled model/ACP
+contract when available, open scientific update-point bindings, dependencies and
+simulator-owned cost metadata. MAT-1 is a deliberately scalar laminate calibration,
+not mature 3-D material mechanics.
+
 Approved computational strategies include:
 
 - hierarchy from cheap estimates/bounds through coarse-grained/molecular/QM reference models as needed,
