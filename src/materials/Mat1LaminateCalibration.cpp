@@ -164,6 +164,7 @@ namespace
             updateBindings(),
             {ae::DerivedArtifactId(state.envelope.identifier())},
             {},
+            {},
             "MAT-1 does not interpolate oblique loading; full tensor laminate mechanics is a later scientific model."};
         record.validate();
         return record;
@@ -185,6 +186,7 @@ namespace
             makeContract(mode),
             updateBindings(),
             {ae::DerivedArtifactId(state.envelope.identifier())},
+            {},
             {
                 {"closed_form_operations", 1.0, "evaluation",
                     "Simulator cost metadata only; not material state or an evolvable trait."}
