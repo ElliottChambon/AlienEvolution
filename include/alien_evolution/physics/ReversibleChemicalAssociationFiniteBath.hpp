@@ -73,6 +73,8 @@ namespace ae
         [[nodiscard]] const ChemicalAssociationParameters& parameters() const;
         [[nodiscard]] const FiniteChemicalBathConfig& config() const;
         [[nodiscard]] const FiniteChemicalBathDiagnostics& diagnostics() const;
+        [[nodiscard]] std::vector<double> reactiveDimensionlessModeRoots() const;
+        [[nodiscard]] std::vector<double> reflectingDimensionlessModeRoots() const;
 
         [[nodiscard]] double accessibleVolume() const;
         [[nodiscard]] double equilibriumBoundProbability(std::size_t totalLigands) const;
