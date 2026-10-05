@@ -409,6 +409,16 @@ namespace
         rejects([] {
             (void)laminate(1.0, 1.0, 2.0, 2.0, 0.5, {0.0, 0.0, 0.0});
         });
+        rejects([] {
+            auto inconsistent = laminate();
+            inconsistent.layerNormal = {0.0, 0.0, 2.0};
+            inconsistent.validate();
+        });
+        rejects([] {
+            auto inconsistent = laminate();
+            inconsistent.laminatePeriod = 0.02;
+            inconsistent.validate();
+        });
     }
 }
 
