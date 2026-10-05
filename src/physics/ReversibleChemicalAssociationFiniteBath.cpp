@@ -378,6 +378,20 @@ namespace ae
         return roots;
     }
 
+    std::size_t
+        ReversibleChemicalAssociationFiniteBath::activeReactiveModeCount(
+            double elapsedTime) const
+    {
+        return activeModeCount(reactiveModes_, dimensionlessTime(elapsedTime));
+    }
+
+    std::size_t
+        ReversibleChemicalAssociationFiniteBath::activeReflectingModeCount(
+            double elapsedTime) const
+    {
+        return activeModeCount(reflectingModes_, dimensionlessTime(elapsedTime));
+    }
+
     double ReversibleChemicalAssociationFiniteBath::accessibleVolume() const
     {
         return diagnostics_.accessibleVolume;
@@ -448,6 +462,28 @@ namespace ae
         return tau;
     }
 
+    std::size_t ReversibleChemicalAssociationFiniteBath::activeModeCount(
+        const std::vector<SpectralMode>& modes,
+        double tau) const
+    {
+        if (modes.empty()) return 0;
+
+        const auto attenuationTarget = std::max(
+            std::numeric_limits<double>::min(),
+            config_.spectralTolerance * 0.1);
+        const auto requiredExponent = -std::log(attenuationTarget);
+
+        auto count = std::min(kMinimumModes, modes.size());
+        while (count < modes.size())
+        {
+            const auto& lastIncluded = modes[count - 1];
+            if (lastIncluded.z * lastIncluded.z * tau >= requiredExponent)
+                break;
+            ++count;
+        }
+        return count;
+    }
+
     double ReversibleChemicalAssociationFiniteBath::reactiveSurvivalDimensionless(
         double rho0,
         double tau) const
@@ -456,8 +492,10 @@ namespace ae
         const auto x0 = rho0 - 1.0;
         double value = 0.0;
         double scale = 0.0;
-        for (const auto& mode : reactiveModes_)
+        const auto activeModes = activeModeCount(reactiveModes_, tau);
+        for (std::size_t modeIndex = 0; modeIndex < activeModes; ++modeIndex)
         {
+            const auto& mode = reactiveModes_[modeIndex];
             const auto exponential = std::exp(-mode.z * mode.z * tau);
             const auto coefficient =
                 modeFunction(x0, mode.z, H)
@@ -479,8 +517,10 @@ namespace ae
         const auto x0 = rho0 - 1.0;
         double value = 0.0;
         double scale = 0.0;
-        for (const auto& mode : reactiveModes_)
+        const auto activeModes = activeModeCount(reactiveModes_, tau);
+        for (std::size_t modeIndex = 0; modeIndex < activeModes; ++modeIndex)
         {
+            const auto& mode = reactiveModes_[modeIndex];
             const auto exponential = std::exp(-mode.z * mode.z * tau);
             const auto coefficient =
                 modeFunction(x0, mode.z, H)
@@ -543,8 +583,10 @@ namespace ae
         const auto x0 = rho0 - 1.0;
         double sum = 0.0;
         double scale = 0.0;
-        for (const auto& mode : reactiveModes_)
+        const auto activeModes = activeModeCount(reactiveModes_, tau);
+        for (std::size_t modeIndex = 0; modeIndex < activeModes; ++modeIndex)
         {
+            const auto& mode = reactiveModes_[modeIndex];
             const auto term =
                 modeFunction(x, mode.z, H)
                 * modeFunction(x0, mode.z, H)
@@ -573,8 +615,10 @@ namespace ae
         const auto x = rho - 1.0;
         const auto x0 = rho0 - 1.0;
         double numerator = 0.0;
-        for (const auto& mode : reactiveModes_)
+        const auto activeModes = activeModeCount(reactiveModes_, tau);
+        for (std::size_t modeIndex = 0; modeIndex < activeModes; ++modeIndex)
         {
+            const auto& mode = reactiveModes_[modeIndex];
             numerator +=
                 modeFunction(x0, mode.z, H)
                 * radialIntegral(x, mode.z, H)
@@ -628,8 +672,10 @@ namespace ae
 
         double dimensionless = 3.0 * rho * rho / volumeDenominator;
         double scale = std::abs(dimensionless);
-        for (const auto& mode : reflectingModes_)
+        const auto activeModes = activeModeCount(reflectingModes_, tau);
+        for (std::size_t modeIndex = 0; modeIndex < activeModes; ++modeIndex)
         {
+            const auto& mode = reflectingModes_[modeIndex];
             const auto term =
                 (rho / rho0)
                 * modeFunction(x, mode.z, 1.0)
@@ -663,8 +709,10 @@ namespace ae
             diagnostics_.lambda * diagnostics_.lambda * diagnostics_.lambda - 1.0;
         double value = (rho * rho * rho - 1.0) / denominator;
 
-        for (const auto& mode : reflectingModes_)
+        const auto activeModes = activeModeCount(reflectingModes_, tau);
+        for (std::size_t modeIndex = 0; modeIndex < activeModes; ++modeIndex)
         {
+            const auto& mode = reflectingModes_[modeIndex];
             value +=
                 modeFunction(x0, mode.z, 1.0)
                 * radialIntegral(x, mode.z, 1.0)
