@@ -662,6 +662,14 @@ harmonic. It refuses oblique queries and does not certify finite-scale RVE adequ
 No full 3-D mechanics, homogenization solver or production material integration is
 claimed. See [material architecture](MATERIAL_ARCHITECTURE.md).
 
+**M8B implemented on issue #47 / PR #48:** MAT-2 adds the first 3-D
+energy-based linear-elastic Material Compiler reference: symmetric tensors,
+Mandel-Kelvin elasticity, proper rotations, isotropic K/G constituents, exact
+periodic-laminate homogenization, phase-local field recovery, Hill-Mandel checks and
+Voigt/Reuss tensor bounds. It remains analytical constitutive/homogenization
+calibration only—no FEM/FFT RVE solver or organism structural-equilibrium PCP.
+See [elasticity architecture](ELASTICITY_ARCHITECTURE.md).
+
 Proceed only after explicit scientific architecture checkpoints for the specific
 mechanism/inheritance backend, with literature review, evidence/alternatives,
 validity/version records, and benchmarks. Physical inheritance opportunities and
