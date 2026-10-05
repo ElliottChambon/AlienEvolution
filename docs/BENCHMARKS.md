@@ -393,6 +393,17 @@ never exceed the compiled table, and retain the minimum numerical mode policy.
 The existing high-precision fixtures remain the correctness guard: cost adaptation
 is not allowed to change the declared physical/numerical result.
 
+A focused post-M7C resolution scan tested the previously difficult
+`chi in {1,10}`, `delta in {1,10}`, `N in {1,2,5}` regimes with ten seeded
+trajectories per cell. Resolved trajectories increased from **46/120** at
+`tau_min=1e-4` (176 reactive modes) to **70/120** at `1e-5` (552 modes) and
+**81/120** at `1e-6` (1743 modes). The `chi=10, delta=10` cells remained mostly
+or completely unresolved even at `1e-6`. This is a numerical-resolution study,
+not a statistical equilibrium validation; ten trajectories per cell are
+insufficient for occupancy inference. The result supports retaining the current
+library default floor rather than attempting to solve the short-time gap solely by
+brute-force spectral depth.
+
 The validity-boundary challenge is onset of rebinding interference/spatial memory
 inside ideal-dilute chemistry. Nonideal thermodynamic promotion cannot be certified
 by the ideal-dilute SCK reference; it and nonspherical supports remain separate
