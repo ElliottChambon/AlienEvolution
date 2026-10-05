@@ -547,27 +547,28 @@ The current 2D explicit stability rule should also be generalized/tested for deg
 
 **Status:** Required mature capability, implementation open.
 
-**Maturity:** Deferred: material occupancy has no differentiated physical properties.
+**Maturity:** Scaffolded: M8A adds a scale-aware developed-material state envelope,
+Material Compiler contract vocabulary and MAT-1 exact scalar laminate calibration.
+Production phenotype material remains undifferentiated and is not yet wired to the compiler.
 
 ### Current simplification
 All occupied phenotype material is a single scalar occupancy with no physical differentiation.
 
 ### Mature commitment
-Material state should eventually include physically meaningful properties such as:
+Material identity must be physical state rather than a bag of independent effective
+properties. The mature state may include composition, thermodynamic/phase state,
+microstructure, orientation, interfaces/connectivity, porosity and explicit internal
+state/history at declared scale. Mechanical/thermal/transport/electrical quantities
+such as stiffness, conductivity, diffusivity, permeability and failure response are
+compiled from that state for a declared QoI/regime.
 
-- density,
-- stiffness/elasticity,
-- viscosity,
-- anisotropy,
-- failure strength,
-- permeability,
-- diffusivity,
-- thermal/electrical properties,
-- chemical reactivity,
-- active contractility,
-- storage capacity.
+[M8A material architecture](MATERIAL_ARCHITECTURE.md) establishes the first stable
+envelope, compiler dispositions/update points and MAT-1 calibration. It explicitly
+permits "not homogenizable" and leaves full 3-D elasticity, RVE backends,
+phase-field/CALPHAD/atomistic models and production material differentiation open.
 
-Material categories should be defined by properties/functions rather than Earth tissue names.
+Material categories must not be Earth tissue names or direct genes for effective
+properties.
 
 ---
 
