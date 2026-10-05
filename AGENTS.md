@@ -38,6 +38,12 @@
 - Reductions require quantity-specific validity/error/reference/provenance/version
   records and selection-aware adversarial checks. Separate numerical uncertainty
   from scientific/model-form uncertainty; pruning cannot erase future possibilities.
+- Treat computational cost as a first-class simulator constraint without trading
+  away scientific adequacy. Keep high-fidelity reference models, runtime physical
+  models, and compiled/reduced models as distinct roles; use the cheapest model
+  already adequate for the current QoI, amortize expensive references through
+  validated caching/sparse audits where appropriate, and never make solver/cost
+  policy inherited or evolvable organism state.
 - Preserve evidence categories and unresolved alternative mechanism models.
   Stop and report ambiguities requiring new scientific architecture decisions;
   specific mechanism/inheritance backends require explicit scientific checkpoints.

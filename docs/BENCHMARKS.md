@@ -335,7 +335,7 @@ small deterministic fixture tests join the fast suite.
 
 ---
 
-# CHEM-1 mature migration benchmark: M7A scaffold
+# CHEM-1 mature migration benchmark: M7A scaffold + M7B spatial oracle
 
 [CHEM-1](CHEMICAL_COUPLING_ARCHITECTURE.md) is generic physical association
 `L + S <-> LS`, distinct from the controlled V0.3B6 sensory-selection prototype.
@@ -348,7 +348,10 @@ The effective Markov reduction assumes rapid local rebinding can be integrated
 out with negligible rebinding interference; ideal spherical geometry alone does
 not establish validity. Frozen spatial configurations are an open/reservoir
 reactive sphere for association rates and a closed finite spherical domain with
-reflecting outer boundary for depletion/conservation. Both remain unimplemented.
+reflecting outer boundary for depletion/conservation. M7B now implements the exact
+**isolated-pair, unbounded-3D radial Green-function kernel** for the same SCK/
+back-reaction mechanism. The maintained-reservoir and closed finite-bath benchmark
+configurations remain unimplemented and are physically distinct from that isolated pair.
 
 The dedicated fast `ReversibleChemicalAssociationTests` checks input validation,
 chi sweep/limits/crossover, rebinding/effective-rate consistency, occupancy bounds,
@@ -358,17 +361,25 @@ trajectories and stationary mean/variance. The statistical tolerance is fixed:
 M1/M2/M3 declarations and eight challenge entries are checked. B4–B6 and M6
 retain their separate scope.
 
-Spatial rebinding, finite-domain conservation/depletion, spherical radius/support-size
-variation (association-rate QoI), low-copy
-spatial effects, forcing, reaction/diffusion regimes and validity-boundary
-cross-fidelity challenges remain declared UNRESOLVED. No spatial solver is selected;
-these are not passed spatial benchmarks. Full CHEM-1 needs the reviewed reference
-and overlapping QoI-specific cross-validation.
+M7B adds dedicated fast spatial-reference tests. They check dimensionless conversion,
+the characteristic cubic/Vieta relations including complex-conjugate roots, independent
+high-precision A12/A3 density fixtures spanning reaction/diffusion/dissociation regimes,
+nonnegative real physical density, deterministic evaluation, the exact irreversible
+limit, numerical-conditioning rejection, and the reference's narrow M1/M2/M3 scope.
+
+The existing eight M7A spatial challenge entries remain declared **UNRESOLVED at
+their own QoIs**. M7B currently references radial volume/shell density, not the
+reservoir `k_on`, occupancy-response/variance, depletion or finite-domain QoIs
+needed to close those challenges. The first reference kernel therefore enables
+future cross-fidelity work without silently marking non-overlapping benchmarks passed.
+Full CHEM-1 still needs overlapping QoI-specific validation, including M7C+ finite/
+open-bath physics.
 
 The validity-boundary challenge is onset of rebinding interference/spatial memory
 inside ideal-dilute chemistry. Nonideal thermodynamic promotion cannot be certified
-by the planned ideal-dilute spatial reference; it and nonspherical supports remain
-separate future reference/extension work.
+by the ideal-dilute SCK reference; it and nonspherical supports remain separate
+future reference/extension work. M7B is an exact reference for the chosen SCK
+isolated-pair model, not proof that SCK is the universal microscopic chemistry model.
 
 # Acceptance Philosophy
 

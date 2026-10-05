@@ -214,7 +214,7 @@ namespace
         {
             challenge.validate(Model::adaptivePhysicsContract(Profile::StochasticWellMixed));
             require(challenge.description.find("UNRESOLVED") != std::string::npos &&
-                challenge.contextReference.find("spatial_solver=unselected") != std::string::npos &&
+                challenge.contextReference.find("overlapping_qoi_reference=unresolved") != std::string::npos &&
                 registry.find(challenge.identifier), "Spatial challenge silently certified");
         }
         rejects([] { (void)Model::schema(static_cast<Profile>(99)); });

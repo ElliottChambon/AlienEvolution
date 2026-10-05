@@ -28,6 +28,7 @@ add_library(
     src/physics/AdaptiveCertifiedPhysics.cpp
     src/physics/PrototypeShiftedHillCouplingChannel.cpp
     src/physics/ReversibleChemicalAssociation.cpp
+    src/physics/ReversibleChemicalAssociationSpatialReference.cpp
 
     src/development/Phenotype.cpp
     src/development/RegulatoryDevelopment.cpp
@@ -110,6 +111,19 @@ target_link_libraries(
 )
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionReversibleChemicalAssociationSpatialReferenceTests
+        tests/reversible_chemical_association_spatial_reference_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionReversibleChemicalAssociationSpatialReferenceTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME ReversibleChemicalAssociationSpatialReferenceTests
+        COMMAND AlienEvolutionReversibleChemicalAssociationSpatialReferenceTests
+    )
 
     add_executable(
         AlienEvolutionReversibleChemicalAssociationTests
