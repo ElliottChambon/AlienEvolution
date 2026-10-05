@@ -113,7 +113,7 @@ namespace
             bad.minimumResolvedDimensionlessTime = 0.0;
             (void)Bath(parameters(1.0, 1.0), bad);
         });
-        rejects([&] {
+        rejects<std::domain_error>([&] {
             auto bad = config(2.0, 1.0e-8, 1.0e-12, 16);
             (void)Bath(parameters(1.0, 1.0), bad);
         });
