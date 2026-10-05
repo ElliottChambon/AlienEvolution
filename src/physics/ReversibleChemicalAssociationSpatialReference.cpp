@@ -39,14 +39,16 @@ namespace
         if (first == 0.0) return 0.0;
         int firstExponent = 0;
         int secondExponent = 0;
+        int thirdExponent = 0;
         int denominatorExponent = 0;
         const auto firstMantissa = std::frexp(first, &firstExponent);
         const auto secondMantissa = std::frexp(second, &secondExponent);
+        const auto thirdMantissa = std::frexp(secondAgain, &thirdExponent);
         const auto denominatorMantissa = std::frexp(denominator, &denominatorExponent);
-        const auto mantissa = firstMantissa * secondMantissa * secondMantissa / denominatorMantissa;
+        const auto mantissa = firstMantissa * secondMantissa * thirdMantissa / denominatorMantissa;
         const auto value = std::scalbn(
             mantissa,
-            firstExponent + 2 * secondExponent - denominatorExponent);
+            firstExponent + secondExponent + thirdExponent - denominatorExponent);
         return representablePositive(
             value,
             "CHEM-1B dimensionless dissociation ratio is outside representable double range.");
