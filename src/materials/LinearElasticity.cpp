@@ -481,15 +481,17 @@ namespace ae
     {
         if (!std::isfinite(relativeTolerance) || relativeTolerance < 0.0)
             throw std::invalid_argument("Elasticity comparison tolerance must be finite and nonnegative.");
+        double scale = std::numeric_limits<double>::min();
         for (std::size_t i = 0; i < matrix_.size(); ++i)
-        {
-            const auto scale = std::max({
-                std::numeric_limits<double>::min(),
+            scale = std::max({
+                scale,
                 std::abs(matrix_[i]),
                 std::abs(other.matrix_[i])});
-            if (std::abs(matrix_[i] - other.matrix_[i]) > relativeTolerance * scale)
+
+        const auto tolerance = relativeTolerance * scale;
+        for (std::size_t i = 0; i < matrix_.size(); ++i)
+            if (std::abs(matrix_[i] - other.matrix_[i]) > tolerance)
                 return false;
-        }
         return true;
     }
 
@@ -505,13 +507,11 @@ namespace ae
         if (!(scale > 0.0))
             throw std::invalid_argument("Kelvin elasticity tensor must be nonzero.");
 
+        const auto symmetryTolerance = kSymmetryTolerance * scale;
         for (std::size_t i = 0; i < 6; ++i)
             for (std::size_t j = i + 1; j < 6; ++j)
                 if (std::abs(matrix_[6 * i + j] - matrix_[6 * j + i])
-                    > kSymmetryTolerance * std::max({
-                        std::numeric_limits<double>::min(),
-                        std::abs(matrix_[6 * i + j]),
-                        std::abs(matrix_[6 * j + i])}))
+                    > symmetryTolerance)
                     throw std::invalid_argument(
                         "Energy-based Kelvin elasticity tensor must be major-symmetric.");
 
