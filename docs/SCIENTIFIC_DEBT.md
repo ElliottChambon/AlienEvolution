@@ -956,6 +956,15 @@ against the spectral form. Both are deferred until the remaining unresolved
 short-time fraction warrants their implementation. Higher precision and other
 reviewed transforms also remain possible replacements.
 
+A focused hard-regime scan quantified the tradeoff: lowering `tau_min` from
+`1e-4` to `1e-5` to `1e-6` increased compiled reactive modes from
+176 to 552 to 1743 and improved resolved trajectories from 46/120 to 70/120 to
+81/120. Strong/rapid `chi=10,delta=10` cases remained largely unresolved.
+Therefore M7C-R1 does **not** lower the default `tau_min=1e-5`; brute-force mode
+depth has diminishing scientific coverage per unit compute. The unresolved
+near-contact/high-turnover regime remains explicit debt for a future verified
+short-time representation or protective-domain method.
+
 For the ideal capacity-one finite system,
 `P_bound=N/(N+K_D V)` is algebraically the same Langmuir form when expressed using
 total number concentration `N/V`. M7C therefore adds information primarily through
