@@ -80,6 +80,11 @@ namespace
         }
         require(foundComplex, "Complex-conjugate CHEM-1B root regime was not exercised");
 
+        // Exercise a distinct physical regime with three real characteristic roots.
+        const Reference threeReal(parameters(20.0, 100.0));
+        for (const auto& root : threeReal.characteristicRoots().dimensionlessRoots)
+            require(std::abs(root.imag()) < 2.0e-10, "Three-real-root CHEM-1B regime was not preserved");
+
         const auto sum =
             roots.dimensionlessRoots[0]
             + roots.dimensionlessRoots[1]
@@ -125,7 +130,7 @@ namespace
         // Independently generated with 80-digit mpmath arithmetic from
         // Prüstel & Meier-Schellersheim (2021), Appendix A, Eqs. A12-A13.
         // a=D=1, k_a=4*pi*chi, k_d=delta.
-        const std::array<GoldenCase, 6> cases{{
+        const std::array<GoldenCase, 7> cases{{
             {0.01, 0.1, 1.01, 1.2, 0.01,
                 0.1280371057457073416411382474452704113},
             {1.0, 1.0, 1.1, 1.5, 1.0,
@@ -137,7 +142,9 @@ namespace
             {0.1, 10.0, 3.0, 4.0, 10.0,
                 0.0004018804150016235649482875518394756220},
             {1.0, 1.0, 2.0, 3.0, 2.0,
-                0.002112269419136343261181113684968273559}
+                0.002112269419136343261181113684968273559},
+            {20.0, 100.0, 1.2, 2.0, 0.2,
+                0.009627860563879113272084888806353082067}
         }};
 
         for (const auto& fixture : cases)
@@ -234,10 +241,17 @@ namespace
             metadata.assumptions.end(),
             [](const std::string& value)
             {
-                return value.find("Langmuir") != std::string::npos
-                    || value.find("maintained reservoir concentration") != std::string::npos;
+                return value.find("Langmuir") != std::string::npos;
             }),
-            "M7B silently became a reservoir/Langmuir reference");
+            "M7B silently became a Langmuir reference");
+        require(std::any_of(
+            metadata.assumptions.begin(),
+            metadata.assumptions.end(),
+            [](const std::string& value)
+            {
+                return value.find("No maintained reservoir concentration") != std::string::npos;
+            }),
+            "M7B isolated-pair/no-reservoir guardrail missing");
         require(metadata.evidence.size() == 1
             && metadata.evidence[0].status == ae::EvidenceStatus::EstablishedPhysicalInteraction
             && metadata.evidence[0].references.size() == 2,
