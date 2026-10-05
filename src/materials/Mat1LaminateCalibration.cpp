@@ -12,17 +12,13 @@ namespace
 
     std::array<double, 3> normalized(std::array<double, 3> value)
     {
-        double squaredNorm = 0.0;
         for (const auto component : value)
-        {
             if (!std::isfinite(component))
                 throw std::invalid_argument("MAT-1 direction components must be finite.");
-            squaredNorm += component * component;
-        }
-        if (!std::isfinite(squaredNorm) || squaredNorm <= 0.0)
-            throw std::invalid_argument("MAT-1 direction vector must have finite positive norm.");
 
-        const auto norm = std::sqrt(squaredNorm);
+        const auto norm = std::hypot(value[0], value[1], value[2]);
+        if (!std::isfinite(norm) || norm <= 0.0)
+            throw std::invalid_argument("MAT-1 direction vector must have finite positive norm.");
         for (auto& component : value) component /= norm;
         return value;
     }
