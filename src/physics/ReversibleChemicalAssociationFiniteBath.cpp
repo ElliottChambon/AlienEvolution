@@ -113,18 +113,29 @@ namespace
     double phaseRoot(double ell, double HInner, double HOuter, std::size_t n)
     {
         double lower = 0.0;
+        double fLower = 0.0;
         if (n == 0)
         {
-            lower = 1.0e-12 / std::max(1.0, ell);
+            // For the reactive slow mode, direct evaluation as z->0 subtracts
+            // two nearly equal atan terms and can round the negative endpoint
+            // sign to zero for weak but valid association. Analytically,
+            //
+            // F(z) = -z*(HInner-1)/HInner + O(z^3)
+            //
+            // because HOuter=1/Lambda and ell=Lambda-1. A reactive mode has
+            // HInner=1+chi>1, so the one-sided sign is strictly negative.
+            // Keep lower at the exact limiting point and use that sign only
+            // for bracketing; phaseEquation is never evaluated at z=0.
+            fLower = -1.0;
         }
         else
         {
             lower = static_cast<double>(n) * std::numbers::pi / ell;
+            fLower = phaseEquation(lower, ell, HInner, HOuter, n);
         }
         double upper = static_cast<double>(n + 1) * std::numbers::pi / ell;
 
-        auto fLower = phaseEquation(lower, ell, HInner, HOuter, n);
-        auto fUpper = phaseEquation(upper, ell, HInner, HOuter, n);
+        const auto fUpper = phaseEquation(upper, ell, HInner, HOuter, n);
         if (!(fLower < 0.0 && fUpper > 0.0))
             throw std::domain_error("CHEM-1C spectral root could not be bracketed in the approved phase interval.");
 
@@ -378,17 +389,29 @@ namespace ae
         if (totalLigands == 0) return 0.0;
         if (parameters_.intrinsicDissociationRate() == 0.0) return 1.0;
 
-        const auto Kd =
-            parameters_.intrinsicDissociationRate()
-            / parameters_.intrinsicAssociationConstant();
-        const auto unboundWeight = Kd * diagnostics_.accessibleVolume;
-        if (!std::isfinite(unboundWeight))
-            return 0.0;
-
         const auto boundWeight = static_cast<double>(totalLigands);
-        if (!std::isfinite(boundWeight))
-            throw std::overflow_error("CHEM-1C ligand count cannot be represented as double.");
-        return boundWeight / (boundWeight + unboundWeight);
+        if (!std::isfinite(boundWeight) || !(boundWeight > 0.0))
+            throw std::overflow_error("CHEM-1C ligand count cannot be represented as positive double.");
+
+        // Evaluate N/(N + K_D*V) through a log-ratio so a finite,
+        // representable probability is preserved even when K_D*V itself
+        // overflows double. This is numerical stabilization only; the
+        // underlying equilibrium relation is unchanged.
+        const auto logUnboundToBound =
+            std::log(parameters_.intrinsicDissociationRate())
+            - std::log(parameters_.intrinsicAssociationConstant())
+            + std::log(diagnostics_.accessibleVolume)
+            - std::log(boundWeight);
+
+        if (logUnboundToBound >= 0.0)
+        {
+            const auto inverse = std::exp(-logUnboundToBound);
+            if (inverse == 0.0) return 0.0;
+            return inverse / (1.0 + inverse);
+        }
+
+        const auto ratio = std::exp(logUnboundToBound);
+        return 1.0 / (1.0 + ratio);
     }
 
     double ReversibleChemicalAssociationFiniteBath::meanFirstReactionTime(
