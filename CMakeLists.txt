@@ -21,6 +21,10 @@ add_library(
     src/core/Random.cpp
     src/core/CausalDependencyGraph.cpp
 
+    src/materials/DevelopedMaterialState.cpp
+    src/materials/MaterialCompiler.cpp
+    src/materials/Mat1LaminateCalibration.cpp
+
     src/science/ScientificModelMetadata.cpp
 
     src/physics/DiffusiveField2D.cpp
@@ -121,6 +125,19 @@ target_link_libraries(
 )
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionMaterialStateCompilerTests
+        tests/material_state_compiler_tests.cpp
+    )
+    target_link_libraries(
+        AlienEvolutionMaterialStateCompilerTests
+        PRIVATE AlienEvolutionCore
+    )
+    add_test(
+        NAME MaterialStateCompilerTests
+        COMMAND AlienEvolutionMaterialStateCompilerTests
+    )
 
     add_executable(
         AlienEvolutionReversibleChemicalAssociationFiniteBathTests
