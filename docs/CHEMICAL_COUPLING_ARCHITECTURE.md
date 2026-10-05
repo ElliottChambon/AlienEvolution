@@ -190,6 +190,27 @@ and stationary mean/variance. The predeclared ensemble test uses 12,000 trajecto
 seed 3502, 16 relaxation times and absolute mean/Bernoulli-variance tolerance 0.025.
 These are analytical/well-mixed checks, not spatial or biological validation.
 
+## M7A simplifications and mature replacements
+
+M7A is deliberately a scaffold. The following simplifications are **not** intended
+to become the permanent chemical-sensing architecture:
+
+| M7A simplification | Mature replacement / addition |
+| --- | --- |
+| Ideal-dilute scalar concentration | Thermodynamic closure from conserved composition/state to activity/chemical potential, including nonideal and electrochemical models where required |
+| Spherical support and constant open reservoir | General physical coupling support over surfaces, volumes, porous/distributed regions and internal interfaces, with explicit open/closed domains and transport |
+| Effective two-state Markov rates with collapsed rapid rebinding | Spatial/history-aware reaction-diffusion reference models when rebinding, confinement, depletion, geometry or many-particle correlations matter |
+| One ligand + one noncooperative site | Multispecies mixtures, competition/promiscuity, interacting sites/cooperativity and general physical state/reaction networks when justified |
+| Passive reversible association only | Chemical transformation, adsorption/permeation, protonation, redox, catalysis and other mechanism families; driven cycles require explicit free-energy reservoirs |
+| Probability normalization ledger only | Bidirectional matter, charge and energy/free-energy exchange accounting across the coupling support |
+| Fixed benchmark `a,D,k_a,k_d` inputs | Developed material/geometry plus reviewed material/chemistry models compile or constrain effective rates and affinities; mature evolution does not directly mutate finished response constants |
+| Declarative ACP contracts/challenges only | Runtime quantity-specific certification, promotion/demotion and evolutionary adversarial checks after reference models and error criteria are validated |
+| Standalone benchmark, no production wiring | Eventual validated world/transport -> coupling support -> material-state change -> transduction/integration -> consequence path, followed by retirement of obsolete legacy sensing only after equivalence/coverage is demonstrated |
+
+These replacements are requirements or reviewed future directions, not permission
+to select their numerical methods without a new scientific checkpoint. The detailed
+open items remain tracked in [scientific debt](SCIENTIFIC_DEBT.md#chem-1a-analytical-and-well-mixed-scaffold).
+
 ## Challenges, expected failures and deferred checkpoint
 
 The M3 registry declares eight spatial comparisons, all **UNRESOLVED**:
