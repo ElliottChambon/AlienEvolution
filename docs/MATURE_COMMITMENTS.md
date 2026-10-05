@@ -547,9 +547,10 @@ The current 2D explicit stability rule should also be generalized/tested for deg
 
 **Status:** Required mature capability, implementation open.
 
-**Maturity:** Scaffolded: M8A adds a scale-aware developed-material state envelope,
-Material Compiler contract vocabulary and MAT-1 exact scalar laminate calibration.
-Production phenotype material remains undifferentiated and is not yet wired to the compiler.
+**Maturity:** Scaffolded: M8A adds the scale-aware material-state/compiler boundary;
+M8B adds 3-D Mandel-Kelvin elasticity plus MAT-2 exact periodic-laminate
+homogenization/local fields. Production phenotype material remains undifferentiated
+and is not yet wired to these compiler responses.
 
 ### Current simplification
 All occupied phenotype material is a single scalar occupancy with no physical differentiation.
@@ -562,10 +563,11 @@ state/history at declared scale. Mechanical/thermal/transport/electrical quantit
 such as stiffness, conductivity, diffusivity, permeability and failure response are
 compiled from that state for a declared QoI/regime.
 
-[M8A material architecture](MATERIAL_ARCHITECTURE.md) establishes the first stable
-envelope, compiler dispositions/update points and MAT-1 calibration. It explicitly
-permits "not homogenizable" and leaves full 3-D elasticity, RVE backends,
-phase-field/CALPHAD/atomistic models and production material differentiation open.
+[M8A material architecture](MATERIAL_ARCHITECTURE.md) establishes the stable
+envelope/compiler contract. [M8B elasticity architecture](ELASTICITY_ARCHITECTURE.md)
+adds an exact 3-D linear-elastic laminate reference while still leaving arbitrary
+RVE backends, nonlinear/failure physics, phase-field/CALPHAD/atomistic models and
+production material differentiation open.
 
 Material categories must not be Earth tissue names or direct genes for effective
 properties.
