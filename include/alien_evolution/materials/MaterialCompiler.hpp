@@ -42,6 +42,17 @@ namespace ae
         void validate() const;
     };
 
+    struct MaterialStateUncertaintyDescriptor
+    {
+        std::string key;
+        std::string stateComponentKey;
+        std::string uncertaintyModelIdentifier;
+        std::string unit;
+        std::optional<std::string> note;
+
+        void validate() const;
+    };
+
     struct MaterialCompilationCostDescriptor
     {
         std::string key;
@@ -61,6 +72,10 @@ namespace ae
         std::optional<AdaptivePhysicsContract> adaptivePhysicsContract;
         std::vector<MaterialScienceUpdateBinding> updateBindings;
         std::vector<DerivedArtifactId> dependencies;
+        // Underlying-state uncertainty is intentionally separate from
+        // AdaptivePhysicsContract numerical/reduction error declarations and
+        // ScientificModelMetadata model-form uncertainty.
+        std::vector<MaterialStateUncertaintyDescriptor> materialStateUncertainties;
         std::vector<MaterialCompilationCostDescriptor> costs;
         std::optional<std::string> note;
 
