@@ -302,6 +302,12 @@ namespace
         rejects([] {
             (void)ae::Mat1AxialResponseQuery({0.0, 0.0, 0.0});
         });
+
+        const ae::Mat1AxialResponseQuery hugeDirection(
+            {1.0e308, 1.0e308, 0.0});
+        require(std::isfinite(hugeDirection.loadingDirection[0])
+            && std::isfinite(hugeDirection.loadingDirection[1]),
+            "MAT-1 finite large direction failed overflow-safe normalization");
         rejects([] {
             (void)laminate(0.0, 10.0, 0.5);
         });
