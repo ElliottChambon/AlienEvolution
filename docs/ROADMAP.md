@@ -630,10 +630,21 @@ M7+ needs reviewed domain mechanisms before any production replacement.
 has ideal-sphere analytical rates, noncooperative equilibrium, exact constant-reservoir
 deterministic kinetics and a seeded two-state well-mixed CTMC benchmark. M1/M2/M3
 declarations attach identities, assumptions, neutral quantities, capability profiles
-and unresolved spatial challenges without runtime policy. This completes the
-analytical/well-mixed scaffold only. Spatial stochastic reference selection remains
-a separate scientific checkpoint; mature chemical sensing and the full CHEM-1
-spatial benchmark remain incomplete. Production sensing, evolution and M6 are unchanged.
+and unresolved spatial challenges without runtime policy.
+
+**M7B implemented on issue #37 / PR #38:** the same CHEM-1 SCK/back-reaction model
+now has an exact unbounded-3D isolated-pair radial Green-function reference for
+volume/shell density QoIs, including the exact irreversible limit, complex-root
+evaluation, numerical-conditioning guards and independent high-precision fixtures.
+This is a reference oracle rather than a general particle engine. It does not yet
+certify maintained-reservoir CTMC occupancy/rates because those are physically
+different configurations and non-overlapping QoIs.
+
+The next chemical checkpoint is M7C+: reviewed finite/open-bath and many-particle
+physics for depletion, conservative matter exchange, low-copy arrival statistics
+and true reservoir-reduction tests. General spatial solver selection remains open
+beyond the narrow isolated-pair reference. Mature chemical sensing and production
+replacement remain incomplete. Production sensing, evolution and M6 are unchanged.
 
 Proceed only after explicit scientific architecture checkpoints for the specific
 mechanism/inheritance backend, with literature review, evidence/alternatives,
