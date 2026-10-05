@@ -427,3 +427,41 @@ overlapping models must be cross-validated,
 
 and the combined architecture must collectively support the full benchmark
 suite.
+
+
+# MAT-1 material/compiler calibration
+
+M8A adds MAT-1 as the first executable Material Compiler calibration. Two abstract
+benchmark phases form a perfectly bonded periodic one-dimensional laminate.
+
+For loading in the layer plane under the explicitly scalar iso-strain calibration:
+
+```text
+E_parallel = f_A E_A + f_B E_B
+```
+
+For loading normal to the layers under the explicitly scalar iso-stress series
+calibration:
+
+```text
+1/E_normal = f_A/E_A + f_B/E_B
+```
+
+These are derived directly from compatibility/force equilibrium for the stated
+one-dimensional boundary-value problems. They are not asserted to be general 3-D
+laminate Young's moduli.
+
+Fast tests verify:
+- pure-phase and equal-phase limits;
+- arithmetic/harmonic references;
+- phase-label/fraction exchange invariance;
+- linear modulus scaling;
+- harmonic <= arithmetic for unequal positive phases;
+- direction normalization and explicit oblique-query refusal;
+- scale/period diagnostic retention without inventing an RVE threshold;
+- versioned Material Compiler update-point/dependency/cost provenance;
+- generic material state contains scale/component descriptors rather than compiled
+  effective-property fields.
+
+Full 3-D laminate mechanics, Hill-Mandel/RVE solver validation and material-field
+integration are later benchmarks.

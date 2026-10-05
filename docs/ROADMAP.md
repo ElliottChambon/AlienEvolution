@@ -653,6 +653,15 @@ maintained-reservoir injection, arbitrary evolved geometry, mixtures, nonideal
 thermodynamics, material-compiled chemistry, runtime ACP and production sensing
 replacement remain incomplete. Production sensing, evolution and M6 are unchanged.
 
+**M8A implemented on issue #45 / PR #46:** the mature materials branch now has a
+scale-aware `DevelopedMaterialStateEnvelope`, simulator-owned Material Compiler
+contract vocabulary, explicit versioned scientific update points, dependency/cost
+provenance, and MAT-1. MAT-1 is an exact scalar periodic-laminate calibration:
+in-layer iso-strain response is arithmetic and layer-normal iso-stress response is
+harmonic. It refuses oblique queries and does not certify finite-scale RVE adequacy.
+No full 3-D mechanics, homogenization solver or production material integration is
+claimed. See [material architecture](MATERIAL_ARCHITECTURE.md).
+
 Proceed only after explicit scientific architecture checkpoints for the specific
 mechanism/inheritance backend, with literature review, evidence/alternatives,
 validity/version records, and benchmarks. Physical inheritance opportunities and
