@@ -35,6 +35,12 @@
 - Keep provenance DAG, derived dependency graph, compilers/caches, and scientific/
   numerical solver choice simulator-owned; they are never inherited biology.
   Evolution changes `phi`; the simulator controls `m`.
+- Follow [material architecture](docs/MATERIAL_ARCHITECTURE.md): mature material
+  identity is scale-aware physical state, not an inherited/evolved property sheet.
+  Effective stiffness, conductivity, diffusivity, permeability, strength, etc. are
+  compiled responses with query/QoI validity and provenance. Do not silently
+  homogenize when representativity is unresolved, and do not promote MAT-1's scalar
+  arithmetic/harmonic laminate calibration into a general 3-D material law.
 - Reductions require quantity-specific validity/error/reference/provenance/version
   records and selection-aware adversarial checks. Separate numerical uncertainty
   from scientific/model-form uncertainty; pruning cannot erase future possibilities.
