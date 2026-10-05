@@ -383,6 +383,14 @@ namespace
                 {1.0e-5, -2.0e-5, 1.0e-5, 2.0e-6, -1.0e-6, 3.0e-6});
         require(std::isfinite(response.hillMandelWorkResidual),
             "MAT-2 high-contrast challenge produced nonfinite residual");
+        const auto challengeScale =
+            std::max(1.0, std::abs(response.macroElasticEnergyDensity));
+        require(
+            std::abs(response.hillMandelWorkResidual)
+                <= 2.0e-7 * challengeScale
+            && std::abs(response.energyResidual)
+                <= 1.0e-7 * challengeScale,
+            "MAT-2 high-contrast challenge lost micro/macro energy consistency");
 
         // Auxetic constituent remains physically accepted through positive K/G.
         const auto auxetic =
