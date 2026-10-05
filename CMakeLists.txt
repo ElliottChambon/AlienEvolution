@@ -27,6 +27,7 @@ add_library(
     src/physics/PhysicalCouplingProcess.cpp
     src/physics/AdaptiveCertifiedPhysics.cpp
     src/physics/PrototypeShiftedHillCouplingChannel.cpp
+    src/physics/ReversibleChemicalAssociation.cpp
 
     src/development/Phenotype.cpp
     src/development/RegulatoryDevelopment.cpp
@@ -109,6 +110,13 @@ target_link_libraries(
 )
 
 if(BUILD_TESTING)
+
+    add_executable(
+        AlienEvolutionReversibleChemicalAssociationTests
+        tests/reversible_chemical_association_tests.cpp
+    )
+    target_link_libraries(AlienEvolutionReversibleChemicalAssociationTests PRIVATE AlienEvolutionCore)
+    add_test(NAME ReversibleChemicalAssociationTests COMMAND AlienEvolutionReversibleChemicalAssociationTests)
 
     add_executable(
         AlienEvolutionPrototypeShiftedHillCouplingChannelTests
