@@ -549,20 +549,15 @@ These are later reviewed scientific checkpoints.
 
 ---
 
-## Next material/mechanics milestone
+## M8B implemented: 3-D elastic constitutive/homogenization reference
 
-The natural next step after M8A is a full **three-dimensional linear-elastic
-mechanics/homogenization calibration** that consumes the M8A material state and
-compiler contract.
+M8B is documented in [elasticity architecture](ELASTICITY_ARCHITECTURE.md) and
+implements MAT-2: Mandel-Kelvin tensor primitives, positive-energy isotropic K/G
+constituents, exact periodic-laminate 3-D homogenization, exact phase-local fields,
+Hill-Mandel checks and Voigt/Reuss tensor bounds.
 
-That milestone should decide:
-- stress/strain/kinematic representation;
-- isotropic constituent elastic parameterization;
-- tensor material symmetry;
-- exact layered-composite reference;
-- Hill-Mandel micro/macro contract;
-- homogeneous/periodic/traction boundary conditions;
-- bounds versus full-field solution;
-- when a local homogenized tensor is scientifically adequate.
+This remains a Material Compiler calibration. It does **not** solve organism-scale
+structural equilibrium, gravity loading or arbitrary numerical RVEs.
 
-It should not be implemented by silently extending MAT-1's scalar formulas.
+The next mechanics milestone is M9A: a controlled quasi-static structural-mechanics
+PCP that consumes compiled elasticity from the Material Compiler.
