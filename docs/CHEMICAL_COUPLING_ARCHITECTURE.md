@@ -293,11 +293,30 @@ not silently switch to Brownian dynamics, loosen accuracy, or modify organismal
 physics.
 
 The attenuation-based mode-count rule is a numerical policy, not a universal error
-bound. Fast tests use independent high-precision fixtures and exact analytical
-relations; broader `N,chi,delta,Lambda` sweeps live in a manual experiment outside
-CTest. Future short-time asymptotics, alternative spectral acceleration, or general
-spatial solvers require their own validation before replacing this numerical
-boundary.
+bound. M7C-R1 keeps the same compiled table and physical model but evaluates only
+the ordered **active prefix** needed by that attenuation policy at the actual query
+time. At `tau=tau_min` the active prefix equals the compiled table; at longer
+times it can shrink toward the minimum numerical mode count. This is simulator-owned
+cost adaptation only: it does not change trajectories, chemistry, the time-resolution
+boundary or scientific validity.
+
+Fast tests use independent high-precision fixtures and exact analytical relations;
+broader `N,chi,delta,Lambda` sweeps live in a manual experiment outside CTest.
+
+A literature checkpoint considered a short-time M7B / long-time M7C hybrid.
+An arbitrary clock switch was rejected because M7B is unbounded and M7C has a
+reflecting outer boundary; such a switch would change the physical model without a
+controlled handoff error. Two scientifically credible future routes remain:
+
+1. **protective-domain first-passage coupling** in the GFRD/eGFRD sense, where
+   local-domain exits/reactions are exact stochastic events before rebuilding the
+   global decomposition; or
+2. a verified **short-time Robin/multiple-reflection heat-kernel representation**
+   of the same bounded problem, cross-validated in an overlap region against the
+   current long-time spectral representation.
+
+Neither route is implemented by M7C-R1. Either must carry explicit overlap/error
+tests before it may remove the current `tau_min` boundary.
 
 M7C remains calibration geometry and a reference role. It does not make concentric
 spheres, radial state, SCK contact reactivity, or the spectral algorithm into the
