@@ -49,11 +49,36 @@ evidence and retain the distinction from the historical
 | Planetary inputs and population history (1–4, 25) | [Environment](../include/alien_evolution/environment/Environment.hpp), [Simulation](../src/simulation/Simulation.cpp), [controlled selection experiment](../experiments/regulatory_selection_validation.cpp) |
 | Heredity, sensory boundaries, regulation (5–7, 11) | [RegulatoryProgram](../include/alien_evolution/genetics/RegulatoryProgram.hpp), [RegulatoryInput](../include/alien_evolution/genetics/RegulatoryInput.hpp), [dynamics tests](../tests/regulatory_dynamics_tests.cpp) |
 | Development, material, geometry (8–11, 13, 20) | [RegulatoryDevelopment](../src/development/RegulatoryDevelopment.cpp), [Phenotype](../include/alien_evolution/development/Phenotype.hpp), [development tests](../tests/regulatory_development_tests.cpp) |
-| Field physics (12) | [DiffusiveField2D](../src/physics/DiffusiveField2D.cpp), [field tests](../tests/diffusive_field_tests.cpp) |
+| Field physics / chemical reference (12, 22–24) | [DiffusiveField2D](../src/physics/DiffusiveField2D.cpp), [CHEM-1B spatial reference](../src/physics/ReversibleChemicalAssociationSpatialReference.cpp), [field tests](../tests/diffusive_field_tests.cpp), [CHEM-1B tests](../tests/reversible_chemical_association_spatial_reference_tests.cpp) |
 | Energetics, population mechanics, mutation, function (16–19) | [Energetics](../src/evaluation/Energetics.cpp), [Fitness](../src/evaluation/Fitness.cpp), [Reproduction](../src/evolution/Reproduction.cpp), [mutation opportunities](../src/genetics/RegulatoryMutationRateModel.cpp), [mutation targets](../src/genetics/RegulatoryMutationTargetSelector.cpp), [PhenotypeMetrics](../src/evaluation/PhenotypeMetrics.cpp) |
 | Archive scaffold and software verification (21, 23–24) | [Organism](../include/alien_evolution/evolution/Organism.hpp), [fast CTest definitions](../CMakeLists.txt), [CI workflow](../.github/workflows/build-and-test.yml) |
 
 # Master registry
+
+M7B ([issue #37](https://github.com/ElliottChambon/AlienEvolution/issues/37)) adds the
+exact [CHEM-1 isolated-pair spatial reference](CHEMICAL_COUPLING_ARCHITECTURE.md)
+for the chosen 3-D Smoluchowski/Collins-Kimball contact-reactivity/back-reaction
+model. **Maturity: Scaffolded reference, not mature chemical sensing.** It provides
+radial volume/shell density QoIs, dimensionless/cached characteristic roots, an
+exact irreversible limit, explicit numerical-conditioning failure, and independent
+high-precision fixtures. The canonical sphere is calibration geometry and SCK is
+one versioned microscopic model, not universal alien chemistry.
+
+M7B deliberately does not claim maintained-reservoir occupancy/rate certification,
+finite-bath depletion/conservation, many-particle low-copy behavior, arbitrary
+coupling-support geometry, a universal spatial solver, material-derived rates,
+runtime ACP policy or production replacement. Existing M7A challenge cases remain
+unresolved unless their declared QoIs overlap a validated reference. General
+Brownian, GFRD/eGFRD, RDME, Doi, PDE and hybrid backends retain separate future
+scientific checkpoints.
+
+M7B also freezes a mature computational principle: high-fidelity **reference**,
+runtime physical, and compiled/reduced models are distinct roles. Routine evolution
+should use the cheapest scientifically adequate certified representation; expensive
+references are amortized through sparse certification/adversarial audits and
+validated simulator-owned caching/interpolation. Cost can select only among
+scientifically adequate options and is never inherited/evolvable organism state.
+See [M7B debt](SCIENTIFIC_DEBT.md#chem-1b-numericalreference-debt-and-computational-budget).
 
 M7A ([issue #35](https://github.com/ElliottChambon/AlienEvolution/issues/35)) adds the
 [CHEM-1 analytical/well-mixed scaffold](CHEMICAL_COUPLING_ARCHITECTURE.md) for
@@ -67,12 +92,14 @@ nonequilibrium cycles, material/geometry causality for effective rates, and
 multidimensional ACP rather than a scalar fidelity ladder. The implemented slice
 remains ideal-dilute, spherical, open-reservoir/well-mixed and single-site, with
 collapsed rapid rebinding, probability rather than matter/energy accounting, fixed
-benchmark physical inputs, inert ACP declarations, no spatial stochastic reference
-and no production sensing replacement. The explicit
+benchmark physical inputs, inert ACP declarations and no production sensing
+replacement. M7B now supplies a separate exact isolated-pair spatial-density
+reference, but it does not retroactively certify M7A's reservoir QoIs. The explicit
 [simplification/replacement map](CHEMICAL_COUPLING_ARCHITECTURE.md#m7a-simplifications-and-mature-replacements)
 and [CHEM-1A debt record](SCIENTIFIC_DEBT.md#chem-1a-analytical-and-well-mixed-scaffold)
-remain authoritative for the missing mature capabilities. Numerical/spatial solver
-choice remains a separate scientific checkpoint.
+remain authoritative for the missing mature capabilities. The isolated-pair
+reference method is now selected for M7B; general many-particle/runtime spatial
+solver choice remains a separate scientific checkpoint.
 
 M6 ([issue #33](https://github.com/ElliottChambon/AlienEvolution/issues/33)) adds one
 [prototype shifted-Hill PCC](../include/alien_evolution/physics/PrototypeShiftedHillCouplingChannel.hpp)
@@ -773,13 +800,15 @@ Presentation-only inferred detail must remain distinguishable from simulation-gr
 
 **Decision boundary:** Frozen architecture direction; exact methods open.
 
-**Maturity:** Deferred: representations are fixed; adaptive reductions, promotions, and state/conservation mappings are not implemented.
+**Maturity:** Scaffolded: M3 provides inert certification contracts and M7B provides one exact chemical reference oracle; runtime adaptive reductions/promotions, cost policy and state/conservation mappings are not implemented.
 
 ### Current simplification
 Current development/physics uses fixed representations.
 
 ### Mature commitment
-Use the cheapest representation that remains valid for the local physical regime.
+Use the cheapest representation that remains scientifically adequate for the
+declared quantity of interest and local physical regime. Scientific adequacy is
+a hard constraint; computational cost only chooses among adequate alternatives.
 
 Potential reduced models include:
 
@@ -803,13 +832,20 @@ If assumptions fail, promote back to a more general representation.
 
 Evolution must not be allowed to exploit low-fidelity numerical artifacts.
 
+Keep model roles distinct: a high-fidelity reference used for certification need
+not be the runtime physical model, and neither need be the compiled/reduced model
+used for repeated evolutionary evaluations. Reference calls should be amortized
+through validated caching/interpolation and sparse validity-boundary, novelty,
+elite, sudden-gain and random-shadow audits when appropriate. Computational cost,
+memory/scaling estimates and cache state are simulator-owned and never inherited.
+
 ---
 
 ## 23. Cross-fidelity and scientific validation hierarchy
 
 **Status:** Frozen architectural commitment.
 
-**Maturity:** Scaffolded: fast tests and controlled experiments verify prototype mechanisms; empirical and cross-fidelity validation remain deferred.
+**Maturity:** Scaffolded: fast tests and controlled experiments verify prototype mechanisms, and M7B adds the first exact higher-fidelity chemical reference kernel; overlapping evolutionary/QoI cross-fidelity validation and empirical validation remain deferred.
 
 ### Current simplification
 Most existing experiments are architecture/mechanism validation of simplified models.
