@@ -483,7 +483,10 @@ namespace ae
             throw std::invalid_argument("Elasticity comparison tolerance must be finite and nonnegative.");
         for (std::size_t i = 0; i < matrix_.size(); ++i)
         {
-            const auto scale = std::max({1.0, std::abs(matrix_[i]), std::abs(other.matrix_[i])});
+            const auto scale = std::max({
+                std::numeric_limits<double>::min(),
+                std::abs(matrix_[i]),
+                std::abs(other.matrix_[i])});
             if (std::abs(matrix_[i] - other.matrix_[i]) > relativeTolerance * scale)
                 return false;
         }
@@ -505,8 +508,10 @@ namespace ae
         for (std::size_t i = 0; i < 6; ++i)
             for (std::size_t j = i + 1; j < 6; ++j)
                 if (std::abs(matrix_[6 * i + j] - matrix_[6 * j + i])
-                    > kSymmetryTolerance * std::max(
-                        {1.0, std::abs(matrix_[6 * i + j]), std::abs(matrix_[6 * j + i])}))
+                    > kSymmetryTolerance * std::max({
+                        std::numeric_limits<double>::min(),
+                        std::abs(matrix_[6 * i + j]),
+                        std::abs(matrix_[6 * j + i])}))
                     throw std::invalid_argument(
                         "Energy-based Kelvin elasticity tensor must be major-symmetric.");
 
@@ -533,8 +538,11 @@ namespace ae
     {
         validate();
         const auto value =
-            9.0 * bulkModulus * shearModulus
-            / (3.0 * bulkModulus + shearModulus);
+            bulkModulus >= shearModulus
+            ? 9.0 * shearModulus
+                / (3.0 + shearModulus / bulkModulus)
+            : 9.0 * bulkModulus
+                / (3.0 * bulkModulus / shearModulus + 1.0);
         if (!std::isfinite(value) || value <= 0.0)
             throw std::overflow_error("Derived Young's modulus is not representable.");
         return value;
@@ -543,9 +551,12 @@ namespace ae
     double IsotropicLinearElasticity::poissonRatio() const
     {
         validate();
+        const auto scale = std::max(bulkModulus, shearModulus);
+        const auto k = bulkModulus / scale;
+        const auto g = shearModulus / scale;
         const auto value =
-            (3.0 * bulkModulus - 2.0 * shearModulus)
-            / (2.0 * (3.0 * bulkModulus + shearModulus));
+            (3.0 * k - 2.0 * g)
+            / (2.0 * (3.0 * k + g));
         if (!std::isfinite(value))
             throw std::overflow_error("Derived Poisson ratio is not representable.");
         return value;
