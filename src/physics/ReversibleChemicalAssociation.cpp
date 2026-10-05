@@ -298,7 +298,7 @@ namespace ae
                 {i < 2 || i == 6 ? "k_on" : i == 3 ? "occupancy_variance" : "occupancy_response"},
                 {FidelityAuditReason::DeclaredValidityConcern, FidelityAuditReason::CrossFidelityDisagreement},
                 {{"alien_evolution.chem1.spatial_reference", "review-pending"}},
-                std::string("chem1.challenge:") + contexts[i] + ";spatial_solver=unselected",
+                std::string("chem1.challenge:") + contexts[i] + ";overlapping_qoi_reference=unresolved",
                 std::string("UNRESOLVED spatial cross-validation: ") + cases[i] +
                     ". Analytical/well-mixed checks do not mark this spatial challenge passed."};
             challenge.validate(contract);
