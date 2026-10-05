@@ -387,6 +387,12 @@ spectral-resolution failure, seeded competitive trajectories and capacity-one
 conservation. The larger N/chi/delta/Lambda experiment is built as
 `AlienEvolutionChem1CFiniteBathValidation` but deliberately excluded from CTest.
 
+M7C-R1 additionally verifies that query-time active mode counts equal the compiled
+budget at `tau_min`, decrease monotonically (or remain equal) as query time grows,
+never exceed the compiled table, and retain the minimum numerical mode policy.
+The existing high-precision fixtures remain the correctness guard: cost adaptation
+is not allowed to change the declared physical/numerical result.
+
 The validity-boundary challenge is onset of rebinding interference/spatial memory
 inside ideal-dilute chemistry. Nonideal thermodynamic promotion cannot be certified
 by the ideal-dilute SCK reference; it and nonspherical supports remain separate
