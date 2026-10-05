@@ -1,12 +1,12 @@
 # Physical coupling architecture (S2)
 
 The approved M7 chemical specialization, M7A analytical/well-mixed CHEM-1
-scaffold and M7B exact reversible isolated-pair spatial reference are recorded in
-[chemical coupling architecture](CHEMICAL_COUPLING_ARCHITECTURE.md). M7B selects
-one reference realization for one SCK/back-reaction benchmark QoI family; it does
+scaffold, M7B exact isolated-pair reference and M7C conserved competitive finite
+bath are recorded in [chemical coupling architecture](CHEMICAL_COUPLING_ARCHITECTURE.md).
+M7B/M7C select specialized calibration references for declared SCK QoIs; they do
 not select a universal spatial solver or replace S1–S5 or the production prototype
-sensing path. Finite/open-bath, many-particle and general-geometry solver choices
-remain later scientific checkpoints.
+sensing path. Open-reservoir, arbitrary-geometry, multispecies and general runtime
+solver choices remain later scientific checkpoints.
 
 ## Authority and implementation status
 
