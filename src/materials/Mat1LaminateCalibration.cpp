@@ -262,6 +262,14 @@ namespace ae
         if (!std::isfinite(laminatePeriod) || laminatePeriod <= 0.0)
             throw std::invalid_argument("MAT-1 laminate period must be finite and positive.");
 
+        if (std::abs(envelope.coarseGrainingLength() - laminatePeriod)
+                > 1.0e-12 * std::max(1.0, laminatePeriod)
+            || !envelope.characteristicMicrostructureLength()
+            || std::abs(*envelope.characteristicMicrostructureLength() - laminatePeriod)
+                > 1.0e-12 * std::max(1.0, laminatePeriod))
+            throw std::invalid_argument(
+                "MAT-1 laminate period must remain consistent with the developed material-state envelope scales.");
+
         const auto normalizedNormal = normalized(layerNormal);
         for (std::size_t i = 0; i < layerNormal.size(); ++i)
             if (std::abs(normalizedNormal[i] - layerNormal[i]) > 1.0e-12)
