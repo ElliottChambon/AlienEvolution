@@ -148,13 +148,15 @@ There is no universal chemical quantity enum, runtime port wiring or solver API.
 
 M3 declares QoI-specific validity/reference/error vocabulary: rates, `chi`,
 rebinding, `K_D`, equilibrium occupancy where applicable, transient response and
-relaxation time for kinetics, stochastic mean/variance for CTMC. The identity
-`alien_evolution.chem1.spatial_reference`, version `review-pending`, is an
-**unimplemented reference obligation**, not a solver or certification.
-Analytical checks apply only to analytically defined QoIs; they do not resolve
-omitted spatial physics. Contracts do not evaluate criteria, calculate
-errors or select/promote models. Numerical differences do not bound model-form
-uncertainty or constitute biological validation.
+relaxation time for kinetics, stochastic mean/variance for CTMC. M7B now implements
+`alien_evolution.chem1.spatial_reference` version `chem1b-v1` for the exact
+isolated-pair radial **density QoIs only**. The existing M7A contracts retain their
+`review-pending` spatial-reference edges because M7B does not yet provide the
+overlapping reservoir occupancy/rate QoIs needed to certify those reductions.
+Analytical checks apply only to declared QoIs; the existence of a spatial model
+does not resolve omitted physics automatically. Contracts do not evaluate criteria,
+calculate errors or select/promote models. Numerical differences do not bound
+model-form uncertainty or constitute biological validation.
 
 ## Implemented subset and numerical verification
 
@@ -190,6 +192,67 @@ and stationary mean/variance. The predeclared ensemble test uses 12,000 trajecto
 seed 3502, 16 relaxation times and absolute mean/Bernoulli-variance tolerance 0.025.
 These are analytical/well-mixed checks, not spatial or biological validation.
 
+## M7B exact isolated-pair spatial reference
+
+[ReversibleChemicalAssociationSpatialReference](../include/alien_evolution/physics/ReversibleChemicalAssociationSpatialReference.hpp)
+implements the first reviewed spatial reference for CHEM-1. It evaluates the exact
+3-D radial Green's function for one isolated pair under the
+Smoluchowski/Collins-Kimball contact-reactivity model with reversible back-reaction,
+using the published Kim-Shin solution as reproduced by Prüstel and
+Meier-Schellersheim (2021), Appendix A, Eqs. A12-A13.
+
+The reference nondimensionalizes the problem with
+`chi=k_a/(4*pi*D*a)`, `delta=k_d*a^2/D`, `rho=r/a`,
+`rho0=r0/a`, and `tau=D*t/a^2`. Dimensionless characteristic roots solve
+`lambda^3-(1+chi)lambda^2+delta*lambda-delta=0` and are cached in the
+reference object. Ordinary reversible regimes may contain a complex-conjugate
+root pair; the final physical density is real. The exact `k_d=0` radiation-boundary
+limit is evaluated separately rather than forcing the repeated-root A12 expression.
+
+The complex scaled complementary error function required by A12 is numerical
+infrastructure, not scientific architecture. The implementation evaluates a stable
+right-half-plane integral for moderate arguments and the standard asymptotic
+expansion for large arguments, with independent high-precision golden fixtures.
+Near-degenerate characteristic roots are rejected by an explicit numerical
+conditioning policy rather than silently amplifying cancellation. Numerical
+special-function/root error remains distinct from the scientific/model-form
+uncertainty of choosing the SCK contact-reactivity model itself.
+
+M7B currently exposes volume probability density and radial-shell probability
+density. It does **not** yet expose a verified direct bound-probability,
+time-dependent association-rate, maintained-reservoir occupancy, or finite-bath
+matter-conservation QoI. Therefore it is a spatial reference kernel/oracle, not
+full certification of the M7A CTMC or equilibrium reduction.
+
+The isolated-pair configuration is physically distinct from M7A's maintained
+constant-concentration reservoir. In unbounded 3-D, an isolated reversible pair
+can ultimately escape; it must not be required to approach Langmuir equilibrium.
+Finite/open baths, depletion, conservation and many-particle arrival statistics
+remain M7C+ work.
+
+## Computational role separation
+
+Mature Adaptive Certified Physics distinguishes three roles:
+
+```text
+high-fidelity reference model
+!= runtime physical model
+!= compiled/reduced model
+```
+
+Reference models may be comparatively expensive and are intended for calibration,
+challenge cases, validity-boundary checks, novelty/elite/sudden-gain audits and
+random shadow evaluations. Routine evolution should normally use the cheapest
+representation that is already scientifically adequate for the current QoI.
+Scientific adequacy is a hard constraint; computational cost chooses only among
+adequate alternatives. Model/cost choice is simulator-owned and never inherited.
+
+M7B is deliberately designed for amortization: dimensionless roots depend only on
+`(chi,delta)`, no Brownian timestep or spatial mesh is advanced, and broad validity
+maps belong to manual milestone experiments rather than CI. Future caches,
+interpolation tables or compiled response kernels must remain simulator-owned and
+carry certified interpolation/reduction error.
+
 ## M7A simplifications and mature replacements
 
 M7A is deliberately a scaffold. The following simplifications are **not** intended
@@ -199,7 +262,7 @@ to become the permanent chemical-sensing architecture:
 | --- | --- |
 | Ideal-dilute scalar concentration | Thermodynamic closure from conserved composition/state to activity/chemical potential, including nonideal and electrochemical models where required |
 | Spherical support and constant open reservoir | General physical coupling support over surfaces, volumes, porous/distributed regions and internal interfaces, with explicit open/closed domains and transport |
-| Effective two-state Markov rates with collapsed rapid rebinding | Spatial/history-aware reaction-diffusion reference models when rebinding, confinement, depletion, geometry or many-particle correlations matter |
+| Effective two-state Markov rates with collapsed rapid rebinding | M7B exact isolated-pair spatial reference for local contact/rebinding physics, followed by finite/open-bath and many-particle references when depletion, confinement or correlations matter |
 | One ligand + one noncooperative site | Multispecies mixtures, competition/promiscuity, interacting sites/cooperativity and general physical state/reaction networks when justified |
 | Passive reversible association only | Chemical transformation, adsorption/permeation, protonation, redox, catalysis and other mechanism families; driven cycles require explicit free-energy reservoirs |
 | Probability normalization ledger only | Bidirectional matter, charge and energy/free-energy exchange accounting across the coupling support |
@@ -233,20 +296,23 @@ proofreading. Mean occupancy cannot reproduce intrinsic fluctuations; equilibriu
 cannot reproduce kinetic history. Numerical refinement alone cannot repair these
 physical model limitations.
 
-Spatial stochastic reference selection is a separate scientific checkpoint.
-Brownian dynamics, GFRD/eGFRD, Smoldyn binding/unbinding radii, RDME, general 3D PDE
-and many-particle spatial algorithms are **not chosen or implemented**. The already
-reviewed context distinguishes exact/event-driven isolated-pair Green's functions
-from finite-step particle methods and their numerical assumptions:
+M7B selects the exact reversible isolated-pair Green's function as the first
+CHEM-1 spatial **reference oracle**. It does not select a universal spatial solver.
+Brownian dynamics, full GFRD/eGFRD, Smoldyn-style algorithms, RDME, general 3-D PDE
+and many-particle spatial algorithms remain unchosen for their later runtime/reference
+roles. Doi volume reactivity remains an alternative microscopic physical model,
+not a higher-fidelity implementation of the same SCK model. Relevant context includes
 [Kim & Shin (1999)](https://doi.org/10.1103/PhysRevLett.82.1578),
-[Andrews & Bray (2004)](https://doi.org/10.1088/1478-3967/1/3/001),
+[Prüstel & Meier-Schellersheim (2021)](https://doi.org/10.1063/5.0037266),
+[Andrews & Bray (2004)](https://doi.org/10.1088/1478-3967/1/3/001), and
 [van Zon & ten Wolde (2005)](https://doi.org/10.1103/PhysRevLett.94.128103).
-This implementation does not replace that review or select a method.
 
 Mature sensing, nonideal thermodynamics, mixtures, electrochemistry/redox/protonation,
 cooperativity, amplification/adaptation/proofreading, and evolutionary/selection-aware
 cross-validation remain [debt](SCIENTIFIC_DEBT.md#chem-1a-analytical-and-well-mixed-scaffold).
 Production `Simulation`, `SensoryProgram`, `RegulatoryInputInterface`, development,
 mutation/reproduction, B4–B6 and the separate M6 phenomenological PCC benchmark
-remain unchanged. M7A completion means a scaffold ready for future spatial
-cross-validation, not full CHEM-1 or mature sensing.
+remain unchanged. M7A plus M7B now provide a well-mixed scaffold and one exact
+isolated-pair spatial reference kernel, not full CHEM-1 or mature sensing. M7C+
+still requires a reviewed finite/open-bath strategy before reservoir/depletion
+claims or production migration.
