@@ -1,5 +1,6 @@
 #include "alien_evolution/materials/MaterialCompiler.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <stdexcept>
 #include <unordered_set>
@@ -48,6 +49,17 @@ namespace ae
                 "Material science update-point note must be nonempty when present.");
     }
 
+    void MaterialStateUncertaintyDescriptor::validate() const
+    {
+        if (key.empty() || stateComponentKey.empty()
+            || uncertaintyModelIdentifier.empty() || unit.empty())
+            throw std::invalid_argument(
+                "Material-state uncertainty key, component, model identifier and unit must be nonempty.");
+        if (note && note->empty())
+            throw std::invalid_argument(
+                "Material-state uncertainty note must be nonempty when present.");
+    }
+
     void MaterialCompilationCostDescriptor::validate() const
     {
         if (key.empty() || unit.empty())
@@ -78,6 +90,23 @@ namespace ae
             if (!(adaptivePhysicsContract->model == *compiledModel))
                 throw std::invalid_argument(
                     "Material compilation ACP contract must identify the compiled model.");
+
+            const auto qoiCovered = std::any_of(
+                adaptivePhysicsContract->quantitiesOfInterest.begin(),
+                adaptivePhysicsContract->quantitiesOfInterest.end(),
+                [&](const auto& qoi)
+                {
+                    return qoi.key == query.quantityOfInterestKey;
+                });
+            if (!qoiCovered)
+                throw std::invalid_argument(
+                    "Material compilation ACP contract must cover the query quantity of interest.");
+            if (updateBindings.empty())
+                throw std::invalid_argument(
+                    "Compiled material response must retain at least one scientific update-point binding.");
+            if (dependencies.empty())
+                throw std::invalid_argument(
+                    "Compiled material response must retain at least one source/dependency identifier.");
         }
         else if (compiledModel || adaptivePhysicsContract)
         {
@@ -103,6 +132,16 @@ namespace ae
             if (!dependencyKeys.insert(dependency.value()).second)
                 throw std::invalid_argument(
                     "Material compilation dependency identifiers must be unique.");
+        }
+
+        std::unordered_set<std::string> uncertaintyKeys;
+        uncertaintyKeys.reserve(materialStateUncertainties.size());
+        for (const auto& uncertainty : materialStateUncertainties)
+        {
+            uncertainty.validate();
+            if (!uncertaintyKeys.insert(uncertainty.key).second)
+                throw std::invalid_argument(
+                    "Material-state uncertainty keys must be unique.");
         }
 
         std::unordered_set<std::string> costKeys;
