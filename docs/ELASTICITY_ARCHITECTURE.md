@@ -506,7 +506,7 @@ Those remain separate future science.
   https://doi.org/10.1016/j.probengmech.2005.07.007
 - Nagel et al. (2016), Kelvin mapping and tensor-consistent finite-element
   implementation:
-  https://doi.org/10.1007/s00466-016-1264-5
+  https://doi.org/10.1007/s12665-016-5429-4
 - Computational-homogenization literature on Hill-Mandel and KUBC/SUBC/PBC:
   https://www.sciencedirect.com/science/article/pii/S0045782519304281
 
