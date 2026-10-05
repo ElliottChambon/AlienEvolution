@@ -924,6 +924,46 @@ scientifically adequate models. It can never justify using a model whose omitted
 physics could change the scientific/evolutionary conclusion, and organisms never
 choose or mutate solver/cost policy.
 
+## CHEM-1C finite-bath reference debt
+
+M7C implements a conserved, capacity-one competitive bath only in the canonical
+concentric spherical calibration geometry. Angular coordinates are eliminated by
+symmetry, ligands are point-like and identical, the outer wall is perfectly
+reflecting, and the target switches globally between Robin-reactive and reflecting
+states depending on occupancy. These choices are benchmark simplifications, not
+mature organism geometry or universal chemistry.
+
+The event-driven reference uses truncated spectral expansions. Its configured
+`minimumResolvedDimensionlessTime`, `spectralTolerance`, and `maxModes` are
+simulator-owned numerical policy. Propagations below the time floor and mode budgets
+that cannot satisfy the attenuation criterion are rejected rather than repaired
+silently. The current attenuation criterion is a practical truncation policy, not
+a rigorous universal error bound. Short-time asymptotics, accelerated transforms,
+higher precision or alternative solvers remain possible reviewed replacements.
+
+For the ideal capacity-one finite system,
+`P_bound=N/(N+K_D V)` is algebraically the same Langmuir form when expressed using
+total number concentration `N/V`. M7C therefore adds information primarily through
+finite-copy kinetics, depletion, confinement, stochastic arrival, rebinding/history,
+conditional spatial distributions and competition—not by redefining equilibrium
+affinity.
+
+Still deferred:
+- maintained open-reservoir particle exchange and its dynamical limit;
+- arbitrary/nonspherical/porous/interpenetrating coupling support;
+- ligand-ligand excluded volume or hydrodynamic interactions;
+- multiple chemical species, promiscuity and competition between species;
+- multiple/interacting sites and cooperativity;
+- nonideal activities/electrochemical potentials;
+- chemical transformations, redox, protonation, catalysis and driven cycles;
+- material/developmental derivation of encounter geometry, diffusivity and intrinsic chemistry;
+- a general sparse-particle/runtime spatial solver;
+- runtime ACP cost/certification policy and production PCP integration.
+
+The exact bookkeeping invariant in M7C is ligand count only. Mature chemical PCPs
+still require physically appropriate matter/species, charge, energy/free-energy and
+entropy/exchange accounting where relevant.
+
 # Guiding Rule
 
 AlienEvolution may simplify aggressively during development and large-scale
