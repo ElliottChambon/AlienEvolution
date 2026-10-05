@@ -344,6 +344,12 @@ benchmark geometry, not anatomy. M7A implements analytical rates/equilibrium and
 deterministic/stochastic well-mixed constant-reservoir reductions only. It supplies
 no biological calibration, evolutionary evidence or production sensing replacement.
 
+The effective Markov reduction assumes rapid local rebinding can be integrated
+out with negligible rebinding interference; ideal spherical geometry alone does
+not establish validity. Frozen spatial configurations are an open/reservoir
+reactive sphere for association rates and a closed finite spherical domain with
+reflecting outer boundary for depletion/conservation. Both remain unimplemented.
+
 The dedicated fast `ReversibleChemicalAssociationTests` checks input validation,
 chi sweep/limits/crossover, rebinding/effective-rate consistency, occupancy bounds,
 exact relaxation, equal affinity with different response times, seeded CTMC
@@ -352,11 +358,17 @@ trajectories and stationary mean/variance. The statistical tolerance is fixed:
 M1/M2/M3 declarations and eight challenge entries are checked. B4–B6 and M6
 retain their separate scope.
 
-Spatial rebinding, finite-domain conservation/depletion, geometry changes, low-copy
+Spatial rebinding, finite-domain conservation/depletion, spherical radius/support-size
+variation (association-rate QoI), low-copy
 spatial effects, forcing, reaction/diffusion regimes and validity-boundary
 cross-fidelity challenges remain declared UNRESOLVED. No spatial solver is selected;
 these are not passed spatial benchmarks. Full CHEM-1 needs the reviewed reference
 and overlapping QoI-specific cross-validation.
+
+The validity-boundary challenge is onset of rebinding interference/spatial memory
+inside ideal-dilute chemistry. Nonideal thermodynamic promotion cannot be certified
+by the planned ideal-dilute spatial reference; it and nonspherical supports remain
+separate future reference/extension work.
 
 # Acceptance Philosophy
 

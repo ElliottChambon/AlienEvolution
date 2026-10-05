@@ -186,6 +186,15 @@ namespace
                 c.quantitiesOfInterest.size() == s.observables.size() && c.errorMeasures.size() == s.observables.size() &&
                 c.referenceModels.back().version() == "review-pending" &&
                 c.description->find("No scalar fidelity rank") != std::string::npos, "ACP boundary lost");
+            require(std::any_of(m.assumptions.begin(), m.assumptions.end(), [](const auto& assumption)
+                { return assumption.find("negligible rebinding interference") != std::string::npos; }) &&
+                m.validityScope.find("rapid local rebinding") != std::string::npos,
+                "M1 rebinding coarse-graining assumption lost");
+            require(std::any_of(c.validityCriteria.begin(), c.validityCriteria.end(), [](const auto& criterion)
+                { return criterion.key == "rebinding_coarse_graining" &&
+                    criterion.description.find("many-particle interference") != std::string::npos &&
+                    criterion.description.find("negligible rebinding interference") != std::string::npos; }),
+                "M3 rebinding coarse-graining validity declaration lost");
         }
         require(Model::schema(Profile::AnalyticalRelations).state.empty() &&
             Model::schema(Profile::EquilibriumReduction).state.empty(), "Algebraic representation acquired history");
@@ -193,6 +202,14 @@ namespace
             Model::schema(Profile::StochasticWellMixed).state[0].key == "binary_bound_state", "Distinct state profiles collapsed");
         const auto registry = Model::spatialReferenceChallenges();
         require(registry.cases().size() == 8, "Missing spatial adversarial cases");
+        const auto* geometry = registry.find("chem1.geometry_variation");
+        require(geometry && geometry->contextReference.find("spherical_encounter_radius_variation") != std::string::npos &&
+            geometry->quantityOfInterestKeys == std::vector<std::string>{"k_on"},
+            "First geometry challenge escaped canonical spherical rate benchmark");
+        const auto* boundary = registry.find("chem1.validity_boundary");
+        require(boundary && boundary->contextReference.find("ideal_dilute;onset_of_rebinding_interference_or_spatial_memory")
+            != std::string::npos && boundary->quantityOfInterestKeys == std::vector<std::string>{"occupancy_response"},
+            "Spatial/kinetic boundary challenge changed fidelity axis");
         for (const auto& challenge : registry.cases())
         {
             challenge.validate(Model::adaptivePhysicsContract(Profile::StochasticWellMixed));

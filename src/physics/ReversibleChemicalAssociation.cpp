@@ -189,11 +189,14 @@ namespace
             "Consistent number-based units; concentration is not universal activity",
             "External reservoir, constant concentration per kinetic segment; no ligand depletion",
             "Passive reversible association; no explicit energetic driving or later chemical mechanisms",
-            "Spatial solver unselected; rebinding collapsed into effective rates"};
+            "Spatial solver unselected; rebinding collapsed into effective rates",
+            "Effective Markov rates require rapid local rebinding to be integrated out and negligible rebinding interference; "
+            "ideal spherical geometry alone does not ensure this coarse-graining condition"};
         if (profile == 1) m.assumptions.push_back("Equilibrium only; kinetic history discarded");
         if (profile == 2) m.assumptions.push_back("Well-mixed mean occupancy; intrinsic fluctuations discarded");
         if (profile == 3) m.assumptions.push_back("Well-mixed two-state Markov jump model; spatial history discarded");
         m.validityScope = "Analytical and well-mixed CHEM-1A only under declared assumptions; "
+            "rapid local rebinding must be integrated out with negligible rebinding interference; "
             "no spatial certification, biological sensing claim, or runtime validity evaluation.";
         m.uncertainties = {ae::UncertaintyKind::NumericalReduction, ae::UncertaintyKind::ScientificModelForm};
         s.identifier = m.identifier + ".schema";
@@ -242,7 +245,11 @@ namespace
             "not DiffusiveField2D, crowding, mixtures or driven chemistry.", "Declaration only; spatial check UNRESOLVED"},
             {"reservoir", "chem1.open_constant_reservoir",
             "No depletion; kinetic segments have constant concentration. Well-mixed models collapse rebinding history.",
-            "Closed-domain matter conservation and non-Markov spatial history are deferred"}};
+            "Closed-domain matter conservation and non-Markov spatial history are deferred"},
+            {"rebinding_coarse_graining", "chem1.rapid_local_rebinding_reduction",
+            "Effective Markov rates require rapid local rebinding to be integrated out and negligible rebinding interference. "
+            "Spatial history and many-particle interference can invalidate this reduction even in an ideal dilute spherical model.",
+            "Declaration only; no timescale threshold or runtime validity evaluation; spatial comparison UNRESOLVED"}};
         for (const auto& q : c.quantitiesOfInterest)
             c.errorMeasures.push_back({q.key + "_difference", q.key, "chem1.quantity_specific_reference_difference", q.unit,
                 "Numerical/reference difference declaration only, no estimator; spatial comparison UNRESOLVED. "
@@ -284,11 +291,11 @@ namespace ae
             "low_copy_stochastic", "spatial_rebinding", "finite_domain_conservation", "geometry_variation", "validity_boundary"};
         const std::array<const char*, 8> contexts{"chi=0.01", "chi=100", "piecewise_constant_reservoir",
             "one_site;seed=3501", "post_dissociation_spatial_history", "closed_domain;finite_L",
-            "nonspherical_support", "dilute_to_nondilute_cross_fidelity"};
+            "spherical_encounter_radius_variation", "ideal_dilute;onset_of_rebinding_interference_or_spatial_memory"};
         for (std::size_t i = 0; i < cases.size(); ++i)
         {
             PhysicsChallengeCase challenge{std::string("chem1.") + cases[i], contract.model,
-                {i < 2 ? "k_on" : i == 3 ? "occupancy_variance" : "occupancy_response"},
+                {i < 2 || i == 6 ? "k_on" : i == 3 ? "occupancy_variance" : "occupancy_response"},
                 {FidelityAuditReason::DeclaredValidityConcern, FidelityAuditReason::CrossFidelityDisagreement},
                 {{"alien_evolution.chem1.spatial_reference", "review-pending"}},
                 std::string("chem1.challenge:") + contexts[i] + ";spatial_solver=unselected",

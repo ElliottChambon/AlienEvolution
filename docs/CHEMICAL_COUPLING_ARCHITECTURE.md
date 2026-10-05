@@ -79,6 +79,13 @@ These ideal-dilute spherical relations and collapsed rebinding do not describe
 arbitrary geometry, dense mixtures or cooperative chemistry. `DiffusiveField2D`
 is neither the reference nor a source of literal 3D rates.
 
+The effective Markov rates and collapsed rebinding probability are the intended
+reduction when rapid local rebinding can be integrated out and rebinding interference
+is negligible. Ideal spherical geometry alone does not guarantee this condition:
+spatial history and many-particle interference can invalidate the two-state Markov
+description even within ideal-dilute chemistry. This is a declared validity
+assumption, not an evaluated criterion or a newly selected timescale threshold.
+
 For an open, well-mixed constant reservoir and one reactive site:
 
 ```text
@@ -101,7 +108,14 @@ reports `std::domain_error` for this nonunique equilibrium; relaxation is infini
 and deterministic/CTMC dynamics preserve initial state. For `k_d=0,c>0`, binding
 is absorbing and equilibrium occupancy is one. These follow the frozen equations.
 
-A future **closed finite-domain** configuration must preserve free L plus bound L
+The frozen canonical spatial benchmark has a reactive sphere at radius `a`.
+Its **open/reservoir** configuration maintains external concentration for
+association-rate validation. Its **closed finite spherical domain** has a
+reflecting outer boundary for depletion/conservation tests. These approved spatial
+configurations are non-executable declarations and remain unimplemented in M7A;
+the well-mixed reservoir helper does not implement either spatial domain.
+
+The closed configuration must preserve free L plus bound L
 and unbound S plus LS. Depletion changes concentration and couples chemistry to
 transport and matter accounting. That configuration is a declared challenge,
 not executable M7A physics.
@@ -180,8 +194,14 @@ These are analytical/well-mixed checks, not spatial or biological validation.
 
 The M3 registry declares eight spatial comparisons, all **UNRESOLVED**:
 reaction-limited, diffusion-limited, transient forcing, low-copy stochastic,
-spatial rebinding, finite-domain depletion/conservation, geometry variation and
-near-validity-boundary cross-fidelity disagreement. Contexts are inert scenario
+spatial rebinding, finite-domain depletion/conservation, spherical encounter-radius/
+support-size variation (association-rate QoI), and near-validity-boundary
+cross-fidelity disagreement at the onset of rebinding interference or spatial
+memory within ideal-dilute chemistry. The boundary case concerns spatial/kinetic
+fidelity, not dilute-to-nondilute thermodynamic promotion: the future ideal-dilute
+spatial reference cannot certify nonideal thermodynamics. Nonspherical supports
+remain a later extension, separate from the first geometry challenge.
+Contexts are inert scenario
 descriptions, not reproducible spatial snapshots before solver/configuration
 review. Analytical passes do not mark spatial entries passed.
 

@@ -853,6 +853,14 @@ Effective rates, rebinding and `K_D` are compiled benchmark quantities with no
 mutation path. P1 physical interaction evidence is not biological sensory-use
 evidence; numerical checks do not certify scientific/model-form adequacy.
 
+Effective Markov rates require rapid local rebinding to be integrated out with
+negligible rebinding interference. Ideal spherical geometry alone does not ensure
+validity. The declared boundary challenge concerns onset of spatial memory/rebinding
+interference within ideal-dilute chemistry, not nonideal thermodynamic promotion.
+The first geometry challenge varies spherical radius/support size; nonspherical
+supports remain a later extension. Nonideal thermodynamics requires separate future
+reference work, beyond the planned ideal-dilute spatial reference.
+
 The spatial stochastic reference remains unselected/unimplemented. Isolated-pair
 Green's-function, Brownian/Smoldyn-style, GFRD/eGFRD, RDME and general 3D PDE/
 many-particle methods need a separate scientific checkpoint before backend selection.
