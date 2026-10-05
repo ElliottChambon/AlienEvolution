@@ -120,19 +120,19 @@ namespace
     std::vector<ae::MaterialScienceUpdateBinding> updateBindings()
     {
         return {
-            {"constituent_physics",
+            {std::string(material_update_points::ConstituentPhysics),
                 ae::ScientificModelRef("alien_evolution.mat1.benchmark_constituent_axial_elasticity", "mat1-v1"),
                 "Reference constituent response inputs; replaceable without changing heredity."},
-            {"homogenization",
+            {std::string(material_update_points::Homogenization),
                 ae::ScientificModelRef("alien_evolution.mat1.periodic_1d_laminate_homogenization", "mat1-v1"),
                 "Exact scalar iso-strain / iso-stress laminate calibration."},
-            {"constitutive_response",
+            {std::string(material_update_points::ConstitutiveResponse),
                 ae::ScientificModelRef("alien_evolution.mat1.linear_axial_response", "mat1-v1"),
                 "One-dimensional linear elastic calibration only."},
-            {"numerical_realization",
+            {std::string(material_update_points::NumericalRealization),
                 ae::ScientificModelRef("alien_evolution.mat1.closed_form_evaluator", "mat1-v1"),
                 "Closed-form arithmetic/harmonic evaluation; no mechanics solver."},
-            {"calibration_reference",
+            {std::string(material_update_points::CalibrationReference),
                 ae::ScientificModelRef("alien_evolution.mat1.layered_composite_reference", "mat1-v1"),
                 "Literature-backed layered-composite calibration and exact scalar derivation."}
         };
