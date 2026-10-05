@@ -349,6 +349,24 @@ namespace ae
         return diagnostics_;
     }
 
+    std::vector<double>
+        ReversibleChemicalAssociationFiniteBath::reactiveDimensionlessModeRoots() const
+    {
+        std::vector<double> roots;
+        roots.reserve(reactiveModes_.size());
+        for (const auto& mode : reactiveModes_) roots.push_back(mode.z);
+        return roots;
+    }
+
+    std::vector<double>
+        ReversibleChemicalAssociationFiniteBath::reflectingDimensionlessModeRoots() const
+    {
+        std::vector<double> roots;
+        roots.reserve(reflectingModes_.size());
+        for (const auto& mode : reflectingModes_) roots.push_back(mode.z);
+        return roots;
+    }
+
     double ReversibleChemicalAssociationFiniteBath::accessibleVolume() const
     {
         return diagnostics_.accessibleVolume;
