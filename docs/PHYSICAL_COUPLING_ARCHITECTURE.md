@@ -1,9 +1,12 @@
 # Physical coupling architecture (S2)
 
-The approved M7 chemical specialization and M7A analytical/well-mixed CHEM-1
-scaffold are recorded in [chemical coupling architecture](CHEMICAL_COUPLING_ARCHITECTURE.md).
-The spatial stochastic reference remains a separate scientific checkpoint;
-this does not replace S1–S5 or the production prototype sensing path.
+The approved M7 chemical specialization, M7A analytical/well-mixed CHEM-1
+scaffold and M7B exact reversible isolated-pair spatial reference are recorded in
+[chemical coupling architecture](CHEMICAL_COUPLING_ARCHITECTURE.md). M7B selects
+one reference realization for one SCK/back-reaction benchmark QoI family; it does
+not select a universal spatial solver or replace S1–S5 or the production prototype
+sensing path. Finite/open-bath, many-particle and general-geometry solver choices
+remain later scientific checkpoints.
 
 ## Authority and implementation status
 
@@ -94,7 +97,9 @@ Do not create a universal arbitrary `sensorCost`. Construction, maintenance, rep
 
 Adaptive fidelity is a core mature architecture commitment.
 
-The engine should use the cheapest scientifically adequate representation for the current quantity of interest, not a universal low/medium/high fidelity setting.
+The engine should use the cheapest scientifically adequate representation for the current quantity of interest, not a universal low/medium/high fidelity setting. Scientific adequacy is a hard constraint: computational cost may choose among adequate alternatives but must never justify a model whose omitted physics could change the scientific/evolutionary conclusion.
+
+Reference models, runtime physical models and compiled/reduced models are distinct roles. A costly reference may be invoked sparsely to establish or audit validity while routine evolution uses a cheaper certified representation. Cost estimates, cache state and solver choice remain simulator-owned; organisms never inherit or mutate them.
 
 Every reduced model must carry a validity/certification concept including:
 
