@@ -275,10 +275,17 @@ This distinction is essential. Failure/refusal is a valid scientific answer.
 
 A successfully compiled record must identify:
 - the compiled model;
-- a matching AdaptivePhysicsContract;
+- a matching AdaptivePhysicsContract whose QoI covers the query;
 - scientific update-point bindings;
 - source/dependency identities;
+- any declared uncertainty in the underlying material state;
 - optional simulator cost descriptors.
+
+`MaterialStateUncertaintyDescriptor` is intentionally separate from ACP
+numerical/reduction error declarations and from scientific/model-form uncertainty.
+MAT-1 uses deterministic benchmark state and therefore carries no state-uncertainty
+entry, but later measured/inferred material states can declare one without
+reclassifying it as solver error.
 
 An uncompiled record cannot silently carry a "certified" compiled model.
 
